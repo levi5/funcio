@@ -5,14 +5,14 @@
   "author": "Levi Prudêncio",
   "license": "MIT",
   "main": "lib/main.js",
-  "types": "lib/index.d.ts",
+  "types": "lib/main.d.ts",
   "files": [
     "lib/**/*"
   ],
   "scripts": {
     "start": "node ./lib/main.js",
     "dev": "npm run build && npm run start",
-    "build": "tsc --lib 'esnext, dom' ./src/main.ts --outDir 'lib'",
+    "build": "tsc --project ./tsconfig.json",
     "debugger": "tsc",
     "test": "vitest",
     "coverage": "vitest run --coverage"

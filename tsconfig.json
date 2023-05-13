@@ -6,14 +6,16 @@
       "esnext",
       "dom"
     ],
-    "outDir": "lib",
+    "outDir": "./lib",
+    "allowJs": true,
     "rootDir": "./src",
-    "strict": true,
-    "sourceMap": true,
+    "sourceMap": false,
     "moduleResolution": "node",
     "esModuleInterop": true,
     "skipLibCheck": true,
+    "emitDeclarationOnly": false,
     "forceConsistentCasingInFileNames": true,
+    "declarationMap": true,
     "declaration": true
   },
   "include": [
