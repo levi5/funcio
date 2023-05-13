@@ -1,2 +1,9 @@
+import { $makeImmutable } from "./Object/makeImmutable";
 
-console.log("Building")
+
+const Funcio = {
+  $makeImmutable
+}
+
+export { $makeImmutable };
+export default Funcio;
