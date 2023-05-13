@@ -21,7 +21,7 @@ Funcio is a powerful and versatile library designed to bring the functionalities
 
 To get started with Funcio, follow the instructions below:
 
-1. Clone the repository: `git clone https://github.com/your-username/funcio.git`
+1. Clone the repository: `git clone https://github.com/levi5/funcio.git`
 2. Install the dependencies: `npm install`
 3. Explore the examples and documentation to learn how to use Funcio effectively.
 
