@@ -1,0 +1,24 @@
+{
+  "name": "funcio",
+  "version": "0.0.1",
+  "description": "Funcio is a powerful and versatile library designed to empower developers with the rich functionalities of functional programming within the JavaScript/TypeScript ecosystem. With Funcio, you can seamlessly incorporate the principles and techniques of functional programming into your codebase, unlocking a whole new world of possibilities.",
+  "author": "Levi Prudêncio",
+  "license": "MIT",
+  "main": "lib/main.js",
+  "types": "lib/index.d.ts",
+  "files": [
+    "lib/**/*"
+  ],
+  "scripts": {
+    "start": "node ./lib/main.js",
+    "dev": "npm run build && npm run start",
+    "build": "tsc --lib 'esnext, dom' ./src/main.ts --outDir 'lib'",
+    "debugger": "tsc",
+    "test": "vitest",
+    "coverage": "vitest run --coverage"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.4",
+    "vitest": "^0.31.0"
+  }
+}
