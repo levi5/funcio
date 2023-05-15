@@ -1,10 +1,12 @@
-import { _Object } from "./Object";
-
-
+import { left, right } from "./Either";
+import { _Object } from "./Object"
 
 const Funcio = {
-  _Object
+  _Object,
+  left,
+  right,
 }
 
-export { _Object };
+
+export { _Object, left, right };
 export default Funcio;

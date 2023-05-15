@@ -20,7 +20,6 @@ const modifyObject = (immutableObject: any) => {
   }
 }
 
-
 describe("makeImmutable function", () => {
   it("Should not modify the original object", () => {
     const { sut } = makeSut()
