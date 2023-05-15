@@ -1,4 +1,4 @@
-import { $isObject, $isEmpty } from "./common";
+import { $isObject, $isEmpty } from "../common";
 
 export const $copy = <T extends Object>(object: T):T => {
   if ((!$isObject(object))) return object

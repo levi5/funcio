@@ -1,9 +1,10 @@
-import { $makeImmutable } from "./Object/makeImmutable";
+import { _Object } from "./Object";
+
 
 
 const Funcio = {
-  $makeImmutable
+  _Object
 }
 
-export { $makeImmutable };
+export { _Object };
 export default Funcio;
