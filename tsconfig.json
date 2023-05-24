@@ -15,7 +15,7 @@
     "skipLibCheck": true,
     "emitDeclarationOnly": false,
     "forceConsistentCasingInFileNames": true,
-    "declarationMap": true,
+    "declarationMap": false,
     "declaration": true
   },
   "include": [

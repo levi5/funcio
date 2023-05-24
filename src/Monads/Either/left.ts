@@ -1,4 +1,4 @@
-import { EitherType, TLeft } from "./either"
+import { EitherType, TLeft } from "../../@Types"
 
 const Left = <L, R>(value: L): TLeft<L, R> => {
   return {

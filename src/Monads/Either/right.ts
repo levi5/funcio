@@ -1,4 +1,4 @@
-import { EitherType, TRight } from "./either"
+import { EitherType, TRight } from "../../@Types"
 
 const Right = <L, R>(value: R): TRight<L, R> => {
   return {

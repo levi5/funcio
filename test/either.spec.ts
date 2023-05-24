@@ -1,6 +1,7 @@
 import { expect, describe, it } from "vitest"
 
-import { TEither, left, right } from '../src/Either'
+import {left, right } from '../src/Monads/Either'
+import { TEither } from "../src/@Types"
 
 const fakeData = () => ({
   status: "success"
