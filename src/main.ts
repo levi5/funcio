@@ -2,6 +2,7 @@ import { left, right } from "./Monads/Either"
 import { _Maybe, Just, Nothing } from "./Monads/Maybe"
 
 import { _Object } from "./Object"
+import { _pipe } from "./function/Pipe"
 
 const Funcio = {
   _Object,
@@ -10,7 +11,9 @@ const Funcio = {
   Nothing,
   left,
   right,
+  _pipe
 }
 
-export { _Object, _Maybe, left, right, Just, Nothing, }
+
+export { _Object, _Maybe, left, right, Just, Nothing, _pipe }
 export default Funcio
