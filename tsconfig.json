@@ -16,10 +16,20 @@
     "emitDeclarationOnly": false,
     "forceConsistentCasingInFileNames": true,
     "declarationMap": false,
-    "declaration": true
+    "declaration": true,
+    "paths": {
+      "@/tests/*": [
+        "../tests/*"
+      ],
+      "@/*": [
+        "/src/*"
+      ]
+    },
   },
   "include": [
     "src"
   ],
-  "exclude": ["test"],
+  "exclude": [
+    "test"
+  ],
 }

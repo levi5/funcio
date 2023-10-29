@@ -1,20 +1,24 @@
-export const EitherType = {
-  FLAG_Left: Symbol(':left:'),
-  Flag_Right: Symbol(':right:')
-}
+export namespace IEither {
 
-export interface TLeft<L, R> {
-  flag: symbol;
-  value: L;
-  isLeft(): boolean;
-  isRight(): boolean;
-}
+  export const EitherType = {
+    FLAG_Left: Symbol(':left:'),
+    Flag_Right: Symbol(':right:')
+  }
 
-export interface TRight<L, R> {
-  flag: symbol;
-  value: R;
-  isLeft(): boolean;
-  isRight(): boolean;
-}
+  export interface TLeft<L, R> {
+    flag: symbol;
+    value: L;
+    isLeft(): boolean;
+    isRight(): boolean;
+  }
 
-export type TEither<L, R> = TLeft<L, R> | TRight<L, R>
+  export interface TRight<L, R> {
+    flag: symbol;
+    value: R;
+    isLeft(): boolean;
+    isRight(): boolean;
+  }
+
+  export type TryResponse<T> = T extends PromiseConstructor ? Promise<T> : T;
+  export type Either<L, R> = TLeft<L, R> | TRight<L, R>
+}
