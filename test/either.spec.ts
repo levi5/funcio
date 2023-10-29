@@ -1,14 +1,13 @@
 import { expect, describe, it } from "vitest"
-
-import {left, right } from '../src/Monads/Either'
-import { TEither } from "../src/@Types"
+import { left, right } from "../src/Monads/Either"
+import { IEither } from "../src/@Types"
 
 const fakeData = () => ({
   status: "success"
 })
 
 const makeSut = () => {
-  const sut = (condition: boolean, value: any): TEither<null, Object> => {
+  const sut = (condition: boolean, value: any): IEither.Either<null, Object> => {
     if (condition) return right(value)
     return left(null)
   }
