@@ -16,6 +16,7 @@ Funcio is a powerful and versatile library designed to bring the magic of functi
       - [`_Either.left(value)`](#_eitherleftvalue)
       - [`_Either.isRight(either)`](#_eitherisrighteither)
       - [`_Either.isLeft(either)`](#_eitherislefteither)
+      - [`_Either.try(fn)`](#_eithertryfn)
     - [`_Object`](#_object)
     - [`_Object.makeImmutable`](#_objectmakeimmutable)
     - [`_Maybe`](#_maybe)
@@ -82,7 +83,7 @@ The `_Either.isRight(either)` method assesses if the provided `Either` instance 
 import { Funcio } from 'funcio';
 
 const result = Funcio._Either.right(42);
-const isRight = Funcio._Either.isRight(result);
+const isRight = result.isRight();
 
 //Result: true
 ```
@@ -95,7 +96,24 @@ The `_Either.isLeft(either)` method verifies if the provided `Either` instance d
 import { Funcio } from 'funcio';
 
 const result = Funcio._Either.left("Error: Something went wrong");
-const isLeft = Funcio._Either.isLeft(result); // Result: true
+const isLeft = result.isLeft()  // Result: true
+```
+
+#### `_Either.try(fn)`
+
+The `_Either.try(fn)` function is a powerful tool for encapsulating functions that can throw exceptions in a safe context. It allows you to execute a function fn and return the result in the "Right" case if the function is successful, or the exception in the "Left" case if the function fails.
+
+```typescript
+import { Funcio } from 'funcio';
+
+function divide(a:number, b:number) {
+  if (b === 0) {
+    throw new Error("Division by zero");
+  }
+  return a / b;
+}
+const result1 = Funcio._Either.try(() => divide(6, 2)); // Result: Right(3)
+const result2 = Funcio._Either.try(() => divide(6, 0)); // Result: Left(Error: Division by zero)
 ```
 
 ### `_Object`
