@@ -16,6 +16,11 @@ export class Just<T> extends _Maybe {
     return this.value;
   }
 
+  public getOrElse(value: T) {
+    if (this.isNothing()) return value
+    return this.value as T
+  }
+
   public map(fn: (...args: any[]) => any) {
     return Just.of(fn(this.value));
   }

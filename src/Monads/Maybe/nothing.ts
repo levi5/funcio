@@ -17,6 +17,9 @@ export class Nothing extends _Maybe {
     return new ExtractValueError("Can't extract the value of a Nothing.")
   }
 
+  public getOrElse<T>(value: T) {
+    return value
+  }
   public map(fn: (...args: any[]) => any) {
     return this;
   }
