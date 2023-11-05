@@ -16,7 +16,7 @@ const Funcio = {
   _Maybe,
   Just,
   Nothing,
-  Either: _Either,
+  _Either,
   _pipe
 }
 
