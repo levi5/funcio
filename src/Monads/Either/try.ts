@@ -1,23 +1,43 @@
 import { left, right } from ".";
 import { IEither } from "../../@Types";
 
-const asyncTry = <T extends PromiseConstructor>(result: IEither.TryResponse<T>) => {
+/**
+ * Wraps an asynchronous operation in a try-catch block, returning an Either monad.
+ * @template T - The type of the result of the asynchronous operation.
+ * @param {() => Promise<T>} fn - The asynchronous operation to be wrapped.
+ * @returns {Promise<IEither.Either<Error, T>>} Either monad representing success or failure.
+ */
+export const asyncTry = async <T = any>(fn: () => Promise<T>): Promise<IEither.Either<Error, T>> => {
   try {
-    return result
-      .then((value) => right(value))
-      .catch((error) => left(error));
+    const result: T = await fn();
+    return right(result);
   } catch (error) {
     return left(error);
   }
-}
+};
 
-export const _try = <T>(fn: () => IEither.TryResponse<T>) => {
+/**
+ * Wraps a synchronous operation in a try-catch block, returning an Either monad.
+ * @template T - The type of the result of the synchronous operation.
+ * @param {() => T} fn - The synchronous operation to be wrapped.
+ * @returns {IEither.Either<Error, T>} Either monad representing success or failure.
+ */
+export const syncTry = <T>(fn: () => T): IEither.Either<Error, T> => {
   try {
-    const result = fn();
-    if (!(result instanceof Promise)) return right(result)
-    return asyncTry(result)
+    const result: T = fn();
+    if (result instanceof Promise) {
+      return left(new Error("Synchronous function should not return a Promise."));
+    }
+    return right(result);
   } catch (error) {
     return left(error);
   }
-}
+};
 
+/**
+ * Object containing both synchronous and asynchronous try functions.
+ */
+export const _try = {
+  sync: syncTry,
+  async: asyncTry,
+};
