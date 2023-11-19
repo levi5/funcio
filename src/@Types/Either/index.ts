@@ -19,6 +19,5 @@ export namespace IEither {
     isRight(): boolean;
   }
 
-  export type TryResponse<T> = T extends PromiseConstructor ? Promise<T> : T;
   export type Either<L, R> = TLeft<L, R> | TRight<L, R>
 }
