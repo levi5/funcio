@@ -25,8 +25,7 @@ Funcio is an influential and versatile library designed to introduce the eleganc
       - [`_Maybe.getOrElse(defaultValue)`](#_maybegetorelsedefaultvalue)
       - [`_Maybe.map(function)`](#_maybemapfunction)
     - [`_Pipe`](#_pipe)
-    - [`_Curry`](#_curry)
-      - [`_curry(fn)`](#_curryfn)
+    - [`_curry`](#_curry)
   - [Contributions 🤝](#contributions-)
   - [License 📜](#license-)
 
@@ -236,11 +235,9 @@ const transform = Funcio._pipe(
 // Result: 16
 ```
 
-### `_Curry`
+### `_curry`
 
 The `_Curry` function in the Funcio library is a powerful tool for enabling currying, a fundamental concept in functional programming. Currying allows you to transform a function that takes multiple arguments into a series of functions, each accepting a single argument. This technique enhances code readability, reusability, and composability.
-
-#### `_curry(fn)`
 
 The `_curry(fn)` method transforms a regular function into a curried function. Once curried, you can partially apply arguments one at a time, creating new functions along the way.
 
