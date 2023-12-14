@@ -6,17 +6,17 @@ export namespace IEither {
   }
 
   export interface TLeft<L, R> {
-    flag: symbol;
-    value: L;
-    isLeft(): boolean;
-    isRight(): boolean;
+    flag: symbol
+    value: L
+    isLeft(): boolean
+    isRight(): boolean
   }
 
   export interface TRight<L, R> {
-    flag: symbol;
-    value: R;
-    isLeft(): boolean;
-    isRight(): boolean;
+    flag: symbol
+    value: R
+    isLeft(): boolean
+    isRight(): boolean
   }
 
   export type Either<L, R> = TLeft<L, R> | TRight<L, R>

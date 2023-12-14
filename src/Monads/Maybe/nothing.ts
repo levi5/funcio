@@ -1,6 +1,6 @@
-import { _Maybe } from "./maybe";
-import { MaybeType } from "../../@Types";
-import { ExtractValueError } from "../../Helpers";
+import { _Maybe } from './maybe'
+import { MaybeType } from '../../@Types'
+import { ExtractValueError } from '../../helpers'
 
 /**
  * Represents a null or undefined value in the Maybe monad.
@@ -11,34 +11,34 @@ export class Nothing extends _Maybe {
    * The tag indicating the Maybe type.
    * @type {MaybeType}
    */
-  public tag: MaybeType;
+  public tag: MaybeType
 
   /**
    * Creates an instance of Nothing.
    */
-  constructor() {
-    super();
+  constructor () {
+    super()
     /**
      * The tag indicating the Maybe type as Nothing.
      * @type {MaybeType}
      */
-    this.tag = MaybeType.Nothing;
+    this.tag = MaybeType.Nothing
   }
 
   /**
    * Checks if the Maybe instance is a Nothing.
    * @returns {boolean} True if the Maybe instance is a Nothing, otherwise false.
    */
-  public isNothing(): boolean {
-    return true;
+  public isNothing (): boolean {
+    return true
   }
 
   /**
    * Attempts to get the value stored in Nothing, which always results in an error.
    * @returns {Error} An error indicating that the value of Nothing cannot be extracted.
    */
-  public get(): Error {
-    return new ExtractValueError("Can't extract the value of a Nothing.");
+  public get (): Error {
+    return new ExtractValueError("Can't extract the value of a Nothing.")
   }
 
   /**
@@ -48,7 +48,7 @@ export class Nothing extends _Maybe {
    * @returns {T} The specified default value.
    */
   public getOrElse<T>(value: T): T {
-    return value;
+    return value
   }
 
   /**
@@ -56,8 +56,8 @@ export class Nothing extends _Maybe {
    * @param {...function} fn - The function to apply (ignored in this case).
    * @returns {Nothing} The current Nothing instance.
    */
-  public map(fn: (...args: any[]) => any): Nothing {
-    return this;
+  public map (fn: (...args: any[]) => any): Nothing {
+    return this
   }
 
   /**
@@ -67,14 +67,14 @@ export class Nothing extends _Maybe {
    * @returns {Nothing} A new Nothing instance.
    */
   public static of<T>(value: T): Nothing {
-    return new Nothing();
+    return new Nothing()
   }
 
   /**
    * Returns a string representation of the Nothing instance.
    * @returns {string} A string representation of the Nothing instance.
    */
-  public toString(): string {
-    return `Maybe.Nothing`;
+  public toString (): string {
+    return 'Maybe.Nothing'
   }
 }

@@ -1,6 +1,6 @@
 # Funcio 🚀
 
-Funcio is an influential and versatile library designed to introduce the elegance of functional programming to the TypeScript ecosystem. With Funcio, effortlessly integrate functional programming principles and techniques into your codebase, unlocking a universe of possibilities. It empowers you to create clean and expressive code using functional programming paradigms. 🧙‍♂️
+Funcio is a powerful and versatile library designed to bring the elegance of functional programming to the TypeScript ecosystem. With Funcio, seamlessly integrate functional programming principles and techniques into your codebase, unlocking a universe of possibilities. It empowers you to create clean and expressive code using functional programming paradigms. 🧙‍♂️
 
 **Note: This library is currently under construction and not yet ready for production use.**
 
@@ -21,11 +21,12 @@ Funcio is an influential and versatile library designed to introduce the eleganc
     - [`_Object`](#_object)
       - [`_Object.makeImmutable`](#_objectmakeimmutable)
     - [`_Maybe`](#_maybe)
-      - [\`\_Maybe.get()](#_maybeget)
+      - [`_Maybe.get()`](#_maybeget)
       - [`_Maybe.getOrElse(defaultValue)`](#_maybegetorelsedefaultvalue)
       - [`_Maybe.map(function)`](#_maybemapfunction)
-    - [`_Pipe`](#_pipe)
+    - [`_pipe`](#_pipe)
     - [`_curry`](#_curry)
+    - [`_match`](#_match)
   - [Contributions 🤝](#contributions-)
   - [License 📜](#license-)
 
@@ -159,11 +160,11 @@ immutableUser.address.city = "Avalora"; // ❌ Error: TypeError: Cannot assign t
 
 `_Maybe` is a module in the Funcio library that empowers you to handle optional values with finesse, in line with functional programming principles. The concept of "Maybe" is your guardian angel for situations where a value may or may not be present, safeguarding against null reference errors and enabling the creation of safer code.
 
-#### `_Maybe.get()
+#### `_Maybe.get()`
 
-`
+The `_Maybe.get
 
-The `_Maybe.get()` method is a foundational function bequeathed by the `_Maybe` module within the Funcio library. It allows you to securely fetch the value ensconced within a `Maybe` object.
+()` method is a foundational function bequeathed by the `_Maybe` module within the Funcio library. It allows you to securely fetch the value ensconced within a `Maybe` object.
 
 When you invoke `_Maybe.get()` on a `Maybe` instance, it will yield the value if it's present, or it will raise an error or yield a default value if the `Maybe` is empty.
 
@@ -214,7 +215,7 @@ result1 // Output: 10
 result2 // Output: "Value is empty"
 ```
 
-### `_Pipe`
+### `_pipe`
 
 The `_pipe` function in the Funcio library is a formidable utility for composing multiple functions into a single, higher-order function. It empowers you to craft a pipeline of functions where the output of one function becomes the input for the next.
 
@@ -256,6 +257,23 @@ const addTen = addFive(10);
 
 // Usage
 const result = addTen(7); // Result: 22
+```
+
+### `_match`
+
+The `_match` function in the Funcio library is a powerful pattern-matching tool for executing different code blocks based on the matched values. It allows you to define patterns and corresponding actions, providing a concise and expressive way to handle multiple cases.
+
+```typescript
+import { Funcio } from 'funcio';
+
+const response = Funcio._match<number, number>(2)
+  .with(1, (v) => v * 2)
+  .with(2, (v) => v * v)
+  ._(() => -1)
+  .exec();
+
+result // 4
+
 ```
 
 ## Contributions 🤝

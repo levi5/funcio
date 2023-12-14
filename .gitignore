@@ -1,6 +1,8 @@
+.vscode
 node_modules
 *-lock.*
 build
 dist
 lib
 coverage
+yarn.lock

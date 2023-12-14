@@ -1,6 +1,6 @@
-import { $isObject, $isEmpty } from "../common";
+import { $isObject } from '../common'
 
-export const $copy = <T extends Object>(object: T):T => {
+export const $copy = <T extends object>(object: T): T => {
   if ((!$isObject(object))) return object
 
   const copy = Array.isArray(object) ? [] : {}
