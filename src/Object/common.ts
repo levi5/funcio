@@ -1,2 +1,2 @@
-export const $isObject = <T = Object>(value: T) => value && typeof value === 'object'
-export const $isEmpty = <T = Object>(value: T) => $isObject(value) && !Object.keys(value).length
+export const $isObject = <T = object>(value: T) => value && typeof value === 'object'
+export const $isEmpty = <T = object>(value: T) => $isObject(value) && !Object.keys(value).length

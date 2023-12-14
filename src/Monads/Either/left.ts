@@ -1,4 +1,4 @@
-import { IEither } from "../../@Types"
+import { IEither } from '../../@Types'
 /**
  * Create a left value for the Either type.
  *
@@ -16,7 +16,7 @@ const Left = <L, R>(value: L): IEither.TLeft<L, R> => {
      *
      * @returns {boolean} true if this is a failure value (left value), false otherwise.
      */
-    isLeft(): boolean {
+    isLeft (): boolean {
       return true
     },
     /**
@@ -24,7 +24,7 @@ const Left = <L, R>(value: L): IEither.TLeft<L, R> => {
      *
      * @returns {boolean} true if this is a success value (right value), false otherwise.
      */
-    isRight(): boolean {
+    isRight (): boolean {
       return false
     }
   }
@@ -38,6 +38,6 @@ const Left = <L, R>(value: L): IEither.TLeft<L, R> => {
  * @param {L} value - The value to wrap as the left value.
  * @returns {Either.TLeft<L, R>} An instance of Left with the specified value.
  */
-export const left = <L, R>(value: L): IEither.TLeft<L, R> =>{
+export const left = <L, R>(value: L): IEither.TLeft<L, R> => {
   return Left<L, R>(value)
 }
