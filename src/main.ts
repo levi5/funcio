@@ -1,10 +1,10 @@
+import { _try, left, right } from './Monads/Either'
+import { _Maybe, Just, Nothing } from './Monads/Maybe'
 
-import { _try, left, right } from "./Monads/Either"
-import { _Maybe, Just, Nothing } from "./Monads/Maybe"
-
-import { _Object } from "./Object"
-import { _pipe } from "./function/Pipe"
-import { _curry } from "./function/curry/curry"
+import { _Object } from './Object'
+import { _match } from './function/Match/match'
+import { _pipe } from './function/Pipe'
+import { _curry } from './function/Curry/curry'
 
 const _Either = {
   left,
@@ -19,8 +19,9 @@ const Funcio = {
   Nothing,
   _Either,
   _pipe,
-  _curry
+  _curry,
+  _match
 }
 
-export { _Object, _Maybe, _Either, Just, Nothing, _pipe, _curry }
+export { _Object, _Maybe, _Either, Just, Nothing, _pipe, _curry, _match }
 export default Funcio

@@ -1,7 +1,9 @@
 {
   "compilerOptions": {
-    "target": "ES2021",
+
     "module": "CommonJS",
+      "target": "ES5",
+
     "lib": [
       "esnext",
       "dom"
@@ -9,14 +11,14 @@
     "outDir": "./lib",
     "allowJs": true,
     "rootDir": "./src",
-    "sourceMap": false,
+    "sourceMap": true,
     "moduleResolution": "node",
     "esModuleInterop": true,
+    "declaration": false,
     "skipLibCheck": true,
     "emitDeclarationOnly": false,
     "forceConsistentCasingInFileNames": true,
     "declarationMap": false,
-    "declaration": true,
     "paths": {
       "@/tests/*": [
         "../tests/*"
