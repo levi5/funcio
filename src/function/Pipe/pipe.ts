@@ -1,9 +1,11 @@
-import { IPipe } from "../../@Types/Pipe"
-import { identity } from "./identity"
+import { type FN, type Pipeline } from '../../@Types/Pipe'
 
-export const _pipe: IPipe = <T>(input: T, ...fns: Function[]): unknown => {
-  if (!fns.length) return identity(input) as T
+export function _pipe<T, FNS extends FN[]> (
+  input: T,
+  ...fns: FNS
+): ReturnType<Pipeline<FNS>>
+
+export function _pipe<T, FNS extends FN[]> (input: T, ...fns: FNS): FN {
   return fns.reduce((previousValue, fn) =>
     fn.call(fn, previousValue), input)
 }
-

@@ -20,7 +20,7 @@ export class _Maybe {
   }
 
   static fromNullable<T>(value: T) {
-    return !!value
+    return (value !== null && value !== undefined)
   }
 
   static of<T>(value: T) {
