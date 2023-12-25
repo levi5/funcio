@@ -18,9 +18,9 @@ Funcio is a powerful and versatile library designed to bring the elegance of fun
       - [`_Either.isLeft(either)`](#_eitherislefteither)
       - [`_Either._try.sync(fn)`](#_either_trysyncfn)
       - [`_Either._try.async(fn)`](#_either_tryasyncfn)
-    - [`_chainify`](#_chainify)
     - [`_Object`](#_object)
       - [`_Object.makeImmutable`](#_objectmakeimmutable)
+    - [`_Object.chainify`](#_objectchainify)
     - [`_Maybe`](#_maybe)
       - [`_Maybe.get()`](#_maybeget)
       - [`_Maybe.getOrElse(defaultValue)`](#_maybegetorelsedefaultvalue)
@@ -135,9 +135,33 @@ const invalidJsonString = '{"name": "John", "age": 30,}';
 const invalidJson = await Funcio._Either._try.async<object>(() => JSON.parse(invalidJsonString));
 ```
 
-### `_chainify`
+### `_Object`
 
-`_chainify` is a versatile utility in the Funcio library that allows you to create a fluent interface for method chaining, providing a seamless and expressive way to apply multiple operations on an object.
+`_Object` is a module in the Funcio library that offers a treasure trove of utilities for manipulating objects.
+
+#### `_Object.makeImmutable`
+
+The `_Object.makeImmutable` function is a versatile tool provided by the `_Object` module in our library. It enables you to create an immutable incarnation of an object, ensuring
+
+ that its properties remain impervious to change once set.
+
+```typescript
+import { Funcio } from 'funcio';
+
+const user =  {
+  "name": "Alice",
+  "age": 25,
+  "address": { "city": "Wonderland" },
+  "hobbies": ["reading", "painting"]
+}
+
+const immutableUser = Funcio._Object.makeImmutable(user);
+immutableUser.address.city = "Avalora"; // ❌ Error: TypeError: Cannot assign to read-only property 'city' of object '#<Object>'.
+```
+
+### `_Object.chainify`
+
+`_Object.chainify` is a versatile utility in the Funcio library that allows you to create a fluent interface for method chaining, providing a seamless and expressive way to apply multiple operations on an object.
 
 ```typescript
 import { Funcio } from 'funcio';
@@ -165,36 +189,12 @@ class ExampleClass {
 }
 
 // Using _chainify with ExampleClass
-const result = Funcio._chainify(new ExampleClass(5))
+const result = Funcio._Object.chainify(new ExampleClass(5))
   .setValue(10)
   .multiplyBy(3)
   .getValue();
 
 // Result: 30
-```
-
-### `_Object`
-
-`_Object` is a module in the Funcio library that offers a treasure trove of utilities for manipulating objects.
-
-#### `_Object.makeImmutable`
-
-The `_Object.makeImmutable` function is a versatile tool provided by the `_Object` module in our library. It enables you to create an immutable incarnation of an object, ensuring
-
- that its properties remain impervious to change once set.
-
-```typescript
-import { Funcio } from 'funcio';
-
-const user =  {
-  "name": "Alice",
-  "age": 25,
-  "address": { "city": "Wonderland" },
-  "hobbies": ["reading", "painting"]
-}
-
-const immutableUser = Funcio._Object.makeImmutable(user);
-immutableUser.address.city = "Avalora"; // ❌ Error: TypeError: Cannot assign to read-only property 'city' of object '#<Object>'.
 ```
 
 ### `_Maybe`
