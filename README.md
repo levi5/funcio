@@ -20,7 +20,7 @@ Funcio is a powerful and versatile library designed to bring the elegance of fun
       - [`_Either._try.async(fn)`](#_either_tryasyncfn)
     - [`_Object`](#_object)
       - [`_Object.makeImmutable`](#_objectmakeimmutable)
-    - [`_Object.chainify`](#_objectchainify)
+      - [`_Object.chainify`](#_objectchainify)
     - [`_Maybe`](#_maybe)
       - [`_Maybe.get()`](#_maybeget)
       - [`_Maybe.getOrElse(defaultValue)`](#_maybegetorelsedefaultvalue)
