@@ -19,9 +19,9 @@ export const _match = <T, R>(value: T) => patternBuilder<T, R>(value)(() => null
  */
 const matchPattern = <T>(value: T, pattern: PatternMatching.Pattern<T>): boolean => {
   const isFunction = typeof pattern === 'function' && typeof value === 'function'
-  const isString = pattern === String && _Maybe.of(typeof value === 'string').getOrElse(false)
-  const isBoolean = pattern === Boolean && _Maybe.of(typeof value === 'boolean').getOrElse(false)
-  const isNumber = pattern === Number && _Maybe.of(typeof value === 'number' && !Number.isNaN(value)).getOrElse(false)
+  const isString = (pattern === String || typeof pattern === 'string') && _Maybe.of(typeof value === 'string').getOrElse(false)
+  const isBoolean = (pattern === Boolean || typeof pattern === 'boolean') && _Maybe.of(typeof value === 'boolean').getOrElse(false)
+  const isNumber = (pattern === Number || typeof pattern === 'number') && _Maybe.of(typeof value === 'number' && !Number.isNaN(value)).getOrElse(false)
   const isSymbol = typeof pattern === 'symbol' && _Maybe.of(typeof value === 'symbol' && value.description === pattern.description).getOrElse(false)
   const isPrimitive = isString || isBoolean || isNumber || isSymbol
 
