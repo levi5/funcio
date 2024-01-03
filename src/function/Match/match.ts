@@ -1,6 +1,6 @@
 import { _Maybe } from '../../main'
-import { $isObject } from '../../Object/common'
 import { type PatternMatching } from '../../@Types/Match'
+import { $isObject } from '../../Object/common'
 
 /**
  * Function for pattern matching.
@@ -24,18 +24,18 @@ const matchPattern = <T>(value: T, pattern: PatternMatching.Pattern<T>): boolean
   const isNumber = (pattern === Number || typeof pattern === 'number') && _Maybe.of(typeof value === 'number' && !Number.isNaN(value)).getOrElse(false)
   const isSymbol = typeof pattern === 'symbol' && _Maybe.of(typeof value === 'symbol' && value.description === pattern.description).getOrElse(false)
   const isPrimitive = isString || isBoolean || isNumber || isSymbol
-
-  if (isPrimitive || isFunction) return true
-
-  if (!$isObject(value)) {
-    return value === pattern
+  const isNull = _Maybe.of(value).isNothing() && _Maybe.of(pattern).isNothing()
+  if (isFunction) return true
+  if (isPrimitive || isNull) {
+    return (value === pattern) ||
+      (isSymbol && (value as symbol).description === (pattern).description)
   }
 
   if (Array.isArray(pattern)) {
     return Array.isArray(value) && pattern.every((patternItem) => matchPattern(value[0], patternItem))
   }
 
-  return Object.keys(pattern).every((key) => matchPattern(value[key], pattern[key]))
+  return $isObject(pattern) && Object.keys(pattern).every((key) => matchPattern(value[key], pattern[key]))
 }
 
 /**
