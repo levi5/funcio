@@ -14,8 +14,8 @@ describe("Maybe Monad", () => {
   })
 
   it("Should apply the addTwo function to the value 3 and it will return the final value 5", async () => {
-    const addTwo = (value: number) => value + 2
-    const value = _Maybe.of(3).map(addTwo).get()
+    const addTwo = (value: number,) => value + 2
+    const value = _Maybe.of(3).map(addTwo).getOrElse(3)
     expect(value).toBe(5)
   })
 })

@@ -47,7 +47,7 @@ export class Just<T> extends _Maybe {
    * @param {T} value - The default value to return if the Maybe instance is Nothing.
    * @returns {T} The value stored in Just, or the default value if it's Nothing.
    */
-  public getOrElse (value: T): T {
+  public getOrElse <R>(value: R): T | R {
     if (this.isNothing()) return value
     return this.value
   }
@@ -57,7 +57,7 @@ export class Just<T> extends _Maybe {
    * @param {...function} fn - The function to apply to the value inside Just.
    * @returns {Just} A new Just with the result of applying the function.
    */
-  public map (fn: (...args: any[]) => any): Just<any> {
+  public map <R>(fn: (_: T) => R): Just<R> {
     return Just.of(fn(this.value))
   }
 

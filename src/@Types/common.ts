@@ -1,0 +1,1 @@
+export type FN = (..._args: any[]) => any

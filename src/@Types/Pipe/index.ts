@@ -2,8 +2,8 @@
  * Type FN represents a function that accepts any number of arguments
  * and returns any value.
  */
-export type FN = (...args: any[]) => any;
 
+import { FN } from "../common";
 /**
  * Type FnsMatchPipe checks if a sequence of functions can be piped together.
  * Returns true if all functions can be piped, otherwise returns never.

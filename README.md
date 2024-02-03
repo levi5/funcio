@@ -1,3 +1,6 @@
+Certamente! Aqui está a documentação atualizada com as adições referentes à função `getPathValue`:
+
+```typescript
 # Funcio 🚀
 
 Funcio is a powerful and versatile library designed to bring the elegance of functional programming to the TypeScript ecosystem. With Funcio, seamlessly integrate functional programming principles and techniques into your codebase, unlocking a universe of possibilities. It empowers you to create clean and expressive code using functional programming paradigms. 🧙‍♂️
@@ -21,6 +24,7 @@ Funcio is a powerful and versatile library designed to bring the elegance of fun
     - [`_Object`](#_object)
       - [`_Object.makeImmutable`](#_objectmakeimmutable)
       - [`_Object.chainify`](#_objectchainify)
+      - [`_Object.getPathValue(keysToFollow, obj)`](#_objectgetpathvaluekeystofollow-obj)
     - [`_Maybe`](#_maybe)
       - [`_Maybe.get()`](#_maybeget)
       - [`_Maybe.getOrElse(defaultValue)`](#_maybegetorelsedefaultvalue)
@@ -159,9 +163,11 @@ const immutableUser = Funcio._Object.makeImmutable(user);
 immutableUser.address.city = "Avalora"; // ❌ Error: TypeError: Cannot assign to read-only property 'city' of object '#<Object>'.
 ```
 
-### `_Object.chainify`
+#### `_Object.chainify`
 
-`_Object.chainify` is a versatile utility in the Funcio library that allows you to create a fluent interface for method chaining, providing a seamless and expressive way to apply multiple operations on an object.
+`_Object.chain
+
+ify` is a versatile utility in the Funcio library that allows you to create a fluent interface for method chaining, providing a seamless and expressive way to apply multiple operations on an object.
 
 ```typescript
 import { Funcio } from 'funcio';
@@ -195,6 +201,32 @@ const result = Funcio._Object.chainify(new ExampleClass(5))
   .getValue();
 
 // Result: 30
+```
+
+#### `_Object.getPathValue(keysToFollow, obj)`
+
+The `_Object.getPathValue(keysToFollow, obj)` function retrieves the value at the specified path within an object. It takes an array of keys (`keysToFollow`) representing the path to follow and the target object (`obj`). The function returns the value found at the specified path or `undefined` if the path is not valid.
+
+```typescript
+import { Funcio } from 'funcio';
+
+const person = {
+  name: "John Doe",
+  age: 30,
+  address: {
+    street: "123 Main St",
+    city: "New York",
+    state: "NY",
+    country: "USA",
+    sellers: [{ teste: 1 }]
+  },
+}
+
+const streetValue = Funcio._Object.getPathValue(['address', 'street'], person);
+const nonExistingValue = Funcio._Object.getPathValue(['address', 'null'], person);
+
+// Result: "123 Main St" for streetValue
+// Result: undefined for nonExistingValue
 ```
 
 ### `_Maybe`
@@ -300,7 +332,9 @@ const result = addTen(7); // Result: 22
 
 ### `_match`
 
-The `_match` function in the Funcio library is a powerful pattern-matching tool for executing different code blocks based on the matched values. It allows you to define patterns and corresponding actions, providing a concise and expressive way to handle multiple cases.
+The `_match` function in the Funcio library is a powerful pattern-matching tool for executing different code blocks based on the matched values. It allows you to define patterns and corresponding actions
+
+, providing a concise and expressive way to handle multiple cases.
 
 ```typescript
 import { Funcio } from 'funcio';

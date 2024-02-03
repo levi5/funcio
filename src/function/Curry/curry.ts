@@ -1,4 +1,5 @@
-import { Curry } from "../../@Types/Curry";
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+import { type Curry } from '../../@Types/Curry'
 
 /**
  * Curry a function, allowing partial application of its arguments.
@@ -8,9 +9,9 @@ import { Curry } from "../../@Types/Curry";
  */
 
 // overloaded function
-function curry<P extends any[], R>(
+function curry<P extends any[], R> (
   fn: (...args: P) => R
-): Curry.TResponse<P, R>;
+): Curry.TResponse<P, R>
 
 /**
  * Curry a function, allowing partial application of its arguments.
@@ -18,13 +19,13 @@ function curry<P extends any[], R>(
  * @param {(...args: any) => any} fn - The function to curry.
  * @returns {Curry.TResponse<any[], any>} The curried function.
  */
-function curry(fn: (...args: any) => any) {
+function curry (fn: (...args: any) => any) {
   return fn.length === 0
     ? fn()
-    : (x: any) => curry(fn.bind(null, x));
+    : (x: any) => curry(fn.bind(null, x))
 }
 
 /**
  * Export the curried function.
  */
-export const _curry = curry;
+export const _curry = curry
