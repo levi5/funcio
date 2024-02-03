@@ -218,7 +218,6 @@ const person = {
     city: "New York",
     state: "NY",
     country: "USA",
-    sellers: [{ teste: 1 }]
   },
 }
 
