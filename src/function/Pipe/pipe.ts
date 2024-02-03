@@ -1,4 +1,5 @@
-import { type FN, type Pipeline } from '../../@Types/Pipe'
+import { type Pipeline } from '../../@Types/Pipe'
+import { type FN } from '../../@Types/common'
 
 export function _pipe<T, FNS extends FN[]> (
   input: T,
