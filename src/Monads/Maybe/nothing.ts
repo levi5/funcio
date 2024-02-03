@@ -1,6 +1,7 @@
 import { _Maybe } from './maybe'
 import { MaybeType } from '../../@Types'
 import { ExtractValueError } from '../../helpers'
+import { type FN } from '../../@Types/common'
 
 /**
  * Represents a null or undefined value in the Maybe monad.
@@ -56,7 +57,7 @@ export class Nothing extends _Maybe {
    * @param {...function} fn - The function to apply (ignored in this case).
    * @returns {Nothing} The current Nothing instance.
    */
-  public map (fn: (...args: any[]) => any): Nothing {
+  public map (fn: FN) {
     return this
   }
 
