@@ -18,4 +18,11 @@ describe("Maybe Monad", () => {
     const value = _Maybe.of(3).map(addTwo).getOrElse(3)
     expect(value).toBe(5)
   })
+
+
+  it("Should add two to the value inside a Maybe object and unwrap it",()=>{
+    const addTwo = (value: number,) => value + 2
+    const value = _Maybe.of(_Maybe.of(3).map(addTwo)).unwrap()
+    expect(value).toBe(5)
+  })
 })

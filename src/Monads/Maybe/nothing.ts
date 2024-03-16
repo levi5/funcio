@@ -2,12 +2,13 @@ import { _Maybe } from './maybe'
 import { MaybeType } from '../../@Types'
 import { ExtractValueError } from '../../helpers'
 import { type FN } from '../../@Types/common'
+import { Just } from './just'
 
 /**
  * Represents a null or undefined value in the Maybe monad.
  * @extends {_Maybe}
  */
-export class Nothing extends _Maybe {
+export class Nothing<T> extends _Maybe {
   /**
    * The tag indicating the Maybe type.
    * @type {MaybeType}
@@ -17,7 +18,7 @@ export class Nothing extends _Maybe {
   /**
    * Creates an instance of Nothing.
    */
-  constructor () {
+  constructor (private readonly value: T) {
     super()
     /**
      * The tag indicating the Maybe type as Nothing.
@@ -67,8 +68,23 @@ export class Nothing extends _Maybe {
    * @param {T} value - The value (ignored in this case).
    * @returns {Nothing} A new Nothing instance.
    */
-  public static of<T>(value: T): Nothing {
-    return new Nothing()
+  public static of<T>(value: T): Nothing<T> {
+    return new Nothing(value)
+  }
+
+  /**
+ * Unwraps the value contained in the current Maybe monad.
+ * If the value is an instance of Just, it continues unwrapping recursively.
+ * If the value is not an instance of Just, it returns the current Maybe monad.
+ *
+ * @returns {_Maybe} Either the unwrapped value (if it was a Nothing) or the current Maybe monad.
+ */
+  public unwrap () {
+    const value = this.value
+
+    return value instanceof Just || value instanceof Nothing
+      ? value.unwrap()
+      : this.value
   }
 
   /**

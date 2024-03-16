@@ -1,5 +1,6 @@
 import { _Maybe } from './maybe'
 import { MaybeType } from '../../@Types'
+import { Nothing } from './nothing'
 
 /**
  * Represents a non-null value in the Maybe monad.
@@ -47,7 +48,7 @@ export class Just<T> extends _Maybe {
    * @param {T} value - The default value to return if the Maybe instance is Nothing.
    * @returns {T} The value stored in Just, or the default value if it's Nothing.
    */
-  public getOrElse <R>(value: R): T | R {
+  public getOrElse<R>(value: R): T | R {
     if (this.isNothing()) return value
     return this.value
   }
@@ -57,7 +58,7 @@ export class Just<T> extends _Maybe {
    * @param {...function} fn - The function to apply to the value inside Just.
    * @returns {Just} A new Just with the result of applying the function.
    */
-  public map <R>(fn: (_: T) => R): Just<R> {
+  public map<R>(fn: (_: T) => R): Just<R> {
     return Just.of(fn(this.value))
   }
 
@@ -68,6 +69,21 @@ export class Just<T> extends _Maybe {
    */
   public static of<T>(value: T): Just<T> {
     return new Just(value)
+  }
+
+  /**
+ * Unwraps the value contained in the current Maybe monad.
+ * If the value is an instance of Just, it continues unwrapping recursively.
+ * If the value is not an instance of Just, it returns the current Maybe monad.
+ *
+ * @returns {_Maybe} Either the unwrapped value (if it was a Just) or the current Maybe monad.
+ */
+  public unwrap () {
+    const value = this.value
+
+    return value instanceof Just || value instanceof Nothing
+      ? value.unwrap()
+      : this.value
   }
 
   /**

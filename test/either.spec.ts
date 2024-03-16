@@ -1,5 +1,5 @@
 import { expect, describe, it } from "vitest"
-import { left, right } from "../src/Monads/Either"
+import { _unwrap, left, right } from "../src/Monads/Either"
 import { IEither } from "../src/@Types"
 
 const fakeData = () => ({
@@ -41,4 +41,11 @@ describe("Either monad", () => {
     expect(box.value).toBe(null)
   })
 
+  it("Should unwrap the value and return the correct data when input is true", () => {
+    const { sut } = makeSut()
+
+    const wrapper = right<null, Object>(sut(true, fakeData()))
+    const value = _unwrap<null, Object>(wrapper)
+    expect(value).toStrictEqual(fakeData())
+  })
 })

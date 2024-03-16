@@ -1,5 +1,5 @@
-import { left, right } from ".";
-import { IEither } from "../../@Types";
+import { left, right } from '.'
+import { type IEither } from '../../@Types'
 
 /**
  * Wraps an asynchronous operation in a try-catch block, returning an Either monad.
@@ -9,12 +9,12 @@ import { IEither } from "../../@Types";
  */
 export const asyncTry = async <T = any>(fn: () => Promise<T>): Promise<IEither.Either<Error, T>> => {
   try {
-    const result: T = await fn();
-    return right(result);
+    const result: T = await fn()
+    return right(result)
   } catch (error) {
-    return left(error);
+    return left(error)
   }
-};
+}
 
 /**
  * Wraps a synchronous operation in a try-catch block, returning an Either monad.
@@ -24,20 +24,20 @@ export const asyncTry = async <T = any>(fn: () => Promise<T>): Promise<IEither.E
  */
 export const syncTry = <T>(fn: () => T): IEither.Either<Error, T> => {
   try {
-    const result: T = fn();
+    const result: T = fn()
     if (result instanceof Promise) {
-      return left(new Error("Synchronous function should not return a Promise."));
+      return left(new Error('Synchronous function should not return a Promise.'))
     }
-    return right(result);
+    return right(result)
   } catch (error) {
-    return left(error);
+    return left(error)
   }
-};
+}
 
 /**
  * Object containing both synchronous and asynchronous try functions.
  */
 export const _try = {
   sync: syncTry,
-  async: asyncTry,
-};
+  async: asyncTry
+}

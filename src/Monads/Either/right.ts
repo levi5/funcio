@@ -1,4 +1,4 @@
-import { IEither } from "../../@Types"
+import { IEither } from '../../@Types'
 
 /**
  * Create a right value for the Either type.
@@ -17,7 +17,7 @@ const Right = <L, R>(value: R): IEither.TRight<L, R> => {
      *
      * @returns {boolean} true if this is a failure value (left value), false otherwise.
      */
-    isLeft(): boolean {
+    isLeft (): boolean {
       return false
     },
     /**
@@ -25,7 +25,7 @@ const Right = <L, R>(value: R): IEither.TRight<L, R> => {
      *
      * @returns {boolean} true if this is a success value (right value), false otherwise.
      */
-    isRight(): boolean {
+    isRight (): boolean {
       return true
     }
   }
