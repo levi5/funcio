@@ -15,8 +15,8 @@ export class _Maybe {
     return new Just(value)
   }
 
-  static nothing () {
-    return new Nothing()
+  static nothing <T>(value: T) {
+    return new Nothing<T>(value)
   }
 
   static fromNullable<T>(value: T) {
@@ -26,6 +26,6 @@ export class _Maybe {
   static of<T>(value: T) {
     return _Maybe.fromNullable(value)
       ? _Maybe.just(value)
-      : _Maybe.nothing()
+      : _Maybe.nothing(value)
   }
 }

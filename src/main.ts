@@ -1,4 +1,4 @@
-import { _try, left, right } from './Monads/Either'
+import { _try, _unwrap, left, right } from './Monads/Either'
 import { _Maybe, Just, Nothing } from './Monads/Maybe'
 
 import { _curry } from './function/Curry/curry'
@@ -9,6 +9,7 @@ import { _pipe } from './function/Pipe'
 const _Either = {
   left,
   right,
+  unwrap: _unwrap,
   try: _try
 }
 
@@ -33,4 +34,5 @@ export {
   Just,
   Nothing
 }
+
 export default Funcio

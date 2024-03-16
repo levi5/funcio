@@ -1,6 +1,3 @@
-Certamente! Aqui está a documentação atualizada com as adições referentes à função `getPathValue`:
-
-```typescript
 # Funcio 🚀
 
 Funcio is a powerful and versatile library designed to bring the elegance of functional programming to the TypeScript ecosystem. With Funcio, seamlessly integrate functional programming principles and techniques into your codebase, unlocking a universe of possibilities. It empowers you to create clean and expressive code using functional programming paradigms. 🧙‍♂️
@@ -21,6 +18,7 @@ Funcio is a powerful and versatile library designed to bring the elegance of fun
       - [`_Either.isLeft(either)`](#_eitherislefteither)
       - [`_Either._try.sync(fn)`](#_either_trysyncfn)
       - [`_Either._try.async(fn)`](#_either_tryasyncfn)
+      - [`_Either.unwrap()`](#_eitherunwrap)
     - [`_Object`](#_object)
       - [`_Object.makeImmutable`](#_objectmakeimmutable)
       - [`_Object.chainify`](#_objectchainify)
@@ -29,6 +27,7 @@ Funcio is a powerful and versatile library designed to bring the elegance of fun
       - [`_Maybe.get()`](#_maybeget)
       - [`_Maybe.getOrElse(defaultValue)`](#_maybegetorelsedefaultvalue)
       - [`_Maybe.map(function)`](#_maybemapfunction)
+    - [`_Maybe.unwrap()`](#_maybeunwrap)
     - [`_pipe`](#_pipe)
     - [`_curry`](#_curry)
     - [`_match`](#_match)
@@ -137,6 +136,21 @@ const validJson = await Funcio._Either._try.async<object>(() => JSON.parse(jsonS
 
 const invalidJsonString = '{"name": "John", "age": 30,}';
 const invalidJson = await Funcio._Either._try.async<object>(() => JSON.parse(invalidJsonString));
+```
+
+#### `_Either.unwrap()`
+
+The _Either.unwrap() method, when called on an Either instance, extracts the value contained within the Either structure. This method proves to be instrumental in
+scenarios where you need to handle both success and failure cases, as it allows you to access the wrapped value regardless of the outcome.
+
+```typescript
+import { Funcio } from 'funcio';
+
+const eitherValue = Funcio._Either.right(42);
+const unwrappedValue = eitherValue.unwrap();
+
+// Result: 42
+
 ```
 
 ### `_Object`
@@ -283,6 +297,20 @@ const result2 = doubledEmptyMaybe.getOrElse("Value is empty");
 
 result1 // Output: 10
 result2 // Output: "Value is empty"
+```
+
+### `_Maybe.unwrap()`
+
+The _Maybe.unwrap() method, when called on a Maybe instance, retrieves the encapsulated value if it exists. If the Maybe is empty, an error or a
+ default value can be specified to handle this scenario, ensuring robust error handling and smooth execution flow.
+
+```typescript
+ import { Funcio } from 'funcio';
+
+const maybeValue = Funcio._Maybe.of(42); // Create a Maybe with a present value
+const unwrappedValue = maybeValue.unwrap(); // Retrieve the encapsulated value
+
+// Result: 42
 ```
 
 ### `_pipe`

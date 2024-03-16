@@ -9,7 +9,7 @@ describe("_Object.getPathValue function", () => {
       street: "123 Main St",
       city: "New York",
       state: "NY",
-      country: "USA"
+      country: "USA",
     },
   }
 
