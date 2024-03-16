@@ -27,7 +27,7 @@ Funcio is a powerful and versatile library designed to bring the elegance of fun
       - [`_Maybe.get()`](#_maybeget)
       - [`_Maybe.getOrElse(defaultValue)`](#_maybegetorelsedefaultvalue)
       - [`_Maybe.map(function)`](#_maybemapfunction)
-    - [`_Maybe.unwrap()`](#_maybeunwrap)
+      - [`_Maybe.unwrap()`](#_maybeunwrap)
     - [`_pipe`](#_pipe)
     - [`_curry`](#_curry)
     - [`_match`](#_match)
@@ -307,8 +307,8 @@ The _Maybe.unwrap() method, when called on a Maybe instance, retrieves the encap
 ```typescript
  import { Funcio } from 'funcio';
 
-const maybeValue = Funcio._Maybe.of(42); // Create a Maybe with a present value
-const unwrappedValue = maybeValue.unwrap(); // Retrieve the encapsulated value
+const maybeValue = Funcio._Maybe.of(42);
+const unwrappedValue = maybeValue.unwrap();
 
 // Result: 42
 ```
