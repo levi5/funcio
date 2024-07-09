@@ -22,12 +22,13 @@ Funcio is a powerful and versatile library designed to bring the elegance of fun
     - [`_Object`](#_object)
       - [`_Object.makeImmutable`](#_objectmakeimmutable)
       - [`_Object.chainify`](#_objectchainify)
+      - [`_Object.setByPath(keysToFollow, value, obj)`](#_objectsetbypathkeystofollow-value-obj)
       - [`_Object.getPathValue(keysToFollow, obj)`](#_objectgetpathvaluekeystofollow-obj)
     - [`_Maybe`](#_maybe)
       - [`_Maybe.get()`](#_maybeget)
       - [`_Maybe.getOrElse(defaultValue)`](#_maybegetorelsedefaultvalue)
       - [`_Maybe.map(function)`](#_maybemapfunction)
-      - [`_Maybe.unwrap()`](#_maybeunwrap)
+    - [`_Maybe.unwrap()`](#_maybeunwrap)
     - [`_pipe`](#_pipe)
     - [`_curry`](#_curry)
     - [`_match`](#_match)
@@ -140,8 +141,7 @@ const invalidJson = await Funcio._Either._try.async<object>(() => JSON.parse(inv
 
 #### `_Either.unwrap()`
 
-The _Either.unwrap() method, when called on an Either instance, extracts the value contained within the Either structure. This method proves to be instrumental in
-scenarios where you need to handle both success and failure cases, as it allows you to access the wrapped value regardless of the outcome.
+The _Either.unwrap() method, when called on an Either instance, extracts the value contained within the Either structure. This method proves to be instrumental in scenarios where you need to handle both success and failure cases, as it allows you to access the wrapped value regardless of the outcome.
 
 ```typescript
 import { Funcio } from 'funcio';
@@ -150,7 +150,6 @@ const eitherValue = Funcio._Either.right(42);
 const unwrappedValue = eitherValue.unwrap();
 
 // Result: 42
-
 ```
 
 ### `_Object`
@@ -159,9 +158,7 @@ const unwrappedValue = eitherValue.unwrap();
 
 #### `_Object.makeImmutable`
 
-The `_Object.makeImmutable` function is a versatile tool provided by the `_Object` module in our library. It enables you to create an immutable incarnation of an object, ensuring
-
- that its properties remain impervious to change once set.
+The `_Object.makeImmutable` function is a versatile tool provided by the `_Object` module in our library. It enables you to create an immutable incarnation of an object, ensuring that its properties remain impervious to change once set.
 
 ```typescript
 import { Funcio } from 'funcio';
@@ -179,9 +176,7 @@ immutableUser.address.city = "Avalora"; // ❌ Error: TypeError: Cannot assign t
 
 #### `_Object.chainify`
 
-`_Object.chain
-
-ify` is a versatile utility in the Funcio library that allows you to create a fluent interface for method chaining, providing a seamless and expressive way to apply multiple operations on an object.
+`_Object.chainify` is a versatile utility in the Funcio library that allows you to create a fluent interface for method chaining, providing a seamless and expressive way to apply multiple operations on an object.
 
 ```typescript
 import { Funcio } from 'funcio';
@@ -217,9 +212,34 @@ const result = Funcio._Object.chainify(new ExampleClass(5))
 // Result: 30
 ```
 
+#### `_Object.setByPath(keysToFollow, value, obj)`
+
+The `_Object.setByPath(keysToFollow, value, obj)` method allows you to set a value at a specific path within an object. It takes an array keysToFollow representing the path to the desired value and the object obj where the value will be set. For example:
+
+```typescript
+import { Funcio } from 'funcio';
+
+const person = {
+  name: "John Doe",
+  age: 30,
+  address: {
+    street: "123 Main St",
+    city: "New York",
+    state: "NY",
+    country: "USA",
+  },
+}
+
+const streetValue = Funcio._Object.setByPath(['address', 'street'], '124 Main St', person);
+
+// Result: "124 Main St" for streetValue
+```
+
 #### `_Object.getPathValue(keysToFollow, obj)`
 
-The `_Object.getPathValue(keysToFollow, obj)` function retrieves the value at the specified path within an object. It takes an array of keys (`keysToFollow`) representing the path to follow and the target object (`obj`). The function returns the value found at the specified path or `undefined` if the path is not valid.
+The `_Object.getPathValue(keysToFollow, obj)` function retrieves the value
+
+ at the specified path within an object. It takes an array of keys (`keysToFollow`) representing the path to follow and the target object (`obj`). The function returns the value found at the specified path or `undefined` if the path is not valid.
 
 ```typescript
 import { Funcio } from 'funcio';
@@ -301,8 +321,7 @@ result2 // Output: "Value is empty"
 
 ### `_Maybe.unwrap()`
 
-The _Maybe.unwrap() method, when called on a Maybe instance, retrieves the encapsulated value if it exists. If the Maybe is empty, an error or a
- default value can be specified to handle this scenario, ensuring robust error handling and smooth execution flow.
+The _Maybe.unwrap() method, when called on a Maybe instance, retrieves the encapsulated value if it exists. If the Maybe is empty, an error or a default value can be specified to handle this scenario, ensuring robust error handling and smooth execution flow.
 
 ```typescript
  import { Funcio } from 'funcio';
@@ -359,9 +378,7 @@ const result = addTen(7); // Result: 22
 
 ### `_match`
 
-The `_match` function in the Funcio library is a powerful pattern-matching tool for executing different code blocks based on the matched values. It allows you to define patterns and corresponding actions
-
-, providing a concise and expressive way to handle multiple cases.
+The `_match` function in the Funcio library is a powerful pattern-matching tool for executing different code blocks based on the matched values. It allows you to define patterns and corresponding actions, providing a concise and expressive way to handle multiple cases.
 
 ```typescript
 import { Funcio } from 'funcio';

@@ -8,7 +8,7 @@ import { $isObject } from '../common'
  * @param {T} object - The object to be deep-frozen.
  * @returns {T} The deep-frozen object.
  */
-const deepFreeze = <T extends object, K extends keyof T>(object: T): T => {
+export const deepFreeze = <T extends object, K extends keyof T>(object: T): T => {
   if ($isObject(object) && !Object.isFrozen(object)) {
     const keys: K[] = Object.keys(object) as K[]
     keys.forEach((key: K) => deepFreeze(object[key] as T))
