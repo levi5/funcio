@@ -18,7 +18,7 @@ const processKey = _curry(<O extends OBJ, K extends keyof OBJ>(keysToFollow: Arr
 })
 
 /**
- * Checks and processes a key in an object only if the key exists.
+ * Checks and processes a key in an object only if the key exists and the object is valid.
  *
  * @param {Array<string | number | symbol>} keysToFollow - The path of keys to follow.
  * @param {OBJ} obj - The object to process.
@@ -26,8 +26,12 @@ const processKey = _curry(<O extends OBJ, K extends keyof OBJ>(keysToFollow: Arr
  * @returns {*} The value obtained by processing the key if it exists, otherwise undefined.
  */
 const checkAndProcessKey = <O extends OBJ>(keysToFollow: Array<string | number | symbol>, obj: O, currentKey: string | number | symbol): any | undefined => {
-  const keyExists = currentKey in obj || (typeof currentKey === 'symbol' && Object.getOwnPropertySymbols(obj).includes(currentKey))
-  return keyExists ? processKey(keysToFollow)(obj)(currentKey) : undefined
+  // Check if obj is a valid object
+  if (obj && typeof obj === 'object') {
+    const keyExists = currentKey in obj || (typeof currentKey === 'symbol' && Object.getOwnPropertySymbols(obj).includes(currentKey))
+    return keyExists ? processKey(keysToFollow)(obj)(currentKey) : undefined
+  }
+  return undefined
 }
 
 /**

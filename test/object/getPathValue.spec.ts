@@ -10,6 +10,9 @@ describe("_Object.getPathValue function", () => {
       city: "New York",
       state: "NY",
       country: "USA",
+      info:{
+        test: ''
+      }
     },
   }
 
