@@ -58,8 +58,10 @@ export class Just<T> extends _Maybe {
    * @param {...function} fn - The function to apply to the value inside Just.
    * @returns {Just} A new Just with the result of applying the function.
    */
-  public map<R>(fn: (_: T) => R): Just<R> {
-    return Just.of(fn(this.value))
+  public map<R>(fn: (value: T) => R): Just<R> | Nothing<T> {
+    return _Maybe.fromNullable(this.value)
+      ? Just.of(fn(this.value))
+      : Nothing.of(this.value)
   }
 
   /**
