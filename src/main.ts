@@ -5,15 +5,16 @@ import { _curry } from './function/Curry/curry'
 import { _match } from './function/Match/match'
 import { _Object } from './Object'
 import { _pipe } from './function/Pipe'
-import { IEither } from './@Types'
+import { type IEither } from './@Types'
 
 const _Either = {
-  IEither,
   left,
   right,
   unwrap: _unwrap,
   try: _try
 }
+
+export type { IEither }
 
 const Funcio = {
   _curry,
