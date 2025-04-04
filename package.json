@@ -9,9 +9,6 @@
   "files": [
     "lib/**/*"
   ],
-  "engines": {
-    "node": ">=16"
-  },
   "scripts": {
     "start": "node ./lib/main.js",
     "dev": "npm run build && npm run start",
