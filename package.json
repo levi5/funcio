@@ -6,6 +6,7 @@
   "license": "MIT",
   "main": "lib/main.js",
   "types": "lib/main.d.ts",
+  "module": "lib/esm/main.js",
   "files": [
     "lib/**/*"
   ],

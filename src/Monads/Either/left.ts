@@ -1,4 +1,4 @@
-import { IEither } from '../../@Types'
+import { IEither, type Match } from '../../@Types'
 /**
  * Create a left value for the Either type.
  *
@@ -26,6 +26,9 @@ const Left = <L, R>(value: L): IEither.TLeft<L, R> => {
      */
     isRight (): boolean {
       return false
+    },
+    match<T>(handlers: Match<L, R, T>): T {
+      return handlers.left(this.value)
     }
   }
 }
