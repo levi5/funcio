@@ -19,6 +19,7 @@ Funcio is a powerful and versatile library designed to bring the elegance of fun
       - [`_Either._try.sync(fn)`](#_either_trysyncfn)
       - [`_Either._try.async(fn)`](#_either_tryasyncfn)
       - [`_Either.unwrap()`](#_eitherunwrap)
+      - [`_Either.match(handlers)`](#_eithermatchhandlers)
     - [`_Object`](#_object)
       - [`_Object.makeImmutable`](#_objectmakeimmutable)
       - [`_Object.chainify`](#_objectchainify)
@@ -150,6 +151,27 @@ const eitherValue = Funcio._Either.right(42);
 const unwrappedValue = eitherValue.unwrap();
 
 // Result: 42
+```
+
+#### `_Either.match(handlers)`
+
+The _Either.match method allows you to handle both Right and Left cases in a single, type-safe call. You provide an object with right and left functions, and the method executes the appropriate handler.
+
+```typescript
+import { Funcio } from 'funcio';
+
+const result = Funcio._Either.right(10).match({
+  right: (val) => `Success: ${val}`,
+  left: (err) => `Error: ${err}`
+});
+
+// Result: "Success: 10"
+
+const errorResult = Funcio._Either.left("Something went wrong").match({
+  right: (val) => `Success: ${val}`,
+  left: (err) => `Error: ${err}`
+})
+
 ```
 
 ### `_Object`

@@ -1,3 +1,9 @@
+export type Match<L, R, T> = {
+  left: (value: L) => T
+  right: (value: R) => T
+}
+
+
 export namespace IEither {
 
   export const EitherType = {
@@ -10,6 +16,7 @@ export namespace IEither {
     value: L
     isLeft(): boolean
     isRight(): boolean
+       match<T>(handlers: Match<L, R, T>): T
   }
 
   export interface TRight<L, R> {
@@ -17,6 +24,7 @@ export namespace IEither {
     value: R
     isLeft(): boolean
     isRight(): boolean
+    match<T>(handlers: Match<L, R, T>): T
   }
 
   export type Either<L, R> = TLeft<L, R> | TRight<L, R>
