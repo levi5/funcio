@@ -5,6 +5,7 @@ import { _curry } from './function/Curry/curry'
 import { _match } from './function/Match/match'
 import { _Object } from './Object'
 import { _pipe } from './function/Pipe'
+import { _Array } from './Array'
 import { type IEither } from './@Types'
 
 const _Either = {
@@ -22,6 +23,7 @@ const Funcio = {
   _match,
   _Maybe,
   _Object,
+  _Array,
   _pipe,
   Just,
   Nothing
@@ -33,6 +35,7 @@ export {
   _match,
   _Maybe,
   _Object,
+  _Array,
   _pipe,
   Just,
   Nothing
