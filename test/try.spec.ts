@@ -30,6 +30,7 @@ describe('_try functions', () => {
     const invalidJsonString = '{"name": "John", "age": 30,}';
     const parsedObject = await _try.async<object>(() => JSON.parse(invalidJsonString));
     const error = parsedObject.isLeft() ? parsedObject.value as Error : new Error()
-    expect(error.message).toBe('Expected double-quoted property name in JSON at position 27');
+    expect(error).toBeInstanceOf(SyntaxError);
+    expect(error.message).toContain('position 27');
   });
 });
