@@ -22,4 +22,17 @@ describe("Pipe function", () => {
       format)
     expect(value).toEqual(`Value: 16`)
   })
+
+  it("should apply sync and async functions in order", async () => {
+    const addTwo = (a: number) => a + 2
+    const multiplyAsync = async (a: number) => a * 3
+    const format = (a: number) => `Value: ${a}`
+
+    const value = await _pipe.async(4,
+      addTwo,
+      multiplyAsync,
+      format)
+
+    expect(value).toEqual(`Value: 18`)
+  })
 })
