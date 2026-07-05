@@ -1,8 +1,14 @@
 import { _Maybe } from './maybe'
 import { MaybeType } from '../../@Types'
 import { ExtractValueError } from '../../helpers'
-import { type FN } from '../../@Types/common'
 import { Just } from './just'
+
+type UnwrappedMaybe<T> =
+  T extends Just<infer Value>
+    ? UnwrappedMaybe<Value>
+    : T extends Nothing<infer Value>
+      ? UnwrappedMaybe<Value>
+      : T
 
 /**
  * Represents a null or undefined value in the Maybe monad.
@@ -58,7 +64,15 @@ export class Nothing<T> extends _Maybe {
    * @param {...function} fn - The function to apply (ignored in this case).
    * @returns {Nothing} The current Nothing instance.
    */
-  public map (fn: FN) {
+  public map<R>(fn: (value: T) => R): Nothing<T> {
+    return this
+  }
+
+  public flatMap<R extends _Maybe>(fn: (value: T) => R): Nothing<T> {
+    return this
+  }
+
+  public chain<R extends _Maybe>(fn: (value: T) => R): Nothing<T> {
     return this
   }
 
@@ -79,12 +93,12 @@ export class Nothing<T> extends _Maybe {
  *
  * @returns {_Maybe} Either the unwrapped value (if it was a Nothing) or the current Maybe monad.
  */
-  public unwrap () {
+  public unwrap (): UnwrappedMaybe<T> {
     const value = this.value
 
     return value instanceof Just || value instanceof Nothing
-      ? value.unwrap()
-      : this.value
+      ? value.unwrap() as UnwrappedMaybe<T>
+      : this.value as UnwrappedMaybe<T>
   }
 
   /**

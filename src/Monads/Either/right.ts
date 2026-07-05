@@ -30,6 +30,18 @@ const Right = <L, R>(value: R): IEither.TRight<L, R> => {
     },
     match<T>(handlers: Match<L, R, T>): T {
       return handlers.right(this.value)
+    },
+    map<NR> (fn: (value: R) => NR): IEither.TRight<L, NR> {
+      return Right<L, NR>(fn(this.value))
+    },
+    mapLeft<NL> (fn: (value: L) => NL): IEither.TRight<NL, R> {
+      return Right<NL, R>(this.value)
+    },
+    flatMap<NR> (fn: (value: R) => IEither.Either<L, NR>): IEither.Either<L, NR> {
+      return fn(this.value)
+    },
+    getOrElse<DefaultValue> (defaultValue: DefaultValue): R | DefaultValue {
+      return this.value
     }
   }
 }

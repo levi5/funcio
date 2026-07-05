@@ -29,6 +29,18 @@ const Left = <L, R>(value: L): IEither.TLeft<L, R> => {
     },
     match<T>(handlers: Match<L, R, T>): T {
       return handlers.left(this.value)
+    },
+    map<NR> (fn: (value: R) => NR): IEither.TLeft<L, NR> {
+      return Left<L, NR>(this.value)
+    },
+    mapLeft<NL> (fn: (value: L) => NL): IEither.TLeft<NL, R> {
+      return Left<NL, R>(fn(this.value))
+    },
+    flatMap<NR> (fn: (value: R) => IEither.Either<L, NR>): IEither.TLeft<L, NR> {
+      return Left<L, NR>(this.value)
+    },
+    getOrElse<DefaultValue> (defaultValue: DefaultValue): R | DefaultValue {
+      return defaultValue
     }
   }
 }

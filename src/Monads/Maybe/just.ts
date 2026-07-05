@@ -2,6 +2,13 @@ import { _Maybe } from './maybe'
 import { MaybeType } from '../../@Types'
 import { Nothing } from './nothing'
 
+type UnwrappedMaybe<T> =
+  T extends Just<infer Value>
+    ? UnwrappedMaybe<Value>
+    : T extends Nothing<infer Value>
+      ? UnwrappedMaybe<Value>
+      : T
+
 /**
  * Represents a non-null value in the Maybe monad.
  * @extends {_Maybe}
@@ -58,10 +65,20 @@ export class Just<T> extends _Maybe {
    * @param {...function} fn - The function to apply to the value inside Just.
    * @returns {Just} A new Just with the result of applying the function.
    */
-  public map<R>(fn: (value: T) => R): Just<R> | Nothing<T> {
-    return _Maybe.fromNullable(this.value)
-      ? Just.of(fn(this.value))
-      : Nothing.of(this.value)
+  public map<R>(fn: (value: T) => R): Just<R> | Nothing<R> {
+    const value = fn(this.value)
+
+    return _Maybe.fromNullable(value)
+      ? Just.of(value)
+      : Nothing.of(value)
+  }
+
+  public flatMap<R extends _Maybe>(fn: (value: T) => R): R {
+    return fn(this.value)
+  }
+
+  public chain<R extends _Maybe>(fn: (value: T) => R): R {
+    return this.flatMap(fn)
   }
 
   /**
@@ -80,12 +97,12 @@ export class Just<T> extends _Maybe {
  *
  * @returns {_Maybe} Either the unwrapped value (if it was a Just) or the current Maybe monad.
  */
-  public unwrap () {
+  public unwrap (): UnwrappedMaybe<T> {
     const value = this.value
 
     return value instanceof Just || value instanceof Nothing
-      ? value.unwrap()
-      : this.value
+      ? value.unwrap() as UnwrappedMaybe<T>
+      : this.value as UnwrappedMaybe<T>
   }
 
   /**
