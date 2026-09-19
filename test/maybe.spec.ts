@@ -69,3 +69,144 @@ describe("Maybe Monad", () => {
     expect(value).toBe(6)
   })
 })
+
+describe("Maybe Fluent Conditional (.when().then().else())", () => {
+  it("executes then branch when predicate is true (boolean)", () => {
+    const result = _Maybe.of(5)
+      .when(true)
+      .then(x => x * 2)
+      .else(x => x)
+      .getOrElse(0)
+    expect(result).toBe(10)
+  })
+
+  it("executes else branch when predicate is false (boolean)", () => {
+    const result = _Maybe.of(5)
+      .when(false)
+      .then(x => x * 2)
+      .else(x => x)
+      .getOrElse(0)
+    expect(result).toBe(5)
+  })
+
+  it("executes then branch when predicate function returns true", () => {
+    const result = _Maybe.of(5)
+      .when(x => x > 3)
+      .then(x => x * 2)
+      .else(x => x)
+      .getOrElse(0)
+    expect(result).toBe(10)
+  })
+
+  it("executes else branch when predicate function returns false", () => {
+    const result = _Maybe.of(2)
+      .when(x => x > 3)
+      .then(x => x * 2)
+      .else(x => x)
+      .getOrElse(0)
+    expect(result).toBe(2)
+  })
+
+  it("executes else branch for Nothing", () => {
+    const result = _Maybe.of(null)
+      .when(true)
+      .then(x => x * 2)
+      .else(() => 99)
+      .getOrElse(0)
+    expect(result).toBe(99)
+  })
+
+  it("executes else branch for Nothing with predicate function", () => {
+    const result = _Maybe.of(null)
+      .when(x => x > 3)
+      .then(x => x * 2)
+      .else(() => 99)
+      .getOrElse(0)
+    expect(result).toBe(99)
+  })
+
+  it("supports toMaybe() for re-wrapping to Maybe", () => {
+    const maybe = _Maybe.of(5)
+      .when(true)
+      .then(x => x * 2)
+      .else(x => x)
+      .toMaybe()
+    expect(maybe.isJust()).toBe(true)
+    expect(maybe.getOrElse(0)).toBe(10)
+  })
+
+  it("toMaybe() returns Nothing when else returns null/undefined", () => {
+    const maybe = _Maybe.of(5)
+      .when(false)
+      .then(x => x * 2)
+      .else(() => null)
+      .toMaybe()
+    expect(maybe.isNothing()).toBe(true)
+  })
+
+  it("works with array filter use case", () => {
+    const files = [{ path: 'a.ts' }, { path: 'b.ts' }]
+    const scope = 'file'
+    
+    const result = _Maybe.of(files)
+      .when(scope === 'file')
+      .then(f => f.filter(file => file.path.endsWith('.ts')))
+      .else(f => f)
+      .getOrElse([])
+    
+    expect(result).toHaveLength(2)
+  })
+
+  it("works with array filter use case - else branch", () => {
+    const files = [{ path: 'a.ts' }, { path: 'b.ts' }]
+    const scope = 'folder'
+    
+    const result = _Maybe.of(files)
+      .when(scope === 'file')
+      .then(f => f.filter(file => file.path.endsWith('.ts')))
+      .else(f => f)
+      .getOrElse([])
+    
+    expect(result).toHaveLength(2)
+  })
+
+  it("supports map chaining after when", () => {
+    const result = _Maybe.of(5)
+      .when(true)
+      .then(x => x * 2)
+      .else(x => x)
+      .map(x => x + 1)
+      .getOrElse(0)
+    expect(result).toBe(11)
+  })
+
+  it("supports flatMap chaining after when", () => {
+    const result = _Maybe.of(5)
+      .when(true)
+      .then(x => x * 2)
+      .else(x => x)
+      .flatMap(x => _Maybe.of(x + 1))
+      .getOrElse(0)
+    expect(result).toBe(11)
+  })
+
+  it("supports chain alias after when", () => {
+    const result = _Maybe.of(5)
+      .when(true)
+      .then(x => x * 2)
+      .else(x => x)
+      .chain(x => _Maybe.of(x + 1))
+      .getOrElse(0)
+    expect(result).toBe(11)
+  })
+
+  it("toMaybe() avoids double wrapping when then/else return Maybe", () => {
+    const maybe = _Maybe.of(5)
+      .when(true)
+      .then(x => _Maybe.of(x * 2))
+      .else(x => _Maybe.of(x))
+      .toMaybe()
+    expect(maybe.isJust()).toBe(true)
+    expect(maybe.getOrElse(0)).toBe(10)
+  })
+})

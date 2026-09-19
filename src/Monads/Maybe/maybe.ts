@@ -1,6 +1,7 @@
 import { Just, Nothing } from '.'
+import { WhenBuilder } from './whenBuilder'
 
-export class _Maybe {
+export class _Maybe<T = any> {
   constructor () { };
 
   public isJust () {
@@ -9,6 +10,10 @@ export class _Maybe {
 
   public isNothing () {
     return false
+  }
+
+  when<U>(predicate: boolean | ((value: T) => boolean)): WhenBuilder<T, U> {
+    return new WhenBuilder(this, predicate)
   }
 
   static just<T>(value: T) {
