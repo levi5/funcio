@@ -36,6 +36,7 @@ Funcio is a powerful and versatile library designed to bring the elegance of fun
       - [`_Maybe.flatMap(function)`](#_maybeflatmapfunction)
       - [`_Maybe.chain(function)`](#_maybechainfunction)
     - [`_Maybe.unwrap()`](#_maybeunwrap)
+    - [`_Maybe.when(predicate).then(fn).else(fn)`](#_maybewhenpredicatethenfnelsefn)
     - [`_pipe`](#_pipe)
       - [`_pipe.async`](#_pipeasync)
     - [`_Array`](#_array)
@@ -457,6 +458,75 @@ const maybeValue = Funcio._Maybe.of(42);
 const unwrappedValue = maybeValue.unwrap();
 
 // Result: 42
+```
+
+#### `_Maybe.when(predicate).then(fn).else(fn)`
+
+The `_Maybe.when()` method provides a fluent conditional API for executing different transformations based on a predicate. It supports both boolean values and predicate functions.
+
+```typescript
+import Funcio from 'funcio';
+
+const files = [{ path: 'a.ts' }, { path: 'b.js' }, { path: 'c.ts' }];
+
+// Using boolean predicate
+const result = Funcio._Maybe.of(files)
+  .when(true)
+  .then(f => f.filter(file => file.path.endsWith('.ts')))
+  .else(f => f)
+  .getOrElse([]);
+
+// Result: [{ path: 'a.ts' }, { path: 'c.ts' }]
+```
+
+Using a predicate function (receives the inner value):
+
+```typescript
+const result = Funcio._Maybe.of(5)
+  .when(x => x > 3)
+  .then(x => x * 2)
+  .else(x => x)
+  .getOrElse(0);
+
+// Result: 10
+```
+
+With `Nothing` (always executes `else` branch as fallback):
+
+```typescript
+const result = Funcio._Maybe.of(null)
+  .when(true)
+  .then(x => x * 2)
+  .else(() => 'fallback')
+  .getOrElse('default');
+
+// Result: 'fallback'
+```
+
+Chain with other Maybe methods:
+
+```typescript
+const result = Funcio._Maybe.of(5)
+  .when(true)
+  .then(x => x * 2)
+  .else(x => x)
+  .map(x => x + 1)
+  .getOrElse(0);
+
+// Result: 11
+```
+
+Wrap result back into Maybe (avoids double-wrapping if callbacks return Maybe):
+
+```typescript
+const maybe = Funcio._Maybe.of(5)
+  .when(true)
+  .then(x => Funcio._Maybe.of(x * 2))
+  .else(x => Funcio._Maybe.of(x))
+  .toMaybe();
+
+maybe.isJust(); // true
+maybe.getOrElse(0); // 10
 ```
 
 ### `_pipe`
