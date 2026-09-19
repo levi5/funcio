@@ -2,6 +2,7 @@ import { _Maybe } from './maybe'
 import { MaybeType } from '../../@Types'
 import { ExtractValueError } from '../../helpers'
 import { Just } from './just'
+import { WhenBuilder } from './whenBuilder'
 
 type UnwrappedMaybe<T> =
   T extends Just<infer Value>
@@ -39,6 +40,10 @@ export class Nothing<T> extends _Maybe {
    */
   public isNothing (): boolean {
     return true
+  }
+
+  public when<U>(predicate: boolean | ((value: T) => boolean)): WhenBuilder<T, U> {
+    return new WhenBuilder(this, predicate)
   }
 
   /**
