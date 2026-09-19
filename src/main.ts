@@ -30,6 +30,7 @@ const Funcio = {
 }
 
 export {
+  _try,
   _curry,
   _Either,
   _match,
