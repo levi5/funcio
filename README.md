@@ -4,6 +4,8 @@ Funcio is a powerful and versatile library designed to bring the elegance of fun
 
 **Note: This library is currently under construction and not yet ready for production use.**
 
+[![Sponsor](https://img.shields.io/badge/Sponsor-GitHub-EA4AAA?style=for-the-badge&logo=githubsponsors&logoColor=white)](https://github.com/sponsors/levi5)
+
 ## Table of Contents
 
 - [Funcio 🚀](#funcio-)
