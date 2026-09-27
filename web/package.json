@@ -7,7 +7,8 @@
   "scripts": {
     "dev": "vite",
     "prebuild": "npm --prefix .. run build",
-    "build": "npm run verify && npm run typecheck && npm run lint && vite build",
+    "pretypecheck": "npm --prefix .. run build",
+    "build": "npm run verify && tsc --noEmit -p tsconfig.json && npm run lint && vite build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "verify": "esbuild scripts/verify-examples.ts --bundle --platform=node --format=esm --log-level=warning --alias:funcio=../src/main.ts --outfile=node_modules/.cache/verify.mjs && node node_modules/.cache/verify.mjs",
