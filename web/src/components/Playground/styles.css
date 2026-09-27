@@ -1,0 +1,15 @@
+.playground {
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-inset);
+  transition: border-color 0.18s ease;
+}
+
+.playground:focus-within {
+  border-color: var(--border-strong);
+}
+
+.compact {
+  border-radius: var(--radius);
+}

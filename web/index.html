@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="%BASE_URL%logo.png" />
+    <meta name="theme-color" content="#0b0d12" />
+    <title>Funcio — Functional programming for TypeScript, with runnable examples</title>
+    <meta
+      name="description"
+      content="Funcio is a functional programming toolkit for TypeScript: Maybe, Either, pipe, curry, pattern matching and immutable object helpers. Every example on this page is editable and runs in your browser."
+    />
+    <link rel="canonical" href="https://levi5.github.io/funcio/" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Funcio — functional programming for TypeScript" />
+    <meta
+      property="og:description"
+      content="Maybe, Either, pipe, curry and pattern matching. Every example on this page runs live in your browser."
+    />
+    <meta property="og:url" content="https://levi5.github.io/funcio/" />
+
+    <script>
+      ;(() => {
+        try {
+          const stored = localStorage.getItem('funcio-theme')
+          const theme =
+            stored ??
+            (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark')
+          document.documentElement.dataset.theme = theme
+        } catch {}
+      })()
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

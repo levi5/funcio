@@ -23,4 +23,21 @@ describe("Match function", () => {
     expect(response).toBe('value is null');
   })
 
+  it("Should return the default expression when no pattern matches", () => {
+    const response: string = _match<number, string>(999)
+      .with(200, () => 'ok')
+      .with(404, () => 'not found')
+      ._(() => 'unknown')
+      .exec()
+    expect(response).toBe('unknown');
+  })
+
+  it("Should keep the default expression when a pattern is added after it", () => {
+    const response: string = _match<number, string>(999)
+      ._(() => 'unknown')
+      .with(200, () => 'ok')
+      .exec()
+    expect(response).toBe('unknown');
+  })
+
 })
