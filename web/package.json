@@ -1,0 +1,30 @@
+{
+  "name": "funcio-web",
+  "private": true,
+  "version": "0.0.32",
+  "type": "module",
+  "description": "Documentation site for Funcio, with runnable examples, deployed to GitHub Pages.",
+  "scripts": {
+    "dev": "vite",
+    "prebuild": "npm --prefix .. run build",
+    "build": "npm run verify && npm run typecheck && npm run lint && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "verify": "esbuild scripts/verify-examples.ts --bundle --platform=node --format=esm --log-level=warning --alias:funcio=../src/main.ts --outfile=node_modules/.cache/verify.mjs && node node_modules/.cache/verify.mjs",
+    "lint": "biome check src scripts",
+    "format": "biome check --write src scripts"
+  },
+  "dependencies": {
+    "acorn": "^8.14.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.5.14",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "4.3.4",
+    "typescript": "^5.6.3",
+    "vite": "^5.4.11"
+  }
+}

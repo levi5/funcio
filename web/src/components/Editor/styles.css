@@ -1,0 +1,123 @@
+.editor {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+}
+
+.gutter {
+  display: flex;
+  flex-direction: column;
+  padding: 14px 0;
+  border-right: 1px solid var(--border);
+  background: color-mix(in srgb, var(--bg) 45%, transparent);
+  color: var(--text-faint);
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  line-height: 1.65;
+  text-align: right;
+  user-select: none;
+}
+
+.gutter span {
+  padding: 0 10px;
+}
+
+.surface {
+  position: relative;
+  min-height: 120px;
+}
+
+.highlight,
+.input {
+  margin: 0;
+  padding: 14px 16px;
+  border: 0;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  line-height: 1.65;
+  tab-size: 2;
+  white-space: pre;
+}
+
+.highlight {
+  overflow: hidden;
+  color: var(--text);
+  pointer-events: none;
+}
+
+.highlight code {
+  font: inherit;
+}
+
+.input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  resize: none;
+  background: transparent;
+  color: transparent;
+  caret-color: var(--accent);
+  outline: none;
+  overflow: auto;
+}
+
+.input::selection {
+  background: color-mix(in srgb, var(--accent) 32%, transparent);
+}
+
+.input[readonly] {
+  cursor: default;
+}
+
+.comment {
+  color: var(--tok-comment);
+  font-style: italic;
+}
+
+.string {
+  color: var(--tok-string);
+}
+
+.number {
+  color: var(--tok-number);
+}
+
+.keyword {
+  color: var(--tok-keyword);
+}
+
+.boolean {
+  color: var(--tok-boolean);
+}
+
+.function {
+  color: var(--tok-function);
+}
+
+.property {
+  color: var(--tok-property);
+}
+
+.operator {
+  color: var(--tok-operator);
+}
+
+.punctuation {
+  color: var(--tok-punct);
+}
+
+.plain {
+  color: var(--text);
+}
+
+@media (max-width: 720px) {
+  .gutter {
+    display: none;
+  }
+
+  .highlight,
+  .input {
+    padding: 12px;
+    font-size: 12px;
+  }
+}

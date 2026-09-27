@@ -1,0 +1,62 @@
+.api {
+  padding: 18px 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-elevated);
+}
+
+.title {
+  margin-bottom: 12px;
+  color: var(--text-faint);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px 32px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item + .item {
+  padding-top: 0;
+  border-top: none;
+}
+
+.name {
+  display: block;
+  color: var(--accent);
+  font-size: 12.5px;
+  font-weight: 600;
+  word-break: break-word;
+}
+
+.signature {
+  display: block;
+  margin-top: 5px;
+  padding: 6px 8px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-inset);
+  color: var(--text-muted);
+  font-size: 11px;
+  line-height: 1.5;
+  word-break: break-word;
+}
+
+.description {
+  margin: 7px 0 0;
+  color: var(--text-muted);
+  font-size: 12.5px;
+  line-height: 1.6;
+}
+
+@media (max-width: 720px) {
+  .api {
+    padding: 14px 16px;
+  }
+}

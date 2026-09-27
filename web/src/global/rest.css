@@ -1,0 +1,35 @@
+.layout {
+  display: grid;
+  grid-template-columns: 190px minmax(0, 1fr);
+  gap: 44px;
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding: 0 var(--gutter) 72px;
+}
+
+.content {
+  min-width: 0;
+  max-width: 900px;
+}
+
+.content > *:first-child {
+  padding-top: 0;
+  border-top: none;
+}
+
+.content > * + * {
+  margin-top: 8px;
+}
+
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+}
+
+@media (max-width: 720px) {
+  .layout {
+    padding-bottom: 48px;
+  }
+}

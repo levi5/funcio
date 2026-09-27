@@ -3,3 +3,5 @@ src
 test
 /lib/*.map
 coverage
+web
+github
