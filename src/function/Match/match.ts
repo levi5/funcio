@@ -69,7 +69,7 @@ const patternBuilder =
      * @param _ - The default expression.
      * @returns An object with methods for defining patterns and executing the matching.
      */
-    _: (__: () => R) => patternBuilder(value)(_, patterns),
+    _: (__: () => R) => patternBuilder(value)(__, patterns),
 
     /**
      * Executes the pattern matching and returns the result.
