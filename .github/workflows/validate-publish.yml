@@ -1,0 +1,49 @@
+name: Validate publish (non-blocking)
+
+# Aviso no PR sem travar merge nem deploy do site.
+# Falha de npm aqui nunca bloqueia Pages: tudo é warning + continue-on-error.
+on:
+  pull_request:
+    branches: [main, master]
+    paths:
+      - 'src/**'
+      - 'package.json'
+      - 'README.md'
+      - 'LICENSE.txt'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          registry-url: 'https://registry.npmjs.org/'
+
+      - name: Warn if version already published
+        continue-on-error: true
+        run: |
+          PKG_VER=$(node -p "require('./package.json').version")
+          if npm view "funcio@$PKG_VER" version --silent 2>/dev/null; then
+            echo "::warning::v$PKG_VER já existe no npm — dê bump (npm version patch) antes de tagear, senão o publish por tag vai ignorar."
+          else
+            echo "v$PKG_VER ainda não publicada — pronta para tagear."
+          fi
+
+      - name: Warn if NPM_TOKEN expired (never blocks site)
+        continue-on-error: true
+        run: |
+          if [ -z "${{ secrets.NPM_TOKEN }}" ]; then
+            echo "::warning::NPM_TOKEN ausente — site vai deployar normal, só o publish por tag vai falhar. Adicione em Settings > Secrets > Actions."
+            exit 0
+          fi
+          npm whoami --registry https://registry.npmjs.org/ \
+            && echo "NPM_TOKEN válido." \
+            || echo "::warning::NPM_TOKEN vencido/inválido — site vai deployar normal, só o publish por tag vai falhar até atualizar o secret."
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

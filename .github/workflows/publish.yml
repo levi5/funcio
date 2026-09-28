@@ -1,0 +1,95 @@
+name: Publish to npm
+
+on:
+  push:
+    tags: ['v*.*.*']
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to publish (ex: v0.0.33). Used to republish a specific merge.'
+        required: true
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: publish
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout tag
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.inputs.tag || github.ref }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          registry-url: 'https://registry.npmjs.org/'
+          cache: npm
+
+      # 1) Fail fast if token is missing/expired — breaks ONLY this workflow, never the site deploy.
+      - name: Validate NPM_TOKEN
+        run: |
+          if [ -z "${{ secrets.NPM_TOKEN }}" ]; then
+            echo "::error::NPM_TOKEN ausente em Settings > Secrets > Actions. Site segue deployando normal, só o publish por tag falha."
+            exit 1
+          fi
+          npm whoami --registry https://registry.npmjs.org/ || {
+            echo "::error::NPM_TOKEN vencido/inválido (401). Gere um novo em npmjs.com > Access Tokens (granular, read+write no pacote funcio) e atualize o secret NPM_TOKEN."
+            exit 1
+          }
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      # 2) Resolve + validate tag == package.json, then check if already published (green skip).
+      - name: Resolve version and check npm
+        id: check
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            RAW_TAG="${{ inputs.tag }}"
+          else
+            RAW_TAG="${GITHUB_REF#refs/tags/}"
+          fi
+          TAG_VER="${RAW_TAG#v}"
+          echo "Tag resolvida: $RAW_TAG -> versão $TAG_VER"
+          PKG_VER=$(node -p "require('./package.json').version")
+          echo "package.json versão: $PKG_VER"
+          if [ "$TAG_VER" != "$PKG_VER" ]; then
+            echo "::error::tag v$TAG_VER != package.json $PKG_VER. Rode 'npm version $TAG_VER' no commit correto, recrie a tag e faça push novamente."
+            exit 1
+          fi
+          echo "version=$TAG_VER" >> "$GITHUB_OUTPUT"
+          if npm view "funcio@$TAG_VER" version --silent 2>/dev/null; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Skip — already published
+        if: steps.check.outputs.exists == 'true'
+        run: echo "::notice::funcio@${{ steps.check.outputs.version }} já publicado no npm — ignorando, build verde."
+
+      - name: Install dependencies
+        if: steps.check.outputs.exists == 'false'
+        run: npm install
+
+      - name: Build library
+        if: steps.check.outputs.exists == 'false'
+        run: npm run build
+
+      - name: Test library
+        if: steps.check.outputs.exists == 'false'
+        run: npm test -- --run
+
+      - name: Publish to npm
+        if: steps.check.outputs.exists == 'false'
+        run: npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
