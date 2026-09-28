@@ -32,7 +32,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: '24'
           registry-url: 'https://registry.npmjs.org/'
           # No cache: project gitignores lockfiles (*-lock.*, yarn.lock), same as test.yml/deploy.yml.
 
