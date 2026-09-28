@@ -9,7 +9,7 @@ export const PageMeta = ({ activeSection }: Props) => {
   const meta = MODULE_META[activeSection] ?? DEFAULT_META
 
   useEffect(() => {
-    const url = `https://levi5.github.io/funcio/#${activeSection}`
+    const url = `https://github.com/levi5/funcio#${activeSection}`
     document.title = meta.title
 
     const updateMeta = (name: string, content: string) => {
