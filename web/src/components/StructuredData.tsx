@@ -144,6 +144,5 @@ export const StructuredData = ({ modules, activeModule }: { modules: ModuleDoc[]
     ...modules.flatMap((m) => codeSnippets(m))
   ]
 
-  // biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD is generated from trusted static data
   return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(allSchemas) }} />
 }
