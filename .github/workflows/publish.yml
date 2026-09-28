@@ -34,7 +34,7 @@ jobs:
         with:
           node-version: '22'
           registry-url: 'https://registry.npmjs.org/'
-          cache: npm
+          # No cache: project gitignores lockfiles (*-lock.*, yarn.lock), same as test.yml/deploy.yml.
 
       # 1) Fail fast if token is missing/expired — breaks ONLY this workflow, never the site deploy.
       - name: Validate NPM_TOKEN
