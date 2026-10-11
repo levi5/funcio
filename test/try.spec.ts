@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { _try } from "../src/Monads/Either/try";
+import { _try } from "../src/Monads/Either/try.js";
 
 function divide(a: number, b: number): number {
   if (b === 0) {

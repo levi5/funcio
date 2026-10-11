@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest"
-import { _Object } from "../../src/main"
+import { _Object } from "../../src/main.js"
 
 describe("_Object.setByPath function", () => {
   const originalObject = {

@@ -1,4 +1,4 @@
-import { IEither } from '../../@Types'
+import { IEither } from '../../@Types/index.js'
 
 /**
  * Unwraps the value contained in an Either monad, handling recursive unwrapping.
@@ -13,7 +13,7 @@ export function _unwrap<L, R> (wrapper: IEither.Either<L, R>): IEither.Either<L,
   if (wrapper && (wrapper.flag === IEither.EitherType.Flag_Right || wrapper.flag === IEither.EitherType.FLAG_Left)) {
     const value = wrapper.value
 
-    if (value && (value as IEither.Either<L, R>).flag) return _unwrap(value as IEither.Either<L, R>)
+    if (value && (value as unknown as IEither.Either<L, R>).flag) return _unwrap(value as unknown as IEither.Either<L, R>)
 
     return value
   }

@@ -1,6 +1,6 @@
 import { expect, describe, it } from "vitest"
-import { _unwrap, left, right } from "../src/Monads/Either"
-import { IEither } from "../src/@Types"
+import { _unwrap, left, right } from "../src/Monads/Either/index.js"
+import { IEither } from "../src/@Types/index.js"
 
 const fakeData = () => ({
   status: "success"

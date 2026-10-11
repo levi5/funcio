@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "module": "CommonJS",
+    "module": "NodeNext",
     "target": "es2016",
     "lib": [
       "esnext",
@@ -10,8 +10,9 @@
     "allowJs": true,
     "rootDir": "./src",
     "sourceMap": true,
-    "moduleResolution": "Node",
-    "esModuleInterop": true,
+    "moduleResolution": "NodeNext",
+     "esModuleInterop": true,
+    "strict": true,
     "declaration": false,
     "skipLibCheck": true,
     "emitDeclarationOnly": false,

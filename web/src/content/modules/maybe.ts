@@ -39,6 +39,11 @@ export const maybe: ModuleDoc = {
       signature: 'when<U>(predicate: boolean | ((value: T) => boolean)): WhenBuilder<T, U>',
       description:
         'A fluent conditional. Chain `.then(fn)` and `.else(fn)`, then finish with `unwrap()`, `getOrElse()`, `toMaybe()`, `map()` and friends.'
+    },
+    {
+      name: '.fold(onNothing, onJust) / .filter(pred) / .orElse(other) / .tap(fn)',
+      description:
+        'Collapse both cases, keep the value only when a predicate holds, fall back, or observe without unwrapping.'
     }
   ],
   examples: [
@@ -154,6 +159,19 @@ const maybe = Funcio._Maybe.of(5)
 .toMaybe()
 
 [raw, maybe.isJust(), maybe.getOrElse(0)]`
+    },
+    {
+      id: 'maybe-fold-filter',
+      title: 'fold, filter and orElse',
+      description: 'New combinators that keep optional flows flat without if statements.',
+      expected: '["just5", true, 9]',
+      code: `import Funcio from 'funcio'
+
+const folded = Funcio._Maybe.of(5).fold(() => 'none', (v) => \`just\${v}\`)
+const kept = Funcio._Maybe.of(10).filter((v) => v > 5).isJust()
+const fallback = Funcio._Maybe.of(null).orElse(Funcio._Maybe.of(9)).getOrElse(0)
+
+[folded, kept, fallback]`
     }
   ]
 }

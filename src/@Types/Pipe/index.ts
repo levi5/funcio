@@ -3,7 +3,7 @@
  * and returns any value.
  */
 
-import { FN } from "../common";
+import { FN } from "../common.js";
 /**
  * Type FnsMatchPipe checks if a sequence of functions can be piped together.
  * Returns true if all functions can be piped, otherwise returns never.

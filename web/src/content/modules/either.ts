@@ -33,6 +33,22 @@ export const either: ModuleDoc = {
       description: 'Exhaustively handles both sides in one call, and keeps the result type-safe.'
     },
     {
+      name: 'bimap(mapLeft, mapRight) / fold(onLeft, onRight)',
+      description: 'Transform either side (`bimap`) or collapse both sides into one value (`fold`, same as `match`).'
+    },
+    {
+      name: 'orElse(fn) / tap(fn) / getOrThrow()',
+      description: 'Recover from a `Left` with another `Either`, run a side effect on `Right`, or unwrap / throw.'
+    },
+    {
+      name: '_Either.fromNullable(value, fallback)',
+      description: 'Turns `null`/`undefined` into `Left(fallback)` and anything else into `Right(value)`.'
+    },
+    {
+      name: '_Either.sequence(list) / combine(a, b, fn)',
+      description: 'Collect a list of `Either` into one, or merge two with a pure function. First `Left` wins.'
+    },
+    {
       name: '_Either.unwrap(either)',
       description: 'Returns the wrapped value, following nested `Either` values.'
     }
@@ -130,6 +146,43 @@ b === 0
 const chained = Funcio._Either.right(10).flatMap((value) => divide(value, 2))
 
 [mapped.getOrElse(0), normalized, chained.getOrElse(0)]`
+    },
+    {
+      id: 'either-bimap-fold',
+      title: 'bimap, fold and orElse',
+      description: 'Transform either side, collapse both sides, or recover from a failure.',
+      expected: '["R20", "E:oops", "recovered"]',
+      code: `import Funcio from 'funcio'
+
+const doubled = Funcio._Either.right(10)
+  .bimap((e) => \`E:\${e}\`, (v) => v * 2)
+  .fold((e) => e, (v) => \`R\${v}\`)
+
+const mappedLeft = Funcio._Either.left('oops')
+  .bimap((e) => \`E:\${e}\`, (v) => v * 2)
+  .fold((e) => e, (v) => \`R\${v}\`)
+
+const recovered = Funcio._Either.left('bad')
+  .orElse(() => Funcio._Either.right('recovered'))
+  .getOrElse('fallback')
+
+[doubled, mappedLeft, recovered]`
+    },
+    {
+      id: 'either-nullable-sequence',
+      title: 'fromNullable and sequence',
+      description: 'Lift nullable values and collect lists of Either without manual loops.',
+      expected: '[[1, 2], true]',
+      code: `import Funcio from 'funcio'
+
+const collected = Funcio._Either.sequence([
+  Funcio._Either.right(1),
+  Funcio._Either.right(2)
+]).getOrElse([])
+
+const missing = Funcio._Either.fromNullable(null, 'empty').isLeft()
+
+[collected, missing]`
     }
   ]
 }

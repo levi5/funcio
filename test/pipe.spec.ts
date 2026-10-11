@@ -1,5 +1,5 @@
 import { expect, describe, it } from "vitest"
-import { _pipe } from '../src/function/Pipe'
+import { _pipe } from '../src/function/Pipe/index.js'
 
 
 describe("Pipe function", () => {

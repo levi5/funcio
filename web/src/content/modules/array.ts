@@ -19,6 +19,18 @@ export const array: ModuleDoc = {
       name: '_Array.forEachAsync',
       signature: 'forEachAsync<T>(array: T[], fn: (x: T) => any): Promise<any>',
       description: 'Runs the callback over each element strictly in sequence, awaiting each one before the next.'
+    },
+    {
+      name: '_Array.chunk / uniq / groupBy / partition',
+      description: 'Sync collection helpers: paginate, dedupe, bucket by key, or split by predicate.'
+    },
+    {
+      name: '_Array.zip / range / sortBy / take / drop / flatMap',
+      description: 'Pair lists, build numeric ranges, sort by derived key, slice, or map-and-flatten.'
+    },
+    {
+      name: '_Array.reduceAsync',
+      description: 'Sequential async fold over an array.'
     }
   ],
   examples: [
@@ -50,6 +62,19 @@ order.push(\`end \${value}\`)
 })
 
 order`
+    },
+    {
+      id: 'array-sync',
+      title: 'Sync collection helpers',
+      description: 'Chunking, grouping and zipping without pulling in another utility library.',
+      expected: '[[[1, 2], [3]], { odd: [1, 3], even: [2] }, [[1, "a"]]]',
+      code: `import Funcio from 'funcio'
+
+const chunks = Funcio._Array.chunk(2, [1, 2, 3])
+const grouped = Funcio._Array.groupBy((x) => (x % 2 === 0 ? 'even' : 'odd'), [1, 2, 3])
+const zipped = Funcio._Array.zip([1], ['a'])
+
+[chunks, grouped, zipped]`
     }
   ]
 }

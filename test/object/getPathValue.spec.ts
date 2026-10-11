@@ -1,5 +1,5 @@
 import { expect, describe, it } from "vitest"
-import { _Object } from '../../src/Object'
+import { _Object } from '../../src/Object/index.js'
 
 describe("_Object.getPathValue function", () => {
   const person = {

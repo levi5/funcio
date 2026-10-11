@@ -1,4 +1,4 @@
-import { IEither, type Match } from '../../@Types'
+import { IEither, type Match } from '../../@Types/index.js'
 
 /**
  * Create a right value for the Either type.
@@ -41,6 +41,22 @@ const Right = <L, R>(value: R): IEither.TRight<L, R> => {
       return fn(this.value)
     },
     getOrElse<DefaultValue> (defaultValue: DefaultValue): R | DefaultValue {
+      return this.value
+    },
+    bimap<NL, NR> (mapLeftFn: (value: L) => NL, mapRightFn: (value: R) => NR): IEither.TRight<NL, NR> {
+      return Right<NL, NR>(mapRightFn(this.value))
+    },
+    fold<T> (onLeft: (value: L) => T, onRight: (value: R) => T): T {
+      return onRight(this.value)
+    },
+    orElse<NL> (fn: (value: L) => IEither.Either<NL, R>): IEither.Either<NL, R> {
+      return Right<NL, R>(this.value)
+    },
+    tap (fn: (value: R) => void): IEither.TRight<L, R> {
+      fn(this.value)
+      return Right<L, R>(this.value)
+    },
+    getOrThrow (): R {
       return this.value
     }
   }

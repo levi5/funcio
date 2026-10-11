@@ -16,6 +16,20 @@ export const pipe: ModuleDoc = {
       signature: '_pipe.async<T>(input: T, ...fns: AsyncFN[]): Promise<any>',
       description:
         'The same idea for pipelines that mix sync and async steps. Each step receives the resolved value from the previous one.'
+    },
+    {
+      name: '_compose(...fns)',
+      signature: '_compose(...fns: FN[]): FN',
+      description: 'Right-to-left twin of `_pipe`: `compose(f, g)(x)` is `f(g(x))`.'
+    },
+    {
+      name: '_pipeFn(...fns)',
+      signature: '_pipeFn(...fns: FN[]): FN',
+      description: 'Reusable data-last pipe: `pipeFn(f, g)` returns a function `(x) => g(f(x))`.'
+    },
+    {
+      name: '_tap / _once / _memoize / _flip',
+      description: 'Small function helpers: side-effect passthrough, run-once, cached pure fn, swapped binary args.'
     }
   ],
   examples: [
@@ -75,6 +89,25 @@ async (value) => value * 3,
 )
 
 result`
+    },
+    {
+      id: 'pipe-compose-reusable',
+      title: 'Reusable pipelines',
+      description: '`_pipeFn` and `_compose` build functions you can reuse instead of threading a value inline.',
+      expected: '[16, 11]',
+      code: `import Funcio from 'funcio'
+
+const transform = Funcio._pipeFn(
+(x) => x + 2,
+(x) => x * x
+)
+
+const composed = Funcio._compose(
+(x) => x + 1,
+(x) => x * 2
+)
+
+[transform(2), composed(5)]`
     }
   ]
 }

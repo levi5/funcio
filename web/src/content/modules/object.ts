@@ -26,6 +26,18 @@ export const object: ModuleDoc = {
       signature: 'chainify<T extends Record<string, any>>(object: T): Chainify<T>',
       description:
         'Wraps an object in a `Proxy` so any method returning `undefined` returns the proxy instead, letting calls chain.'
+    },
+    {
+      name: '_Object.pick / omit',
+      description: 'Keep or drop a fixed set of keys, returning a new object.'
+    },
+    {
+      name: '_Object.mergeDeep / evolve',
+      description: 'Recursively merge two objects, or map selected keys through transform functions.'
+    },
+    {
+      name: '_Object.hasPath / dissocPath',
+      description: 'Test a nested path, or remove it immutably.'
     }
   ],
   examples: [
@@ -108,6 +120,19 @@ error = caught.name
 }
 
 [error, immutableUser.address.city, user.address.city, Object.isFrozen(immutableUser.address)]`
+    },
+    {
+      id: 'object-pick-merge',
+      title: 'pick, omit and mergeDeep',
+      description: 'Small immutable helpers that cover most day-to-day object shaping.',
+      expected: '[{ a: 1 }, { a: 1 }, { a: { x: 1, y: 2 } }]',
+      code: `import Funcio from 'funcio'
+
+const picked = Funcio._Object.pick(['a'], { a: 1, b: 2 })
+const omitted = Funcio._Object.omit(['b'], { a: 1, b: 2 })
+const merged = Funcio._Object.mergeDeep({ a: { x: 1 } }, { a: { y: 2 } })
+
+[picked, omitted, merged]`
     }
   ]
 }
