@@ -19,6 +19,11 @@ const cssModule = (): Plugin => ({
 export default defineConfig({
   base: process.env.BASE_PATH ?? '/funcio/',
   plugins: [cssModule(), react()],
+  resolve: {
+    alias: {
+      '@': resolve(__dirname, 'src')
+    }
+  },
   build: {
     outDir: 'dist',
     target: 'es2020',

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useTheme } from '../../hooks/useTheme'
+import { VERSION } from '@/version'
 
 import { Button } from '../Button'
 import { Logo } from '../Logo'
@@ -29,7 +30,7 @@ export const Header = () => {
         <a className={styles.brand} href="#top">
           <Logo size={24} />
           <span>Funcio</span>
-          <span className={styles.version}>0.0.32</span>
+          <span className={styles.version}>{VERSION}</span>
         </a>
 
         <nav className={`${styles.nav} ${open ? styles.open : ''}`} aria-label="Sections">

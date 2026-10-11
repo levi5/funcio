@@ -6,7 +6,8 @@
   "description": "Documentation site for Funcio, with runnable examples, deployed to GitHub Pages.",
   "scripts": {
     "dev": "vite",
-    "prebuild": "npm --prefix .. run build",
+    "predev": "tsx scripts/generate-version.ts",
+    "prebuild": "tsx scripts/generate-version.ts && npm --prefix .. run build",
     "pretypecheck": "npm --prefix .. run build",
     "build": "npm run verify && tsc --noEmit -p tsconfig.json && npm run lint && vite build",
     "postbuild": "tsx scripts/generate-sitemap.ts && tsx scripts/update-version.ts",
