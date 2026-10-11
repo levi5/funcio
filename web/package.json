@@ -9,7 +9,7 @@
     "prebuild": "npm --prefix .. run build",
     "pretypecheck": "npm --prefix .. run build",
     "build": "npm run verify && tsc --noEmit -p tsconfig.json && npm run lint && vite build",
-    "postbuild": "tsx scripts/generate-sitemap.ts",
+    "postbuild": "tsx scripts/generate-sitemap.ts && tsx scripts/update-version.ts",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "verify": "esbuild scripts/verify-examples.ts --bundle --platform=node --format=esm --log-level=warning --alias:funcio=../src/main.ts --outfile=node_modules/.cache/verify.mjs && node node_modules/.cache/verify.mjs",
