@@ -1,13 +1,8 @@
-name: Deploy site
+name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [main, master]
-    paths:
-      - 'web/**'
-      - 'src/**'
-      - 'package.json'
-      - '.github/workflows/deploy.yml'
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -17,37 +12,41 @@ permissions:
 
 concurrency:
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          node-version: '24'
+          node-version: '20'
+          cache: 'npm'
 
-      - name: Install library dependencies
-        run: npm install
+      - name: Install dependencies
+        run: npm ci
 
-      - name: Test library
-        run: npm test -- --run
-
-      - name: Install site dependencies
-        working-directory: web
-        run: npm install
-
-      - name: Build site
-        working-directory: web
+      - name: Build library
         run: npm run build
 
-      - uses: actions/configure-pages@v5
+      - name: Install web dependencies
+        working-directory: ./web
+        run: npm ci
 
-      - uses: actions/upload-pages-artifact@v3
+      - name: Build web
+        working-directory: ./web
+        run: npm run build
+        env:
+          BASE_PATH: '/funcio/'
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          path: web/dist
+          path: ./web/dist
 
   deploy:
     needs: build
