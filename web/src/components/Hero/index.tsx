@@ -1,4 +1,5 @@
 import { heroExample } from '../../content'
+import { VERSION } from '@/version'
 
 import { Button } from '../Button'
 import { Install } from '../Install'
@@ -11,7 +12,7 @@ export const Hero = () => (
 
     <p className={styles.eyebrow}>
       <span className={styles.dot} aria-hidden="true" />
-      v0.0.32 · MIT · 0 dependencies
+      v{VERSION} · MIT · 0 dependencies
     </p>
 
     <h1 className={styles.title}>
