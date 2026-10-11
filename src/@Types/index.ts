@@ -1,2 +1,2 @@
-export * from './Maybe'
-export * from './Either'
+export * from './Maybe/index.js'
+export * from './Either/index.js'

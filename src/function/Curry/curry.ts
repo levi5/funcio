@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
-import { type Curry } from '../../@Types/Curry'
+import { type Curry } from '../../@Types/Curry/index.js'
 
 /**
  * Curry a function, allowing partial application of its arguments.

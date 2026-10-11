@@ -17,12 +17,12 @@
     "format": "biome check --write src scripts"
   },
   "dependencies": {
-    "acorn": "^8.14.0",
+    "acorn": "^8.19.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.5.14",
+    "@biomejs/biome": "^2.5.15",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "@vitejs/plugin-react": "4.3.4",

@@ -1,6 +1,6 @@
-import { _Maybe } from '../../main'
-import { type PatternMatching } from '../../@Types/Match'
-import { $isObject } from '../../Object/common'
+import { _Maybe } from '../../main.js'
+import { type PatternMatching } from '../../@Types/Match/index.js'
+import { $isObject } from '../../Object/common.js'
 
 /**
  * Function for pattern matching.
@@ -8,7 +8,7 @@ import { $isObject } from '../../Object/common'
  * @param value - The value to match against.
  * @returns An object with methods for defining patterns and executing the matching.
  */
-export const _match = <T, R>(value: T) => patternBuilder<T, R>(value)(() => null, [])
+export const _match = <T, R>(value: T) => patternBuilder<T, R>(value)(undefined, [])
 
 /**
  * Internal function for matching a value against a pattern.
@@ -32,10 +32,25 @@ const matchPattern = <T>(value: T, pattern: PatternMatching.Pattern<T>): boolean
   }
 
   if (Array.isArray(pattern)) {
-    return Array.isArray(value) && pattern.every((patternItem) => matchPattern(value[0], patternItem))
+    if (!Array.isArray(value)) return false
+    if (pattern.length !== (value as unknown[]).length) return false
+    return pattern.every((patternItem: unknown, index: number) =>
+      matchPattern<unknown>((value as unknown[])[index], patternItem as PatternMatching.Pattern<unknown>))
   }
 
-  return $isObject(pattern) && Object.keys(pattern).every((key) => matchPattern(value[key], pattern[key]))
+  if (typeof pattern === 'function' && (pattern as unknown) !== (String as unknown) && (pattern as unknown) !== (Number as unknown) && (pattern as unknown) !== (Boolean as unknown)) {
+    try {
+      return (pattern as (v: T) => boolean)(value) === true
+    } catch {
+      return false
+    }
+  }
+
+  return $isObject(pattern) && Object.keys(pattern).every((key) => {
+    const subValue = (value as unknown as Record<string, unknown>)[key]
+    const subPattern = (pattern as unknown as Record<string, unknown>)[key]
+    return matchPattern(subValue, subPattern as unknown as PatternMatching.Pattern<unknown>)
+  })
 }
 
 /**
@@ -48,8 +63,8 @@ const matchPattern = <T>(value: T, pattern: PatternMatching.Pattern<T>): boolean
  */
 const patternBuilder =
   <T, R>(value: T) => (
-    _: PatternMatching.WildcardArgs<R> = () => null,
-    patterns: Array<{ value: PatternMatching.Pattern<T>, expression: PatternMatching.MatchingFunction<T, R> }> = []
+    _: PatternMatching.WildcardArgs<R> = (() => null) as unknown as PatternMatching.WildcardArgs<R>,
+    patterns: Array<{ value: PatternMatching.Pattern<T>, expression: (v: any) => R }> = []
   ) => ({
     /**
      * Adds a pattern and its corresponding expression to the pattern matching.

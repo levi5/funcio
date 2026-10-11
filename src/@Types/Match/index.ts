@@ -15,13 +15,17 @@ export namespace PatternMatching {
 
   /**
    * Type representing a pattern for pattern matching.
+   * Besides literals, constructors, arrays and partial shapes,
+   * a predicate `(value) => boolean` is also accepted.
    */
   export type Pattern<T> =
-    T extends number ? T | NumberConstructor :
+    (T extends number ? T | NumberConstructor :
       T extends string ? T | StringConstructor :
         T extends boolean ? T | BooleanConstructor :
           T extends symbol ? T | SymbolConstructor :
-              { [k in keyof T]?: Pattern<T[k]> }
+            T extends Array<infer E> ? T | Array<Pattern<E>> :
+              { [k in keyof T]?: Pattern<T[k]> })
+    | ((value: T) => boolean)
 
   /**
    * Type representing custom extraction of types `T` and `R`.
@@ -38,6 +42,7 @@ export namespace PatternMatching {
       S extends StringConstructor ? string :
         S extends BooleanConstructor ? boolean :
           S extends SymbolConstructor ? symbol :
-            S extends Array<infer SS> ? Array<InvertedPattern<SS>> :
-                { [k in keyof S]: InvertedPattern<S[k]> }
+            S extends (value: infer V) => boolean ? V :
+              S extends Array<infer SS> ? Array<InvertedPattern<SS>> :
+                  { [k in keyof S]: InvertedPattern<S[k]> }
 }

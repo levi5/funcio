@@ -16,6 +16,7 @@
     "build": "tsc --declaration --project ./tsconfig.json",
     "debugger": "tsc",
     "lint": "eslint src/**/*.ts --fix",
+    "typecheck": "tsc --noEmit -p tsconfig.typecheck.json",
     "test": "vitest",
     "coverage": "vitest run --coverage"
   },
@@ -27,7 +28,7 @@
     "eslint-plugin-import": "^2.25.2",
     "eslint-plugin-n": "^15.0.0 || ^16.0.0 ",
     "eslint-plugin-promise": "^6.0.0",
-    "typescript": "^5.0.4",
+    "typescript": "^5.9.3",
     "vitest": "^0.31.0"
   }
 }

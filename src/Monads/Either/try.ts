@@ -1,5 +1,5 @@
-import { left, right } from '.'
-import { type IEither } from '../../@Types'
+import { left, right } from './index.js'
+import { type IEither } from '../../@Types/index.js'
 
 /**
  * Wraps an asynchronous operation in a try-catch block, returning an Either monad.
@@ -10,9 +10,10 @@ import { type IEither } from '../../@Types'
 export const asyncTry = async <T = any>(fn: () => Promise<T>): Promise<IEither.Either<Error, T>> => {
   try {
     const result: T = await fn()
-    return right(result)
+    return right<Error, T>(result)
   } catch (error) {
-    return left(error)
+    // Preserve the exact thrown value (historical behavior): no wrapping.
+    return left<Error, T>(error as Error)
   }
 }
 
@@ -26,11 +27,12 @@ export const syncTry = <T>(fn: () => T): IEither.Either<Error, T> => {
   try {
     const result: T = fn()
     if (result instanceof Promise) {
-      return left(new Error('Synchronous function should not return a Promise.'))
+      return left<Error, T>(new Error('Synchronous function should not return a Promise.'))
     }
-    return right(result)
+    return right<Error, T>(result)
   } catch (error) {
-    return left(error)
+    // Preserve the exact thrown value (historical behavior): no wrapping.
+    return left<Error, T>(error as Error)
   }
 }
 

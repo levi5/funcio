@@ -1,5 +1,5 @@
 import { expect, describe, it } from "vitest"
-import Funcio, { _Array } from "../src/main"
+import Funcio, { _Array } from "../src/main.js"
 
 describe("Array helpers", () => {
   it("Should export _Array from the main entrypoint", () => {

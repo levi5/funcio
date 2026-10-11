@@ -29,22 +29,31 @@ Funcio is a powerful and versatile library designed to bring the elegance of fun
       - [`_Either.mapLeft(function)`](#_eithermapleftfunction)
       - [`_Either.flatMap(function)`](#_eitherflatmapfunction)
       - [`_Either.getOrElse(defaultValue)`](#_eithergetorelse-defaultvalue)
+      - [`_Either.bimap / fold / orElse / tap / getOrThrow`](#_eitherbimap--fold--orelse--tap--getorthrow)
+      - [`_Either.fromNullable / sequence / combine`](#_eitherfromnullable--sequence--combine)
     - [`_Object`](#_object)
       - [`_Object.makeImmutable`](#_objectmakeimmutable)
       - [`_Object.chainify`](#_objectchainify)
       - [`_Object.setByPath(keysToFollow, value, obj)`](#_objectsetbypathkeystofollow-value-obj)
       - [`_Object.getPathValue(keysToFollow, obj)`](#_objectgetpathvaluekeystofollow-obj)
+      - [`_Object.pick / omit / mergeDeep / evolve / hasPath / dissocPath`](#_objectpick--omit--mergedeep--evolve--haspath--dissocpath)
     - [`_Maybe`](#_maybe)
       - [`_Maybe.get()`](#_maybeget)
       - [`_Maybe.getOrElse(defaultValue)`](#_maybegetorelsedefaultvalue)
       - [`_Maybe.map(function)`](#_maybemapfunction)
       - [`_Maybe.flatMap(function)`](#_maybeflatmapfunction)
       - [`_Maybe.chain(function)`](#_maybechainfunction)
+      - [`_Maybe.fold / filter / orElse / tap`](#_maybefold--filter--orelse--tap)
     - [`_Maybe.unwrap()`](#_maybeunwrap)
     - [`_Maybe.when(predicate).then(fn).else(fn)`](#_maybewhenpredicatethenfnelsefn)
     - [`_pipe`](#_pipe)
       - [`_pipe.async`](#_pipeasync)
+      - [`_compose / _pipeFn`](#_compose--_pipefn)
     - [`_Array`](#_array)
+    - [`_String / _Number`](#_string--_number)
+    - [`_Task`](#_task)
+    - [`_Validation`](#_validation)
+    - [`_tap / _once / _memoize / _flip`](#_tap--_once--_memoize--_flip)
     - [`_curry`](#_curry)
     - [`_match`](#_match)
   - [Contributions 🤝](#contributions-)
@@ -249,6 +258,40 @@ const result = Funcio._Either.left<string, number>("Not found")
   .getOrElse(404);
 
 // Result: 404
+```
+
+#### `_Either.bimap / fold / orElse / tap / getOrThrow`
+
+```typescript
+import Funcio from 'funcio';
+
+const doubled = Funcio._Either.right<string, number>(10)
+  .bimap((e) => `E:${e}`, (v) => v * 2)
+  .fold((e) => e, (v) => `R${v}`); // "R20"
+
+const recovered = Funcio._Either.left<string, number>("bad")
+  .orElse(() => Funcio._Either.right<string, number>(42))
+  .getOrElse(0); // 42
+
+Funcio._Either.right<string, number>(3).tap(console.log); // logs 3, returns Right(3)
+Funcio._Either.right<string, number>(7).getOrThrow(); // 7 (throws on Left)
+```
+
+#### `_Either.fromNullable / sequence / combine`
+
+```typescript
+import Funcio from 'funcio';
+
+Funcio._Either.fromNullable(null, "empty").isLeft(); // true
+Funcio._Either.sequence([
+  Funcio._Either.right<string, number>(1),
+  Funcio._Either.right<string, number>(2),
+]).getOrElse([]); // [1, 2]
+Funcio._Either.combine(
+  Funcio._Either.right<string, number>(2),
+  Funcio._Either.right<string, number>(3),
+  (a, b) => a + b,
+).getOrElse(0); // 5
 ```
 
 ### `_Object`
@@ -534,6 +577,16 @@ maybe.isJust(); // true
 maybe.getOrElse(0); // 10
 ```
 
+#### `_Maybe.fold / filter / orElse / tap`
+
+```typescript
+import Funcio from 'funcio';
+
+Funcio._Maybe.of(5).fold(() => "none", (v) => `just${v}`); // "just5"
+Funcio._Maybe.of(10).filter((v) => v > 5).isJust(); // true
+Funcio._Maybe.of(null).orElse(Funcio._Maybe.of(9)).getOrElse(0); // 9
+```
+
 ### `_pipe`
 
 The `_pipe` function in the Funcio library is a formidable utility for composing multiple functions into a single, higher-order function. It empowers you to craft a pipeline of functions where the output of one function becomes the input for the next.
@@ -552,7 +605,21 @@ const transform = Funcio._pipe(
   subtractTen
 );
 
-// Result: 16
+// Result: 6
+```
+
+#### `_compose / _pipeFn`
+
+```typescript
+import Funcio from 'funcio';
+
+const transform = Funcio._pipeFn(
+  (x: number) => x + 2,
+  (x: number) => x * x,
+); // (x) => ...
+
+transform(2); // 16
+Funcio._compose((x: number) => x + 1, (x: number) => x * 2)(5); // 11
 ```
 
 #### `_pipe.async`
@@ -574,16 +641,77 @@ const result = await Funcio._pipe.async(
 
 ### `_Array`
 
-The `_Array` module groups async-friendly array helpers for working with collections while preserving readable functional flows.
+The `_Array` module groups async-friendly array helpers plus sync collection utilities (chunk, groupBy, zip, range, sortBy...) for working with collections while preserving readable functional flows.
 
 ```typescript
 import Funcio from 'funcio';
 
 const doubled = await Funcio._Array.mapAsync([1, 2, 3], async (value) => value * 2);
 const evens = await Funcio._Array.filterAsync([1, 2, 3, 4], async (value) => value % 2 === 0);
+const chunks = Funcio._Array.chunk(2, [1, 2, 3]); // [[1,2],[3]]
+const grouped = Funcio._Array.groupBy((x: number) => (x % 2 === 0 ? "even" : "odd"), [1, 2, 3]);
 
 // doubled: [2, 4, 6]
 // evens: [2, 4]
+```
+
+#### `_Object.pick / omit / mergeDeep / evolve / hasPath / dissocPath`
+
+```typescript
+import Funcio from 'funcio';
+
+Funcio._Object.pick(["a"], { a: 1, b: 2 }); // { a: 1 }
+Funcio._Object.omit(["b"], { a: 1, b: 2 }); // { a: 1 }
+Funcio._Object.mergeDeep({ a: { x: 1 } }, { a: { y: 2 } }); // { a: { x: 1, y: 2 } }
+```
+
+### `_String / _Number`
+
+```typescript
+import Funcio from 'funcio';
+
+Funcio._String.capitalize("hello"); // "Hello"
+Funcio._String.slugify("Olá Mundo!"); // "ola-mundo"
+Funcio._Number.clamp(0, 10, 15); // 10
+Funcio._Number.avg([2, 4]); // 3
+```
+
+### `_Task`
+
+```typescript
+import Funcio from 'funcio';
+
+const result = await Funcio._Task
+  .fromPromise(async () => 5)
+  .map((v) => v * 2)
+  .run();
+
+result.getOrElse(0); // 10
+```
+
+### `_Validation`
+
+```typescript
+import Funcio from 'funcio';
+
+const schema = Funcio._Validation.object({
+  name: Funcio._Validation.string().min(2),
+  age: Funcio._Validation.number().positive(),
+});
+
+schema.safeParse({ name: "Ana", age: 30 }).isRight(); // true
+schema.safeParse({ name: "x", age: -1 }).isLeft(); // true (2 issues accumulated)
+```
+
+### `_tap / _once / _memoize / _flip`
+
+```typescript
+import Funcio from 'funcio';
+
+const tapped = Funcio._tap<number>(console.log); // (v) => v with side effect
+const runOnce = Funcio._once(() => Math.random());
+const cached = Funcio._memoize((x: number) => x * 2);
+const flipped = Funcio._flip((a: number, b: number) => a - b); // (b, a) => a - b
 ```
 
 ### `_curry`

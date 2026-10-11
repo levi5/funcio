@@ -1,4 +1,4 @@
-import { type OBJ } from '../common'
+import { type OBJ } from '../common.js'
 
 /**
  * Sets a value in an object by following a path of keys.
@@ -10,15 +10,17 @@ import { type OBJ } from '../common'
 export const setByPath = <O extends OBJ>(keysToFollow: Array<string | number>, value: unknown, obj: O): O => {
   if (keysToFollow.length === 0 || (obj && typeof obj !== 'object')) return obj
 
+  const source = obj as unknown as Record<string | number, unknown>
   if (!(keysToFollow[0] in obj)) {
-    (obj as any)[keysToFollow[0]] = keysToFollow.length === 1
-      ? null
+    source[keysToFollow[0]] = keysToFollow.length === 1
+      ? undefined
       : Number.isInteger(keysToFollow[1])
         ? []
         : {}
   }
 
-  const newObj = Array.isArray(obj) ? [...obj] : { ...obj }
+  const cloned: unknown = Array.isArray(obj) ? [...(obj as unknown[])] : { ...source }
+  const newObj = cloned as Record<string | number, unknown>
   const currentKey = keysToFollow[0]
 
   if (typeof newObj[currentKey] === 'undefined') {
@@ -26,8 +28,8 @@ export const setByPath = <O extends OBJ>(keysToFollow: Array<string | number>, v
   }
 
   newObj[currentKey] = keysToFollow.length > 1
-    ? setByPath(keysToFollow.slice(1), value, newObj[currentKey])
+    ? setByPath(keysToFollow.slice(1), value, newObj[currentKey] as OBJ)
     : value
 
-  return newObj as O
+  return newObj as unknown as O
 }

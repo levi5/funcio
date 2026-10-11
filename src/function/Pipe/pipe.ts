@@ -1,5 +1,5 @@
-import { type Pipeline } from '../../@Types/Pipe'
-import { type FN } from '../../@Types/common'
+import { type Pipeline } from '../../@Types/Pipe/index.js'
+import { type FN } from '../../@Types/common.js'
 
 type AsyncFN = (value: any) => any | Promise<any>
 

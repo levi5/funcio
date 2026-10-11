@@ -1,7 +1,7 @@
-import { _Maybe } from './maybe'
-import { MaybeType } from '../../@Types'
-import { Nothing } from './nothing'
-import { WhenBuilder } from './whenBuilder'
+import { _Maybe } from './maybe.js'
+import { MaybeType } from '../../@Types/index.js'
+import { Nothing } from './nothing.js'
+import { WhenBuilder } from './whenBuilder.js'
 
 type UnwrappedMaybe<T> =
   T extends Just<infer Value>
@@ -43,7 +43,7 @@ export class Just<T> extends _Maybe {
     return true
   }
 
-  public when<U>(predicate: boolean | ((value: T) => boolean)): WhenBuilder<T, U> {
+  public when<U>(predicate: boolean | ((value: any) => boolean)): WhenBuilder<T, U> {
     return new WhenBuilder(this, predicate)
   }
 
@@ -84,6 +84,27 @@ export class Just<T> extends _Maybe {
 
   public chain<R extends _Maybe>(fn: (value: T) => R): R {
     return this.flatMap(fn)
+  }
+
+  public fold<R>(onNothing: () => R, onJust: (value: T) => R): R {
+    return onJust(this.value)
+  }
+
+  public filter(predicate: (value: T) => boolean): Just<T> | Nothing<T> {
+    return predicate(this.value) ? this : Nothing.of(this.value)
+  }
+
+  public orElse<U>(other: Just<U> | Nothing<U>): Just<T> {
+    return this
+  }
+
+  public tap(fn: (value: T) => void): Just<T> {
+    fn(this.value)
+    return this
+  }
+
+  public toNullable(): T {
+    return this.value
   }
 
   /**
