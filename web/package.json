@@ -1,7 +1,7 @@
 {
   "name": "funcio-web",
   "private": true,
-  "version": "0.0.32",
+  "version": "0.1.0",
   "type": "module",
   "description": "Documentation site for Funcio, with runnable examples, deployed to GitHub Pages.",
   "scripts": {
