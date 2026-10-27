@@ -12,7 +12,51 @@ export interface Schema<T> {
 const ok = <T>(value: T): ValidationResult<T> => right<ValidationIssue[], T>(value)
 const fail = <T>(issues: ValidationIssue[]): ValidationResult<T> => left<ValidationIssue[], T>(issues)
 
-class StringSchema implements Schema<string> {
+export type Infer<S extends Schema<unknown>> = S extends Schema<infer T> ? T : never
+type OptionalObject<T> = { [K in keyof T as undefined extends T[K] ? never : K]: T[K] } &
+{ [K in keyof T as undefined extends T[K] ? K : never]?: T[K] }
+
+abstract class BaseSchema<T> implements Schema<T> {
+  abstract safeParse(value: unknown): ValidationResult<T>
+
+  parse (value: unknown): T {
+    const result = this.safeParse(value)
+    if (result.isLeft()) {
+      throw new Error((result.value as ValidationIssue[]).map((i) => i.path ? `${i.path}: ${i.message}` : i.message).join('; '))
+    }
+    return result.value as T
+  }
+
+  optional (): BaseSchema<T | undefined> {
+    return new WrappedSchema((value) => value === undefined ? ok(undefined) : this.safeParse(value))
+  }
+
+  nullable (): BaseSchema<T | null> {
+    return new WrappedSchema((value) => value === null ? ok(null) : this.safeParse(value))
+  }
+
+  default (fallback: Exclude<T, undefined>): BaseSchema<Exclude<T, undefined>> {
+    return new WrappedSchema((value) => this.safeParse(value === undefined ? fallback : value) as ValidationResult<Exclude<T, undefined>>)
+  }
+
+  refine (predicate: (value: T) => boolean, message = 'Invalid value'): BaseSchema<T> {
+    return new WrappedSchema((value) => {
+      const result = this.safeParse(value)
+      if (result.isLeft()) return result
+      return predicate(result.value as T) ? result : fail([{ path: '', message }])
+    })
+  }
+}
+
+class WrappedSchema<T> extends BaseSchema<T> {
+  constructor (private readonly validate: (value: unknown) => ValidationResult<T>) { super() }
+
+  safeParse (value: unknown): ValidationResult<T> {
+    return this.validate(value)
+  }
+}
+
+class StringSchema extends BaseSchema<string> {
   checks: Array<{ test: (v: string) => boolean, message: string }> = []
 
   min (n: number, message?: string): this {
@@ -48,7 +92,7 @@ class StringSchema implements Schema<string> {
   }
 }
 
-class NumberSchema implements Schema<number> {
+class NumberSchema extends BaseSchema<number> {
   checks: Array<{ test: (v: number) => boolean, message: string }> = []
 
   min (n: number, message?: string): this {
@@ -84,16 +128,16 @@ class NumberSchema implements Schema<number> {
   }
 }
 
-class ObjectSchema<T extends Record<string, unknown>> implements Schema<T> {
-  constructor (readonly shape: { [K in keyof T]: Schema<T[K]> }) {}
+class ObjectSchema<T extends Record<string, unknown>> extends BaseSchema<OptionalObject<T>> {
+  constructor (readonly shape: { [K in keyof T]: Schema<T[K]> }) { super() }
 
-  parse (value: unknown): T {
+  parse (value: unknown): OptionalObject<T> {
     const res = this.safeParse(value)
     if (res.isLeft()) throw new Error((res.value as ValidationIssue[]).map((i) => `${i.path}: ${i.message}`).join('; '))
-    return res.value as T
+    return res.value as OptionalObject<T>
   }
 
-  safeParse (value: unknown): ValidationResult<T> {
+  safeParse (value: unknown): ValidationResult<OptionalObject<T>> {
     if (typeof value !== 'object' || value === null || Array.isArray(value)) {
       return fail([{ path: '', message: 'Expected object' }])
     }
@@ -110,12 +154,12 @@ class ObjectSchema<T extends Record<string, unknown>> implements Schema<T> {
         out[key as string] = res.value as T[keyof T]
       }
     }
-    return issues.length > 0 ? fail(issues) : ok(out as T)
+    return issues.length > 0 ? fail(issues) : ok(out as OptionalObject<T>)
   }
 }
 
-class ArraySchema<T> implements Schema<T[]> {
-  constructor (readonly item: Schema<T>) {}
+class ArraySchema<T> extends BaseSchema<T[]> {
+  constructor (readonly item: Schema<T>) { super() }
 
   parse (value: unknown): T[] {
     const res = this.safeParse(value)
@@ -141,9 +185,31 @@ class ArraySchema<T> implements Schema<T[]> {
   }
 }
 
-export const _Validation = {
+export interface Validation {
+  string: () => StringSchema
+  number: () => NumberSchema
+  boolean: () => BaseSchema<boolean>
+  enum: <T extends string>(values: readonly [T, ...T[]]) => BaseSchema<T>
+  union: <S extends readonly [Schema<unknown>, ...Array<Schema<unknown>>]>(schemas: S) => BaseSchema<Infer<S[number]>>
+  object: <T extends Record<string, unknown>>(shape: { [K in keyof T]: Schema<T[K]> }) => ObjectSchema<T>
+  array: <T>(item: Schema<T>) => ArraySchema<T>
+}
+
+export const _Validation: Validation = {
   string: () => new StringSchema(),
   number: () => new NumberSchema(),
+  boolean: () => new WrappedSchema<boolean>((value) => typeof value === 'boolean' ? ok(value) : fail([{ path: '', message: 'Expected boolean' }])),
+  enum: <T extends string>(values: readonly [T, ...T[]]) => new WrappedSchema<T>((value) =>
+    typeof value === 'string' && values.includes(value as T) ? ok(value as T) : fail([{ path: '', message: `Expected one of: ${values.join(', ')}` }])),
+  union: <S extends readonly [Schema<unknown>, ...Array<Schema<unknown>>]>(schemas: S) => new WrappedSchema<Infer<S[number]>>((value) => {
+    const issues: ValidationIssue[] = []
+    for (const schema of schemas) {
+      const result = schema.safeParse(value)
+      if (result.isRight()) return ok(result.value as Infer<S[number]>)
+      issues.push(...result.value as ValidationIssue[])
+    }
+    return fail(issues)
+  }),
   object: <T extends Record<string, unknown>>(shape: { [K in keyof T]: Schema<T[K]> }) => new ObjectSchema<T>(shape),
   array: <T>(item: Schema<T>) => new ArraySchema<T>(item)
 }

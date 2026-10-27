@@ -26,6 +26,8 @@ const _Either = {
 }
 
 export type { IEither }
+export type { Schema, Infer, Validation, ValidationIssue, ValidationResult } from './Validation/validation.js'
+export type { TaskResult } from './Task/task.js'
 
 const Funcio = {
   _curry,

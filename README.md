@@ -689,6 +689,32 @@ const result = await Funcio._Task
 result.getOrElse(0); // 10
 ```
 
+Tasks are lazy: each `run()` executes the operation again. Execution controls compose with existing methods:
+
+```typescript
+const controller = new AbortController();
+const request = Funcio._Task.fromPromise(async (signal) => {
+  const response = await fetch('/api/users', { signal });
+  if (!response.ok) throw new Error(`HTTP ${response.status}`);
+  return response.json();
+});
+
+const result = await request
+  .timeout(2000) // Timeout for each attempt
+  .retry(2, 100) // Up to 2 additional attempts, 100ms apart
+  .run(controller.signal);
+
+// To cancel an in-progress run: controller.abort();
+const users = await Funcio._Task.parallel([request, request, request], 2).run();
+```
+
+- `retry(retries, delayMs = 0)` retries failures; `retry(0)` runs once.
+- `timeout(ms)` returns a `Left` with an error named `TimeoutError` and aborts its operation's signal. Put it after `retry` to limit the entire retry sequence instead.
+- `run(signal?)` and `match(handlers, signal?)` accept cancellation. Cancellation returns a `Left` with an error named `AbortError`, skips queued work and stops retries.
+- Cancellation is cooperative: pass the supplied signal to APIs such as `fetch`. An operation that ignores it may continue in the background, even after the task returns.
+- `parallel(tasks, concurrency = Infinity)` preserves input order, limits active tasks and stops scheduling queued tasks after a failure. Already-running tasks are allowed to finish.
+- Invalid retry counts, delays, timeouts or concurrency limits throw `RangeError` when configured.
+
 ### `_Validation`
 
 ```typescript
@@ -702,6 +728,34 @@ const schema = Funcio._Validation.object({
 schema.safeParse({ name: "Ana", age: 30 }).isRight(); // true
 schema.safeParse({ name: "x", age: -1 }).isLeft(); // true (2 issues accumulated)
 ```
+
+Additional schemas and composable modifiers:
+
+```typescript
+import { _Validation as v, type Infer } from 'funcio';
+
+const userSchema = v.object({
+  name: v.string().min(2),
+  nickname: v.string().optional(),
+  email: v.string().email().nullable(),
+  active: v.boolean().default(true),
+  role: v.enum(['admin', 'user']),
+  id: v.union([v.string(), v.number().int()]),
+  age: v.number().refine((age) => age >= 18, 'Must be an adult'),
+});
+
+type User = Infer<typeof userSchema>; // nickname is an optional property
+const result = userSchema.safeParse({
+  name: 'Ana', email: null, role: 'user', id: 1, age: 30,
+}); // Right: active defaults to true
+```
+
+- `optional()` accepts `undefined`; `nullable()` accepts `null`. Combine them to accept both.
+- `default(value)` replaces only `undefined`, validates the default and removes `undefined` from the inferred output type.
+- `enum(values)` accepts a non-empty tuple of string literals.
+- `union(schemas)` returns the first successful alternative, or accumulates all alternative issues if none match.
+- `refine(predicate, message?)` checks a successfully parsed value, including entire objects and arrays. Predicates should return a boolean; exceptions thrown by user predicates propagate.
+- `safeParse` returns `Either<ValidationIssue[], T>` with nested error paths; `parse` throws on invalid input. Apply type-specific checks such as `.min()` before generic modifiers such as `.optional()`.
 
 ### `_tap / _once / _memoize / _flip`
 
