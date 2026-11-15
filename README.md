@@ -971,7 +971,7 @@ documentation examples and the production site. Pages deployment runs the
 library tests, types, lint and site build before uploading. npm publishing remains tag-driven. Dependabot
 checks library tooling, website dependencies and Actions weekly.
 
-Tooling uses TypeScript 6, Vitest 5 with V8 coverage, and Biome 2 for linting
+Tooling uses TypeScript 7, Vitest 5 with V8 coverage, and Biome 2 for linting
 the library and website. The website uses React 19 and Vite 8. The library
 still has no runtime dependencies.
 
