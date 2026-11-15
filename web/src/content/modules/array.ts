@@ -1,4 +1,4 @@
-import { mapAsyncImplementation } from '@/content/implementations'
+import { lazyArrayImplementation, mapAsyncImplementation, syncArrayImplementation } from '@/content/implementations'
 import type { ModuleDoc } from '@/content/types'
 
 export const array: ModuleDoc = {
@@ -27,6 +27,7 @@ export const array: ModuleDoc = {
     },
     {
       name: '_Array.chunk / uniq / groupBy / partition',
+      implementation: syncArrayImplementation,
       description: 'Sync collection helpers: paginate, dedupe, bucket by key, or split by predicate.'
     },
     {
@@ -45,6 +46,7 @@ export const array: ModuleDoc = {
     },
     {
       name: '_Array.lazy(iterable)',
+      implementation: lazyArrayImplementation,
       signature: 'lazy<T>(source: Iterable<T>): LazyArray<T>',
       description:
         'Deferred map, filter, flatMap, take and drop; consume with reduce, toArray or for...of. take does not over-read. Counts must be non-negative integers. Arrays are reusable; generator instances are single-use.'

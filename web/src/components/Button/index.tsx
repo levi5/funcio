@@ -12,6 +12,9 @@ type Props = {
   title?: string
   className?: string
   testId?: string
+  ariaLabel?: string
+  ariaExpanded?: boolean
+  ariaControls?: string
 }
 
 export const Button = ({
@@ -23,7 +26,10 @@ export const Button = ({
   target,
   title,
   className,
-  testId
+  testId,
+  ariaLabel,
+  ariaExpanded,
+  ariaControls
 }: Props) => {
   const classes = [styles.button, styles[variant], className].filter(Boolean).join(' ')
 
@@ -36,6 +42,7 @@ export const Button = ({
         rel={target ? 'noreferrer' : undefined}
         title={title}
         data-testid={testId}
+        aria-label={ariaLabel}
       >
         {children}
       </a>
@@ -43,7 +50,17 @@ export const Button = ({
   }
 
   return (
-    <button type="button" className={classes} onClick={onClick} disabled={disabled} title={title} data-testid={testId}>
+    <button
+      type="button"
+      className={classes}
+      onClick={onClick}
+      disabled={disabled}
+      title={title}
+      data-testid={testId}
+      aria-label={ariaLabel}
+      aria-expanded={ariaExpanded}
+      aria-controls={ariaControls}
+    >
       {children}
     </button>
   )

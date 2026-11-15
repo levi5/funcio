@@ -4,6 +4,9 @@
 }
 
 .toggle {
+  display: flex;
+  align-items: center;
+  gap: 7px;
   width: fit-content;
   padding: 6px 10px;
   border: 1px solid var(--border);
@@ -11,10 +14,32 @@
   color: var(--accent);
   cursor: pointer;
   font-size: 12px;
+  list-style: none;
+}
+
+.toggle::-webkit-details-marker {
+  display: none;
 }
 
 .toggle:hover {
   background: var(--bg-inset);
+}
+
+.chevron {
+  font-size: 9px;
+  line-height: 1;
+  transition: transform var(--motion-duration, 0.15s) ease;
+}
+
+.implementation[open] .chevron {
+  transform: rotate(90deg);
+}
+
+.count {
+  padding-left: 2px;
+  color: var(--text-faint);
+  font-family: var(--font-mono);
+  font-size: 10px;
 }
 
 .toggle:focus-visible,
@@ -36,8 +61,60 @@
   margin: 16px 0 8px;
 }
 
+.source a,
+.lines {
+  color: var(--accent);
+}
+
+.source a:hover,
+.lines:hover {
+  text-decoration: underline;
+}
+
 .source code {
   font-size: 11px;
+}
+
+.block {
+  margin: 8px 0 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-inset);
+  overflow: hidden;
+}
+
+.codeBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 4px 10px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-faint);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+}
+
+.lines {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.copy {
+  padding: 2px 7px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-size: 10px;
+}
+
+.copy:hover {
+  border-color: var(--border-strong);
+  color: var(--text);
 }
 
 .techniques {
@@ -64,11 +141,10 @@
 
 .code {
   max-width: 100%;
+  margin: 0;
   padding: 12px;
   overflow: auto;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  background: var(--bg-inset);
+  background: transparent;
   font-size: 11px;
   line-height: 1.7;
   white-space: pre;

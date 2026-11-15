@@ -5,10 +5,20 @@ export interface ApiEntry {
   implementation?: ImplementationDoc
 }
 
+export interface ImplementationStep {
+  title: string
+  code: string
+  explanation: string
+  /** Source file for this step. Defaults to the document source. */
+  source?: string
+  startLine?: number
+  endLine?: number
+}
+
 export interface ImplementationDoc {
   source: string
   techniques: string[]
-  steps: { title: string; code: string; explanation: string }[]
+  steps: ImplementationStep[]
   tradeoffs: string
 }
 

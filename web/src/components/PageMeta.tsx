@@ -1,6 +1,8 @@
 import { useEffect } from 'react'
 import { DEFAULT_META, MODULE_META } from '@/hooks/usePageMeta'
 
+const SITE_URL = 'https://levi5.github.io/funcio/'
+
 type Props = {
   activeSection: string
 }
@@ -9,7 +11,7 @@ export const PageMeta = ({ activeSection }: Props) => {
   const meta = MODULE_META[activeSection] ?? DEFAULT_META
 
   useEffect(() => {
-    const url = `https://github.com/levi5/funcio#${activeSection}`
+    const url = `${SITE_URL}#${activeSection}`
     document.title = meta.title
 
     const updateMeta = (name: string, content: string) => {
@@ -36,8 +38,10 @@ export const PageMeta = ({ activeSection }: Props) => {
     updateProperty('og:title', meta.title)
     updateProperty('og:description', meta.description)
     updateProperty('og:url', url)
-    updateProperty('twitter:title', meta.title)
-    updateProperty('twitter:description', meta.description)
+    updateProperty('og:image', `${SITE_URL}og-image.png`)
+    updateMeta('twitter:title', meta.title)
+    updateMeta('twitter:description', meta.description)
+    updateMeta('twitter:image', `${SITE_URL}og-image.png`)
 
     const canonical = document.querySelector('link[rel="canonical"]') as HTMLLinkElement
     if (canonical) canonical.href = url

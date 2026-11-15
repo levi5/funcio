@@ -1,4 +1,10 @@
-import { pipeImplementation } from '@/content/implementations'
+import {
+  asyncPipeImplementation,
+  composeImplementation,
+  fnUtilsImplementation,
+  pipeFnImplementation,
+  pipeImplementation
+} from '@/content/implementations'
 import type { ModuleDoc } from '@/content/types'
 
 export const pipe: ModuleDoc = {
@@ -15,6 +21,7 @@ export const pipe: ModuleDoc = {
     },
     {
       name: '_pipe.async',
+      implementation: asyncPipeImplementation,
       signature:
         '_pipe.async<T, A, B>(input: T, a: (value: Awaited<T>) => A, b: (value: Awaited<A>) => B): Promise<Awaited<B>>',
       description:
@@ -22,16 +29,19 @@ export const pipe: ModuleDoc = {
     },
     {
       name: '_compose(...fns)',
+      implementation: composeImplementation,
       signature: '_compose(...fns: FN[]): (input: unknown) => unknown',
       description: 'Right-to-left composition: compose(f, g)(x) is f(g(x)). The result is typed as unknown.'
     },
     {
       name: '_pipeFn(...fns)',
+      implementation: pipeFnImplementation,
       signature: '_pipeFn(...fns: FN[]): (input: unknown) => unknown',
       description: 'Reusable data-last pipe: pipeFn(f, g)(x) is g(f(x)). The result is typed as unknown.'
     },
     {
       name: '_tap / _once / _memoize / _flip',
+      implementation: fnUtilsImplementation,
       description: 'Small function helpers: side-effect passthrough, run-once, cached pure fn, swapped binary args.'
     }
   ],

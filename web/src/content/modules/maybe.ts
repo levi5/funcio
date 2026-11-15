@@ -1,3 +1,4 @@
+import { maybeImplementation } from '@/content/implementations'
 import type { ModuleDoc } from '@/content/types'
 
 export const maybe: ModuleDoc = {
@@ -12,6 +13,7 @@ export const maybe: ModuleDoc = {
     },
     {
       name: 'Just / Nothing',
+      implementation: maybeImplementation,
       description:
         '`Just` holds a value, `Nothing` holds none. Both expose `isJust()`, `isNothing()`, `get()`, `getOrElse()`, `map()`, `flatMap()` and `chain()`.'
     },

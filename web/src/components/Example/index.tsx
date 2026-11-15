@@ -9,6 +9,6 @@ export const Example = ({ example }: { example: ExampleDoc }) => (
       <p className={styles.description}>{example.description}</p>
     </div>
 
-    <Playground code={example.code} expected={example.expected} />
+    <Playground code={example.code} expected={example.expected} label={example.title} />
   </article>
 )

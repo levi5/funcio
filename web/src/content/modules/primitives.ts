@@ -1,3 +1,4 @@
+import { numberImplementation, stringImplementation } from '@/content/implementations'
 import type { ModuleDoc } from '@/content/types'
 
 export const primitives: ModuleDoc = {
@@ -7,10 +8,12 @@ export const primitives: ModuleDoc = {
   api: [
     {
       name: '_String.capitalize / slugify / toCamelCase / toSnakeCase',
+      implementation: stringImplementation,
       description: 'Case conversion and URL slugs without a second dependency.'
     },
     {
       name: '_Number.clamp / inRange / sum / avg / roundTo',
+      implementation: numberImplementation,
       description: 'Bounds, aggregates and fixed-precision rounding.'
     }
   ],

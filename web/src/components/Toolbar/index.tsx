@@ -1,6 +1,9 @@
 import { Button } from '@/components/Button'
 import styles from './styles.css'
 
+const isMac = typeof navigator !== 'undefined' && /Mac|iPhone|iPad|iPod/.test(navigator.userAgent)
+const SHORTCUT = isMac ? '⌘↵' : 'Ctrl↵'
+
 type Props = {
   fileName: string
   edited: boolean
@@ -38,7 +41,7 @@ export const Toolbar = ({ fileName, edited, executed, onRun, onCopy, onReset, ru
         testId="run"
       >
         {running ? 'Running…' : 'Run'}
-        <kbd>⌘↵</kbd>
+        <kbd>{SHORTCUT}</kbd>
       </Button>
     </div>
   </div>
