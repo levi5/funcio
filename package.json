@@ -1,6 +1,6 @@
 {
   "name": "funcio",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Functional programming helpers for TypeScript and JavaScript: Maybe, Either, composition, pattern matching, tasks and validation.",
   "author": "Levi Prudêncio",
   "license": "MIT",
