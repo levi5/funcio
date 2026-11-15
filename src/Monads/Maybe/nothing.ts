@@ -1,6 +1,6 @@
 import { _Maybe } from './maybe.js'
-import { MaybeType } from '../../@Types/index.js'
-import { ExtractValueError } from '../../helpers/index.js'
+import { MaybeType } from '@funcio/@Types/index.js'
+import { ExtractValueError } from '@funcio/helpers/index.js'
 import { Just } from './just.js'
 import { WhenBuilder } from './whenBuilder.js'
 
@@ -15,7 +15,7 @@ type UnwrappedMaybe<T> =
  * Represents a null or undefined value in the Maybe monad.
  * @extends {_Maybe}
  */
-export class Nothing<T> extends _Maybe {
+export class Nothing<T> extends _Maybe<T> {
   /**
    * The tag indicating the Maybe type.
    * @type {MaybeType}
@@ -42,7 +42,7 @@ export class Nothing<T> extends _Maybe {
     return true
   }
 
-  public when<U>(predicate: boolean | ((value: any) => boolean)): WhenBuilder<T, U> {
+  public when<U>(predicate: boolean | ((value: T) => boolean)): WhenBuilder<T, U> {
     return new WhenBuilder(this, predicate)
   }
 
@@ -69,23 +69,23 @@ export class Nothing<T> extends _Maybe {
    * @param {...function} fn - The function to apply (ignored in this case).
    * @returns {Nothing} The current Nothing instance.
    */
-  public map<R>(fn: (value: T) => R): Nothing<T> {
+  public map<R>(_fn: (value: T) => R): Nothing<T> {
     return this
   }
 
-  public flatMap<R extends _Maybe>(fn: (value: T) => R): Nothing<T> {
+  public flatMap<R extends _Maybe>(_fn: (value: T) => R): Nothing<T> {
     return this
   }
 
-  public chain<R extends _Maybe>(fn: (value: T) => R): Nothing<T> {
+  public chain<R extends _Maybe>(_fn: (value: T) => R): Nothing<T> {
     return this
   }
 
-  public fold<R>(onNothing: () => R, onJust: (value: T) => R): R {
+  public fold<R>(onNothing: () => R, _onJust: (value: T) => R): R {
     return onNothing()
   }
 
-  public filter(predicate: (value: T) => boolean): Nothing<T> {
+  public filter (_predicate: (value: T) => boolean): Nothing<T> {
     return this
   }
 
@@ -93,11 +93,11 @@ export class Nothing<T> extends _Maybe {
     return other
   }
 
-  public tap(fn: (value: T) => void): Nothing<T> {
+  public tap (_fn: (value: T) => void): Nothing<T> {
     return this
   }
 
-  public toNullable(): null | undefined {
+  public toNullable (): null | undefined {
     return this.value as null | undefined
   }
 

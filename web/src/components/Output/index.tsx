@@ -1,4 +1,4 @@
-import type { RunOutcome } from '../../playground/runner'
+import type { RunOutcome } from '@/playground/runner'
 import styles from './styles.css'
 
 type Props = {
@@ -73,8 +73,8 @@ const Success = ({ outcome }: { outcome: RunOutcome }) => {
 
   return (
     <div className={`${styles.output} ${styles.succeeded}`} data-state="ok">
-      {outcome.logs.map((log, index) => (
-        <div key={index} className={log.level === 'log' ? styles.line : `${styles.line} ${styles[log.level]}`}>
+      {outcome.logs.map((log) => (
+        <div key={log.id} className={log.level === 'log' ? styles.line : `${styles.line} ${styles[log.level]}`}>
           {log.level !== 'log' && <span className={`${styles.badge} ${styles.muted}`}>{log.level}</span>}
           <code>{log.text}</code>
         </div>

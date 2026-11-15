@@ -1,0 +1,117 @@
+.implementation {
+  margin-top: 12px;
+  min-width: 0;
+}
+
+.toggle {
+  width: fit-content;
+  padding: 6px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--accent);
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.toggle:hover {
+  background: var(--bg-inset);
+}
+
+.toggle:focus-visible,
+.code:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.content {
+  margin-top: 14px;
+  color: var(--text-muted);
+  font-size: 12.5px;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+
+.content h4 {
+  color: var(--text);
+  margin: 16px 0 8px;
+}
+
+.source code {
+  font-size: 11px;
+}
+
+.techniques {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 0;
+  list-style: none;
+}
+
+.techniques li {
+  padding: 2px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+
+.steps {
+  padding-left: 20px;
+}
+
+.steps li {
+  min-width: 0;
+}
+
+.code {
+  max-width: 100%;
+  padding: 12px;
+  overflow: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-inset);
+  font-size: 11px;
+  line-height: 1.7;
+  white-space: pre;
+  overflow-wrap: normal;
+}
+
+.comment {
+  color: var(--tok-comment);
+}
+.string {
+  color: var(--tok-string);
+}
+.number {
+  color: var(--tok-number);
+}
+.keyword {
+  color: var(--tok-keyword);
+}
+.boolean {
+  color: var(--tok-boolean);
+}
+.function {
+  color: var(--tok-function);
+}
+.property {
+  color: var(--tok-property);
+}
+.operator {
+  color: var(--tok-operator);
+}
+.punctuation {
+  color: var(--tok-punct);
+}
+.plain {
+  color: var(--text);
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

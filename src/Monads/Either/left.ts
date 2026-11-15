@@ -1,4 +1,4 @@
-import { IEither, type Match } from '../../@Types/index.js'
+import { IEither, type Match } from '@funcio/@Types/index.js'
 /**
  * Create a left value for the Either type.
  *
@@ -30,28 +30,28 @@ const Left = <L, R>(value: L): IEither.TLeft<L, R> => {
     match<T>(handlers: Match<L, R, T>): T {
       return handlers.left(this.value)
     },
-    map<NR> (fn: (value: R) => NR): IEither.TLeft<L, NR> {
+    map<NR> (_fn: (value: R) => NR): IEither.TLeft<L, NR> {
       return Left<L, NR>(this.value)
     },
     mapLeft<NL> (fn: (value: L) => NL): IEither.TLeft<NL, R> {
       return Left<NL, R>(fn(this.value))
     },
-    flatMap<NR> (fn: (value: R) => IEither.Either<L, NR>): IEither.TLeft<L, NR> {
+    flatMap<NR> (_fn: (value: R) => IEither.Either<L, NR>): IEither.TLeft<L, NR> {
       return Left<L, NR>(this.value)
     },
     getOrElse<DefaultValue> (defaultValue: DefaultValue): R | DefaultValue {
       return defaultValue
     },
-    bimap<NL, NR> (mapLeftFn: (value: L) => NL, mapRightFn: (value: R) => NR): IEither.TLeft<NL, NR> {
+    bimap<NL, NR> (mapLeftFn: (value: L) => NL, _mapRightFn: (value: R) => NR): IEither.TLeft<NL, NR> {
       return Left<NL, NR>(mapLeftFn(this.value))
     },
-    fold<T> (onLeft: (value: L) => T, onRight: (value: R) => T): T {
+    fold<T> (onLeft: (value: L) => T, _onRight: (value: R) => T): T {
       return onLeft(this.value)
     },
     orElse<NL> (fn: (value: L) => IEither.Either<NL, R>): IEither.Either<NL, R> {
       return fn(this.value)
     },
-    tap (fn: (value: R) => void): IEither.TLeft<L, R> {
+    tap (_fn: (value: R) => void): IEither.TLeft<L, R> {
       return Left<L, R>(this.value)
     },
     getOrThrow (): R {

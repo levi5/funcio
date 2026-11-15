@@ -1,16 +1,18 @@
-import { type OBJ } from '../common.js'
+import type { OBJ } from '@funcio/Object/common.js'
 
 export const pick = <O extends OBJ, K extends keyof O>(keys: K[], obj: O): Pick<O, K> => {
-  const out = {} as Pick<O, K>
+  const out: Partial<Pick<O, K>> = {}
   keys.forEach((k) => {
     if (k in obj) (out as Record<string, unknown>)[k as string] = obj[k]
   })
-  return out
+  return out as Pick<O, K>
 }
 
 export const omit = <O extends OBJ, K extends keyof O>(keys: K[], obj: O): Omit<O, K> => {
   const out = { ...obj }
-  keys.forEach((k) => delete (out as Record<string, unknown>)[k as string])
+  keys.forEach((k) => {
+    Reflect.deleteProperty(out, k)
+  })
   return out as Omit<O, K>
 }
 
@@ -42,7 +44,7 @@ export const hasPath = (path: Array<string | number | symbol>, obj: unknown): bo
   let cur: unknown = obj
   for (const key of path) {
     if (cur === null || cur === undefined || typeof cur !== 'object') return false
-    if (!(key in (cur as object))) return false
+    if (!(key in cur)) return false
     cur = (cur as Record<string | number | symbol, unknown>)[key]
   }
   return true
@@ -52,7 +54,7 @@ export const dissocPath = <O extends OBJ>(path: Array<string | number>, obj: O):
   if (path.length === 0) return obj
   if (path.length === 1) {
     const out = Array.isArray(obj) ? [...(obj as unknown[])] : { ...obj }
-    delete (out as Record<string, unknown>)[path[0] as string]
+    Reflect.deleteProperty(out, path[0])
     return out as O
   }
   const [head, ...tail] = path

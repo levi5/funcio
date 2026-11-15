@@ -1,4 +1,4 @@
-import type { ModuleDoc } from '../types'
+import type { ModuleDoc } from '@/content/types'
 
 export const primitives: ModuleDoc = {
   id: 'primitives',

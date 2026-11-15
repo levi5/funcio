@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout tag
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 0
           # On push tags inputs.tag is empty -> checkout defaults to the tag that triggered the run.
@@ -30,11 +30,11 @@ jobs:
           ref: ${{ inputs.tag }}
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7.1.0
         with:
-          node-version: '24'
+          node-version-file: .nvmrc
           registry-url: 'https://registry.npmjs.org/'
-          # No cache: project gitignores lockfiles (*-lock.*, yarn.lock), same as test.yml/deploy.yml.
+          cache: npm
 
       # 1) Fail fast if token is missing/expired — breaks ONLY this workflow, never the site deploy.
       - name: Validate NPM_TOKEN
@@ -80,7 +80,7 @@ jobs:
 
       - name: Install dependencies
         if: steps.check.outputs.exists == 'false'
-        run: npm install
+        run: npm ci
 
       - name: Build library
         if: steps.check.outputs.exists == 'false'
@@ -89,6 +89,10 @@ jobs:
       - name: Test library
         if: steps.check.outputs.exists == 'false'
         run: npm test -- --run
+
+      - name: Validate types, lint and entry points
+        if: steps.check.outputs.exists == 'false'
+        run: npm run typecheck && npm run lint && node scripts/check-package.cjs
 
       - name: Publish to npm
         if: steps.check.outputs.exists == 'false'

@@ -1,5 +1,5 @@
 import { left, right } from './index.js'
-import { type IEither } from '../../@Types/index.js'
+import type { IEither } from '@funcio/@Types/index.js'
 
 /**
  * Wraps an asynchronous operation in a try-catch block, returning an Either monad.
@@ -7,7 +7,7 @@ import { type IEither } from '../../@Types/index.js'
  * @param {() => Promise<T>} fn - The asynchronous operation to be wrapped.
  * @returns {Promise<IEither.Either<Error, T>>} Either monad representing success or failure.
  */
-export const asyncTry = async <T = any>(fn: () => Promise<T>): Promise<IEither.Either<Error, T>> => {
+export const asyncTry = async <T = unknown>(fn: () => Promise<T>): Promise<IEither.Either<Error, T>> => {
   try {
     const result: T = await fn()
     return right<Error, T>(result)

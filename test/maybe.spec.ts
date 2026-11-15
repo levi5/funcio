@@ -1,5 +1,5 @@
 import { expect, describe, it } from "vitest"
-import { _Maybe } from "../src/Monads/Maybe/index.js"
+import { _Maybe } from "@funcio/Monads/Maybe/index.js"
 
 
 describe("Maybe Monad", () => {
@@ -10,9 +10,9 @@ describe("Maybe Monad", () => {
 
 
   it("Should return 'Nothing' when mapping over an undefined value", async () => {
-    const container = _Maybe.of({ status: true, error: null })
+    const container = _Maybe.of<{ status: boolean; error: Error | null }>({ status: true, error: null })
       .map(data => data.error)
-      .map((error: any) => error.message)
+      .map(error => error instanceof Error ? error.message : undefined)
       .map(message => message);
 
     expect(container.isNothing()).toBeTruthy();
@@ -110,7 +110,7 @@ describe("Maybe Fluent Conditional (.when().then().else())", () => {
   it("executes else branch for Nothing", () => {
     const result = _Maybe.of(null)
       .when(true)
-      .then((x: any) => x * 2)
+      .then(x => (x ?? 0) * 2)
       .else(() => 99)
       .getOrElse(0)
     expect(result).toBe(99)
@@ -118,8 +118,8 @@ describe("Maybe Fluent Conditional (.when().then().else())", () => {
 
   it("executes else branch for Nothing with predicate function", () => {
     const result = _Maybe.of(null)
-      .when(x => x > 3)
-      .then((x: any) => x * 2)
+      .when(x => x !== null && x > 3)
+      .then(x => (x ?? 0) * 2)
       .else(() => 99)
       .getOrElse(0)
     expect(result).toBe(99)

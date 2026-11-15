@@ -1,5 +1,5 @@
 import { _Maybe } from './maybe.js'
-import { MaybeType } from '../../@Types/index.js'
+import { MaybeType } from '@funcio/@Types/index.js'
 import { Nothing } from './nothing.js'
 import { WhenBuilder } from './whenBuilder.js'
 
@@ -15,7 +15,7 @@ type UnwrappedMaybe<T> =
  * @extends {_Maybe}
  * @template T - The type of the value stored in Just.
  */
-export class Just<T> extends _Maybe {
+export class Just<T> extends _Maybe<T> {
   /**
    * The tag indicating the Maybe type.
    * @type {MaybeType}
@@ -43,7 +43,7 @@ export class Just<T> extends _Maybe {
     return true
   }
 
-  public when<U>(predicate: boolean | ((value: any) => boolean)): WhenBuilder<T, U> {
+  public when<U>(predicate: boolean | ((value: T) => boolean)): WhenBuilder<T, U> {
     return new WhenBuilder(this, predicate)
   }
 
@@ -86,24 +86,24 @@ export class Just<T> extends _Maybe {
     return this.flatMap(fn)
   }
 
-  public fold<R>(onNothing: () => R, onJust: (value: T) => R): R {
+  public fold<R>(_onNothing: () => R, onJust: (value: T) => R): R {
     return onJust(this.value)
   }
 
-  public filter(predicate: (value: T) => boolean): Just<T> | Nothing<T> {
+  public filter (predicate: (value: T) => boolean): Just<T> | Nothing<T> {
     return predicate(this.value) ? this : Nothing.of(this.value)
   }
 
-  public orElse<U>(other: Just<U> | Nothing<U>): Just<T> {
+  public orElse<U>(_other: Just<U> | Nothing<U>): Just<T> {
     return this
   }
 
-  public tap(fn: (value: T) => void): Just<T> {
+  public tap (fn: (value: T) => void): Just<T> {
     fn(this.value)
     return this
   }
 
-  public toNullable(): T {
+  public toNullable (): T {
     return this.value
   }
 
@@ -136,7 +136,6 @@ export class Just<T> extends _Maybe {
    * @returns {string} A string representation of the Just instance.
    */
   public toString (): string {
-    // eslint-disable-next-line @typescript-eslint/no-base-to-string, @typescript-eslint/restrict-template-expressions
     return `Maybe.Just(${this.value})`
   }
 }

@@ -3,7 +3,7 @@
   border: 1px solid var(--border);
   border-radius: var(--radius);
   background: var(--bg-inset);
-  transition: border-color 0.18s ease;
+  transition: border-color var(--motion-duration, 0.18s) ease;
 }
 
 .playground:focus-within {

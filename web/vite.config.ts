@@ -1,12 +1,17 @@
-import { existsSync } from 'node:fs'
+import { existsSync, readFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
-import { defineConfig, type Plugin } from 'vite'
+import { fileURLToPath } from 'node:url'
 import react from '@vitejs/plugin-react'
+import { defineConfig, type Plugin } from 'vite'
+
+const root = dirname(fileURLToPath(import.meta.url))
+const readVersion = (): string =>
+  (JSON.parse(readFileSync(resolve(root, '../package.json'), 'utf8')) as { version: string }).version
 
 const cssModule = (): Plugin => ({
   name: 'funcio:css-module',
   enforce: 'pre',
-  resolveId (source, importer) {
+  resolveId(source, importer) {
     if (!source.endsWith('styles.css')) return null
 
     const target = resolve(importer ? dirname(importer) : process.cwd(), source)
@@ -18,35 +23,28 @@ const cssModule = (): Plugin => ({
 
 export default defineConfig({
   base: process.env.BASE_PATH ?? '/funcio/',
-  plugins: [cssModule(), react()],
+  plugins: [
+    cssModule(),
+    react(),
+    {
+      name: 'funcio:version',
+      transformIndexHtml: (html) => html.replaceAll('%FUNCIO_VERSION%', readVersion())
+    }
+  ],
   resolve: {
     alias: {
-      '@': resolve(__dirname, 'src')
+      '@': resolve(root, 'src'),
+      '@funcio': resolve(root, '../src'),
+      funcio: resolve(root, '../src/main.ts')
     }
   },
   build: {
     outDir: 'dist',
     target: 'es2020',
     sourcemap: true,
-    emptyOutDir: true,
-    rollupOptions: {
-      external: ['funcio'],
-      output: {
-        globals: {
-          funcio: 'Funcio'
-        }
-      }
-    }
+    emptyOutDir: true
   },
   worker: {
-    format: 'es',
-    rollupOptions: {
-      external: ['funcio'],
-      output: {
-        globals: {
-          funcio: 'Funcio'
-        }
-      }
-    }
+    format: 'es'
   }
 })

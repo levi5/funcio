@@ -1,1 +1,1 @@
-export type FN = (..._args: any[]) => any
+export type FN = (...args: never[]) => unknown

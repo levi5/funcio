@@ -6,29 +6,27 @@
   "description": "Documentation site for Funcio, with runnable examples, deployed to GitHub Pages.",
   "scripts": {
     "dev": "vite",
-    "predev": "tsx scripts/generate-version.ts",
-    "prebuild": "tsx scripts/generate-version.ts && npm --prefix .. run build",
-    "pretypecheck": "npm --prefix .. run build",
     "build": "npm run verify && tsc --noEmit -p tsconfig.json && npm run lint && vite build",
-    "postbuild": "tsx scripts/generate-sitemap.ts && tsx scripts/update-version.ts",
+    "postbuild": "tsx scripts/generate-sitemap.ts && tsx scripts/verify-build.ts",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit -p tsconfig.json",
-    "verify": "esbuild scripts/verify-examples.ts --bundle --platform=node --format=esm --log-level=warning --alias:funcio=../src/main.ts --outfile=node_modules/.cache/verify.mjs && node node_modules/.cache/verify.mjs",
-    "lint": "biome check src scripts",
+    "verify": "tsx --tsconfig tsconfig.json scripts/verify-examples.ts",
+    "lint": "biome check --error-on-warnings .",
     "format": "biome check --write src scripts"
   },
   "dependencies": {
     "acorn": "^8.19.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.5.15",
-    "@types/react": "^18.3.12",
-    "@types/react-dom": "^18.3.1",
-    "@vitejs/plugin-react": "4.3.4",
+    "@biomejs/biome": "^2.6.8",
+    "@types/node": "^24.19.2",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.3.0",
     "tsx": "^4.19.1",
-    "typescript": "^5.6.3",
-    "vite": "^5.4.11"
+    "typescript": "~6.0.3",
+    "vite": "^8.3.8"
   }
 }

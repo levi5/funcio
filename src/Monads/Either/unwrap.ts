@@ -1,4 +1,4 @@
-import { IEither } from '../../@Types/index.js'
+import { IEither } from '@funcio/@Types/index.js'
 
 /**
  * Unwraps the value contained in an Either monad, handling recursive unwrapping.

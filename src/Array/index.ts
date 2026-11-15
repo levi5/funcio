@@ -1,5 +1,6 @@
 import { filterAsync, forEachAsync, mapAsync } from './asyncMethods.js'
 import { chunk, drop, flatMap, groupBy, partition, range, sortBy, take, uniq, uniqBy, zip, zipWith } from './syncMethods.js'
+import { lazy } from './lazy.js'
 
 const reduceAsync = async <T, R>(array: T[], fn: (acc: R, value: T) => Promise<R> | R, initial: R): Promise<R> => {
   let acc = initial
@@ -8,6 +9,7 @@ const reduceAsync = async <T, R>(array: T[], fn: (acc: R, value: T) => Promise<R
 }
 
 export const _Array = {
+  lazy,
   forEachAsync,
   mapAsync,
   filterAsync,

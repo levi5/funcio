@@ -1,7 +1,7 @@
-import { _curry } from '../../function/Curry/curry.js'
-import { _match } from '../../function/Match/match.js'
+import { _curry } from '@funcio/function/Curry/curry.js'
+import { _match } from '@funcio/function/Match/match.js'
 import { $copy } from './copy.js'
-import { type OBJ } from '../common.js'
+import type { OBJ } from '@funcio/Object/common.js'
 
 /**
  * Processes a key in an object by following a path of keys.
@@ -11,7 +11,7 @@ import { type OBJ } from '../common.js'
  * @param {keyof OBJ} key - The current key to process.
  * @returns {*} The value obtained by following the path of keys in the object.
  */
-const processKey = _curry(<O extends OBJ, K extends keyof OBJ>(keysToFollow: Array<string | number | symbol>, obj: O, key: K): any => {
+const processKey = _curry(<O extends OBJ, K extends keyof OBJ>(keysToFollow: Array<string | number | symbol>, obj: O, key: K): unknown => {
   return keysToFollow.length > 1
     ? getPathValue(keysToFollow.slice(1), obj[key])
     : $copy(obj[key])
@@ -25,8 +25,7 @@ const processKey = _curry(<O extends OBJ, K extends keyof OBJ>(keysToFollow: Arr
  * @param {string | number | symbol} currentKey - The current key to check and process.
  * @returns {*} The value obtained by processing the key if it exists, otherwise undefined.
  */
-const checkAndProcessKey = <O extends OBJ>(keysToFollow: Array<string | number | symbol>, obj: O, currentKey: string | number | symbol): any | undefined => {
-  // Check if obj is a valid object
+const checkAndProcessKey = <O extends OBJ>(keysToFollow: Array<string | number | symbol>, obj: O, currentKey: string | number | symbol): unknown => {
   if (obj && typeof obj === 'object') {
     const keyExists = currentKey in obj || (typeof currentKey === 'symbol' && Object.getOwnPropertySymbols(obj).includes(currentKey))
     return keyExists ? processKey(keysToFollow)(obj)(currentKey) : undefined
@@ -41,14 +40,15 @@ const checkAndProcessKey = <O extends OBJ>(keysToFollow: Array<string | number |
  * @param {OBJ} obj - The object to retrieve the value from.
  * @returns {*} The value obtained by following the path of keys in the object.
  */
-export const getPathValue = <O extends OBJ>(keysToFollow: Array<string | number | symbol>, obj: O): any => {
+export const getPathValue = (keysToFollow: Array<string | number | symbol>, obj: unknown): unknown => {
+  if (obj === null || typeof obj !== 'object') return undefined
   const currentKey = keysToFollow[0]
   const keyType = typeof currentKey
 
   return _match(keyType)
-    .with('symbol', () => checkAndProcessKey(keysToFollow, obj, currentKey))
-    .with('number', () => checkAndProcessKey(keysToFollow, obj, currentKey))
-    .with('string', () => checkAndProcessKey(keysToFollow, obj, currentKey))
+    .with('symbol', () => checkAndProcessKey(keysToFollow, obj as OBJ, currentKey))
+    .with('number', () => checkAndProcessKey(keysToFollow, obj as OBJ, currentKey))
+    .with('string', () => checkAndProcessKey(keysToFollow, obj as OBJ, currentKey))
     ._(() => undefined)
     .exec()
 }

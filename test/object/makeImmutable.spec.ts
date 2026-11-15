@@ -1,6 +1,6 @@
 import { expect, describe, it } from "vitest"
 
-import { _Object } from '../../src/Object/index.js'
+import { _Object } from '@funcio/Object/index.js'
 
 const makeSut = () => {
   const sut = _Object.makeImmutable
@@ -9,13 +9,13 @@ const makeSut = () => {
   }
 }
 
-const modifyObject = (immutableObject: any) => {
+const modifyObject = (immutableObject: { age: number; address: { city: string } }) => {
   try {
     if (!immutableObject) return;
     immutableObject.age = 40
     immutableObject.address.city = 'none'
     return immutableObject
-  } catch (error) {
+  } catch {
     return immutableObject
   }
 }

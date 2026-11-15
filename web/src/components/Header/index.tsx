@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react'
-import { useTheme } from '../../hooks/useTheme'
+import { Button } from '@/components/Button'
+import { Logo } from '@/components/Logo'
+import { useTheme } from '@/hooks/useTheme'
 import { VERSION } from '@/version'
-
-import { Button } from '../Button'
-import { Logo } from '../Logo'
 import styles from './styles.css'
 
-const LINKS = ['pipe', 'curry', 'match', 'maybe', 'either', 'object', 'array', 'playground']
+const LINKS = ['pipe', 'curry', 'match', 'maybe', 'either', 'object', 'array', 'async-validation', 'playground']
 
 export const Header = () => {
   const { theme, toggle } = useTheme()
@@ -42,7 +41,7 @@ export const Header = () => {
                 setOpen(false)
               }}
             >
-              {id}
+              {id === 'async-validation' ? 'validation' : id}
             </a>
           ))}
         </nav>

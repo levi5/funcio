@@ -1,25 +1,25 @@
 import { _Maybe } from './maybe.js'
-import { type Just } from './just.js'
-import { type Nothing } from './nothing.js'
+import type { Just } from './just.js'
+import type { Nothing } from './nothing.js'
 
 export class WhenBuilder<T, U> {
-  private readonly predicate: boolean | ((value: any) => boolean)
-  private onTrueFn?: (value: any) => any
-  private onFalseFn?: (value: any) => any
+  private readonly predicate: boolean | ((value: unknown) => boolean)
+  private onTrueFn?: (value: unknown) => unknown
+  private onFalseFn?: (value: unknown) => unknown
   private readonly source: _Maybe<T>
 
-  constructor (source: _Maybe<T>, predicate: boolean | ((value: any) => boolean)) {
+  constructor (source: _Maybe<T>, predicate: boolean | ((value: T) => boolean)) {
     this.source = source
-    this.predicate = predicate
+    this.predicate = typeof predicate === 'function' ? (value) => predicate(value as T) : predicate
   }
 
   then<V> (fn: (value: T) => V): WhenBuilder<T, V> {
-    this.onTrueFn = fn
+    this.onTrueFn = (value) => fn(value as T)
     return this as unknown as WhenBuilder<T, V>
   }
 
   else<V> (fn: (value: T) => V): WhenBuilder<T, V> {
-    this.onFalseFn = fn
+    this.onFalseFn = (value) => fn(value as T)
     return this as unknown as WhenBuilder<T, V>
   }
 
@@ -31,30 +31,30 @@ export class WhenBuilder<T, U> {
 
   private exec (): U {
     const isJust = this.source.isJust()
-    const value = isJust ? (this.source as any).get() : undefined
+    const value = isJust ? (this.source as Just<T>).get() : undefined
 
-    const predicateResult = isJust ? this.evaluatePredicate(value) : false
+    const predicateResult = isJust ? this.evaluatePredicate(value as T) : false
 
     if (predicateResult && this.onTrueFn) {
-      return this.onTrueFn(value)
+      return this.onTrueFn(value as T) as U
     }
 
     if (this.onFalseFn) {
-      return this.onFalseFn(value as T)
+      return this.onFalseFn(value as T) as U
     }
 
     throw new Error('WhenBuilder: either then() or else() must be provided')
   }
 
   map<R> (fn: (value: U) => R): Just<R> | Nothing<R> {
-    return _Maybe.of(this.exec() as any).map(fn)
+    return _Maybe.of(this.exec()).map(fn) as Just<R> | Nothing<R>
   }
 
-  flatMap<R extends _Maybe<any>> (fn: (value: U) => R): R | Nothing<any> {
-    return _Maybe.of(this.exec() as any).flatMap(fn)
+  flatMap<R extends _Maybe> (fn: (value: U) => R): R | Nothing<U> {
+    return _Maybe.of(this.exec()).flatMap(fn)
   }
 
-  chain<R extends _Maybe<any>> (fn: (value: U) => R): R | Nothing<any> {
+  chain<R extends _Maybe> (fn: (value: U) => R): R | Nothing<U> {
     return this.flatMap(fn)
   }
 

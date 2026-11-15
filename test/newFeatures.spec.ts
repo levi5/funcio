@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { _Either, _Maybe, _Array, _Object, _String, _Number, _Task, _Validation, _compose, _pipeFn, _tap, _once, _memoize, _flip, _pipe, _match } from '../src/main.js'
-import { _try } from '../src/Monads/Either/try.js'
+import { _Either, _Maybe, _Array, _Object, _String, _Number, _Task, _Validation, _compose, _pipeFn, _tap, _once, _memoize, _flip, _pipe, _match } from '@funcio/main.js'
+import { _try } from '@funcio/Monads/Either/try.js'
 
 describe('Compat: comportamento histórico preservado (sem breaking changes)', () => {
   it('try.sync/async preservam o valor lançado cru (sem embrulhar em Error)', () => {

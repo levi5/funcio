@@ -1,11 +1,12 @@
 import { writeFileSync } from 'node:fs'
 import { resolve } from 'node:path'
+import { loadContent } from './load-content'
+
+const { modules } = await loadContent()
 
 const BASE_URL = 'https://levi5.github.io/funcio/'
 
-const modules = ['pipe', 'curry', 'match', 'maybe', 'either', 'object', 'array', 'playground']
-
-const urls = [BASE_URL, ...modules.map((m) => `${BASE_URL}#${m}`)]
+const urls = [BASE_URL, ...modules.map((module) => `${BASE_URL}#${module.id}`), `${BASE_URL}#playground`]
 
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">

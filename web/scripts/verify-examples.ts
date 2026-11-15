@@ -1,6 +1,6 @@
-import { heroExample, modules } from '../src/content'
-import { execute } from '../src/playground/execute'
-import { libScope } from '../src/playground/lib-scope'
+import { execute } from '@/playground/execute'
+import { libScope } from '@/playground/lib-scope'
+import { loadContent } from './load-content'
 
 interface Failure {
   label: string
@@ -44,6 +44,10 @@ async function check(label: string, code: string, expected: string | undefined):
 }
 
 async function main(): Promise<void> {
+  const { heroExample, modules } = await loadContent()
+  await check('aliased import', "import { _Validation as v } from 'funcio'; v.number().parse(42)", '42')
+  await check('namespace import', "import * as fp from 'funcio'; fp._Maybe.just(42).get()", '42')
+  await check('renamed default import', "import fp from 'funcio'; fp._Maybe.just(42).get()", '42')
   await check('hero', heroExample, 'no email')
 
   for (const module of modules) {

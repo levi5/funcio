@@ -1,4 +1,5 @@
-import type { ApiEntry } from '../../content'
+import { Implementation } from '@/components/Implementation'
+import type { ApiEntry } from '@/content'
 import styles from './styles.css'
 
 export const ApiList = ({ entries }: { entries: ApiEntry[] }) => (
@@ -11,6 +12,7 @@ export const ApiList = ({ entries }: { entries: ApiEntry[] }) => (
           <code className={styles.name}>{entry.name}</code>
           {entry.signature !== undefined && <code className={styles.signature}>{entry.signature}</code>}
           <p className={styles.description}>{entry.description}</p>
+          {entry.implementation && <Implementation doc={entry.implementation} name={entry.name} />}
         </li>
       ))}
     </ul>

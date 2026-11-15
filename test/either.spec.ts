@@ -1,13 +1,13 @@
 import { expect, describe, it } from "vitest"
-import { _unwrap, left, right } from "../src/Monads/Either/index.js"
-import { IEither } from "../src/@Types/index.js"
+import { _unwrap, left, right } from "@funcio/Monads/Either/index.js"
+import type { IEither } from "@funcio/@Types/index.js"
 
 const fakeData = () => ({
   status: "success"
 })
 
 const makeSut = () => {
-  const sut = (condition: boolean, value: any): IEither.Either<null, Object> => {
+  const sut = (condition: boolean, value: object): IEither.Either<null, object> => {
     if (condition) return right(value)
     return left(null)
   }
@@ -44,8 +44,8 @@ describe("Either monad", () => {
   it("Should unwrap the value and return the correct data when input is true", () => {
     const { sut } = makeSut()
 
-    const wrapper = right<null, Object>(sut(true, fakeData()))
-    const value = _unwrap<null, Object>(wrapper)
+    const wrapper = right<null, object>(sut(true, fakeData()))
+    const value = _unwrap<null, object>(wrapper)
     expect(value).toStrictEqual(fakeData())
   })
 

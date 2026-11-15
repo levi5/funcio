@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { DEFAULT_META, MODULE_META } from '../hooks/usePageMeta'
+import { DEFAULT_META, MODULE_META } from '@/hooks/usePageMeta'
 
 type Props = {
   activeSection: string

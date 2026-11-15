@@ -1,4 +1,5 @@
-import type { ModuleDoc } from '../types'
+import { pipeImplementation } from '@/content/implementations'
+import type { ModuleDoc } from '@/content/types'
 
 export const pipe: ModuleDoc = {
   id: 'pipe',
@@ -7,25 +8,27 @@ export const pipe: ModuleDoc = {
   api: [
     {
       name: '_pipe',
+      implementation: pipeImplementation,
       signature: '_pipe<T, FNS extends FN[]>(input: T, ...fns: FNS): ReturnType<Pipeline<FNS>>',
       description:
-        'Threads a value through each function, using the result of one as the input of the next. Fully typed end to end.'
+        'Passes each result to the next function. Result inference uses the function tuple; it does not validate every input or chain at the call site.'
     },
     {
       name: '_pipe.async',
-      signature: '_pipe.async<T>(input: T, ...fns: AsyncFN[]): Promise<any>',
+      signature:
+        '_pipe.async<T, A, B>(input: T, a: (value: Awaited<T>) => A, b: (value: Awaited<A>) => B): Promise<Awaited<B>>',
       description:
-        'The same idea for pipelines that mix sync and async steps. Each step receives the resolved value from the previous one.'
+        'Mix sync and async steps with inferred resolved output types. Promise inputs are awaited too. TypeScript rejects incompatible steps; annotate steps in longer variadic pipelines when needed.'
     },
     {
       name: '_compose(...fns)',
-      signature: '_compose(...fns: FN[]): FN',
-      description: 'Right-to-left twin of `_pipe`: `compose(f, g)(x)` is `f(g(x))`.'
+      signature: '_compose(...fns: FN[]): (input: unknown) => unknown',
+      description: 'Right-to-left composition: compose(f, g)(x) is f(g(x)). The result is typed as unknown.'
     },
     {
       name: '_pipeFn(...fns)',
-      signature: '_pipeFn(...fns: FN[]): FN',
-      description: 'Reusable data-last pipe: `pipeFn(f, g)` returns a function `(x) => g(f(x))`.'
+      signature: '_pipeFn(...fns: FN[]): (input: unknown) => unknown',
+      description: 'Reusable data-last pipe: pipeFn(f, g)(x) is g(f(x)). The result is typed as unknown.'
     },
     {
       name: '_tap / _once / _memoize / _flip',

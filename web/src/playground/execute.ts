@@ -18,7 +18,7 @@ function createConsole(logs: LogEntry[]): Console {
   const record =
     (level: LogLevel): ((...args: unknown[]) => void) =>
     (...args: unknown[]) => {
-      logs.push({ level, text: args.map((arg) => inspect(arg)).join(' ') })
+      logs.push({ id: logs.length, level, text: args.map((arg) => inspect(arg)).join(' ') })
     }
 
   const fake: Record<string | symbol, unknown> = {

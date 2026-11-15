@@ -1,4 +1,4 @@
-import { type OBJ } from '../common.js'
+import type { OBJ } from '@funcio/Object/common.js'
 
 /**
  * Sets a value in an object by following a path of keys.

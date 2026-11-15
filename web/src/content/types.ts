@@ -2,6 +2,14 @@ export interface ApiEntry {
   name: string
   signature?: string
   description: string
+  implementation?: ImplementationDoc
+}
+
+export interface ImplementationDoc {
+  source: string
+  techniques: string[]
+  steps: { title: string; code: string; explanation: string }[]
+  tradeoffs: string
 }
 
 export interface Example {

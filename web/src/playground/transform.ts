@@ -13,6 +13,7 @@ export type BindingKind = 'default' | 'namespace' | 'named'
 export interface Binding {
   name: string
   kind: BindingKind
+  imported?: string
 }
 
 export interface Transformed {
@@ -58,7 +59,13 @@ function bindingsOf(node: ImportDeclaration): Binding[] {
           ? 'namespace'
           : 'named'
 
-    return { name: specifier.local.name, kind }
+    const imported =
+      specifier.type === 'ImportSpecifier'
+        ? specifier.imported.type === 'Identifier'
+          ? specifier.imported.name
+          : String(specifier.imported.value)
+        : undefined
+    return { name: specifier.local.name, kind, imported }
   })
 }
 

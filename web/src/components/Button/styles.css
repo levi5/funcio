@@ -13,10 +13,10 @@
   cursor: pointer;
   white-space: nowrap;
   transition:
-    background 0.15s ease,
-    border-color 0.15s ease,
-    color 0.15s ease,
-    transform 0.1s ease;
+    background var(--motion-duration, 0.15s) ease,
+    border-color var(--motion-duration, 0.15s) ease,
+    color var(--motion-duration, 0.15s) ease,
+    transform var(--motion-duration, 0.1s) ease;
 }
 
 .button:hover:not(:disabled) {

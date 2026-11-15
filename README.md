@@ -1,26 +1,26 @@
-# Funcio 🚀
+# Funcio
 
-Funcio is a powerful and versatile library designed to bring the elegance of functional programming to the TypeScript ecosystem. With Funcio, seamlessly integrate functional programming principles and techniques into your codebase, unlocking a universe of possibilities. It empowers you to create clean and expressive code using functional programming paradigms. 🧙‍♂️
+Funcio is a functional programming library for TypeScript and JavaScript. It includes Maybe, Either, function composition, pattern matching, async tasks, validation and collection helpers, with no runtime dependencies.
 
 **Note: This library is currently under construction and not yet ready for production use.**
 
-📖 **Documentation:** https://levi5.github.io/funcio/ — every example on the site is a runnable editor wired to the real library.
+**Documentation:** https://levi5.github.io/funcio/ — edit and run examples in the browser.
 
 [![Docs](https://img.shields.io/badge/docs-levi5.github.io%2Ffuncio-7c5cff?style=for-the-badge)](https://levi5.github.io/funcio/)
 [![Sponsor](https://img.shields.io/badge/Sponsor-GitHub-EA4AAA?style=for-the-badge&logo=githubsponsors&logoColor=white)](https://github.com/sponsors/levi5)
 
 ## Table of Contents
 
-- [Funcio 🚀](#funcio-)
+- [Funcio](#funcio)
   - [Table of Contents](#table-of-contents)
-  - [Installation 📦](#installation-)
-  - [Getting Started 🏁](#getting-started-)
-  - [Usage 🚀](#usage-)
+  - [Installation](#installation)
+  - [Getting Started](#getting-started)
+  - [Usage](#usage)
     - [`_Either`](#_either)
       - [`_Either.right(value)`](#_eitherrightvalue)
       - [`_Either.left(value)`](#_eitherleftvalue)
-      - [`_Either.isRight(either)`](#_eitherisrighteither)
-      - [`_Either.isLeft(either)`](#_eitherislefteither)
+      - [`either.isRight()`](#eitherisright)
+      - [`either.isLeft()`](#eitherisleft)
       - [`_Either.try.sync(fn)`](#_eithertrysyncfn)
       - [`_Either.try.async(fn)`](#_eithertryasyncfn)
       - [`_Either.unwrap()`](#_eitherunwrap)
@@ -56,40 +56,40 @@ Funcio is a powerful and versatile library designed to bring the elegance of fun
     - [`_tap / _once / _memoize / _flip`](#_tap--_once--_memoize--_flip)
     - [`_curry`](#_curry)
     - [`_match`](#_match)
-  - [Contributions 🤝](#contributions-)
-  - [License 📜](#license-)
+  - [Contributions](#contributions)
+  - [License](#license)
 
-## Installation 📦
+## Installation
 
-To integrate Funcio into your project, let the npm package manager work its magic. Simply run the following command in your terminal:
+Install with npm:
 
 ```bash
 npm install funcio
 ```
 
-If you prefer yarn, it's got you covered too:
+Or Yarn:
 
 ```bash
 yarn add funcio
 ```
 
-## Getting Started 🏁
+## Getting Started
 
-Embark on your Funcio journey by importing it into your TypeScript code:
+Import the default object:
 
 ```typescript
 import Funcio from 'funcio';
 ```
 
-## Usage 🚀
+## Usage
 
 ### `_Either`
 
-`_Either` is a module in the Funcio library that enables you to handle two distinct scenarios: the "Right" case and the "Left" case. It excels in situations where you need to decide between two possible outcomes. The "Right" case typically represents success, while the "Left" case conveys errors or alternative values.
+`Either<L, R>` represents one of two outcomes. By convention, `Right` holds a successful result and `Left` holds an error.
 
 #### `_Either.right(value)`
 
-The `_Either.right(value)` method creates an `Either` instance, cradling a specific value in the "Right" case.
+Creates a `Right` containing the value.
 
 ```typescript
 import Funcio from 'funcio';
@@ -99,7 +99,7 @@ const rightResult = Funcio._Either.right(42);
 
 #### `_Either.left(value)`
 
-The `_Either.left(value)` method crafts an `Either` instance with the "Left" case containing a specific value.
+Creates a `Left` containing the value.
 
 ```typescript
 import Funcio from 'funcio';
@@ -107,9 +107,9 @@ import Funcio from 'funcio';
 const leftResult = Funcio._Either.left("Error: Something went wrong");
 ```
 
-#### `_Either.isRight(either)`
+#### `either.isRight()`
 
-The `_Either.isRight(either)` method assesses if the provided `Either` instance resides in the "Right" case and returns `true` for a match or `false` if it's in the "Left" case.
+Returns `true` for a `Right`. Call it on the result, not on `_Either`.
 
 ```typescript
 import Funcio from 'funcio';
@@ -120,9 +120,9 @@ const isRight = result.isRight();
 // Result: true
 ```
 
-#### `_Either.isLeft(either)`
+#### `either.isLeft()`
 
-The `_Either.isLeft(either)` method verifies if the provided `Either` instance dwells in the "Left" case and returns `true` for an affirmative or `false` if it inhabits the "Right" case.
+Returns `true` for a `Left`.
 
 ```typescript
 import Funcio from 'funcio';
@@ -133,7 +133,7 @@ const isLeft = result.isLeft();  // Result: true
 
 #### `_Either.try.sync(fn)`
 
-The `_Either.try.sync(fn)` function is a powerful tool for encapsulating synchronous functions that can throw exceptions in a safe context. It allows you to execute a function `fn` and return the result in the "Right" case if the function is successful, or the exception in the "Left" case if the function fails.
+Runs a synchronous function and returns its result as `Right`, or the thrown value as `Left`. Thrown values are preserved, even when they are not `Error` instances.
 
 ```typescript
 import Funcio from 'funcio';
@@ -151,21 +151,21 @@ const result2 = Funcio._Either.try.sync(() => divide(6, 0)); // Result: Left(Err
 
 #### `_Either.try.async(fn)`
 
-The `_Either.try.async(fn)` function is a powerful tool for encapsulating asynchronous functions that can throw exceptions in a safe context. It allows you to execute an asynchronous function `fn` and return the result in the "Right" case if the function is successful or the exception in the "Left" case if the function fails.
+Awaits the function's result and returns `Right` on success or `Left` on rejection. The rejection value is preserved.
 
 ```typescript
 import Funcio from 'funcio';
 
 const jsonString = '{"name": "John", "age": 30}';
-const validJson = await Funcio._Either.try.async<object>(() => JSON.parse(jsonString));
+const validJson = await Funcio._Either.try.async<object>(async () => JSON.parse(jsonString));
 
 const invalidJsonString = '{"name": "John", "age": 30,}';
-const invalidJson = await Funcio._Either.try.async<object>(() => JSON.parse(invalidJsonString));
+const invalidJson = await Funcio._Either.try.async<object>(async () => JSON.parse(invalidJsonString));
 ```
 
 #### `_Either.unwrap()`
 
-The `_Either.unwrap()` function extracts the value contained within an `Either` structure. This function proves to be instrumental in scenarios where you need to handle both success and failure cases, as it allows you to access the wrapped value regardless of the outcome.
+Returns the contained value, following nested `Either` wrappers. This discards the distinction between `Left` and `Right`; use `match` when that distinction matters.
 
 ```typescript
 import Funcio from 'funcio';
@@ -296,11 +296,11 @@ Funcio._Either.combine(
 
 ### `_Object`
 
-`_Object` is a module in the Funcio library that offers a treasure trove of utilities for manipulating objects.
+Object helpers for copying, freezing, selecting properties and accessing nested paths.
 
 #### `_Object.makeImmutable`
 
-The `_Object.makeImmutable` function is a versatile tool provided by the `_Object` module in our library. It enables you to create an immutable incarnation of an object, ensuring that its properties remain impervious to change once set.
+Copies the object and freezes its enumerable string-keyed properties recursively. The original is unchanged. This does not prevent changes through methods such as `Map.set`, `Set.add` or `Date.setTime`, and cyclic objects are not supported.
 
 ```typescript
 import Funcio from 'funcio';
@@ -318,7 +318,7 @@ immutableUser.address.city = "Avalora"; // ❌ Error: TypeError: Cannot assign t
 
 #### `_Object.chainify`
 
-`_Object.chainify` is a versatile utility in the Funcio library that allows you to create a fluent interface for method chaining, providing a seamless and expressive way to apply multiple operations on an object.
+Wraps an object in a proxy. Methods returning `undefined` return the proxy instead, so they can be chained. Other return values are passed through.
 
 ```typescript
 import Funcio from 'funcio';
@@ -330,14 +330,12 @@ class ExampleClass {
     this.value = value;
   }
 
-  setValue(newValue: number): this {
+  setValue(newValue: number): void {
     this.value = newValue;
-    return this;
   }
 
-  multiplyBy(factor: number): this {
+  multiplyBy(factor: number): void {
     this.value *= factor;
-    return this;
   }
 
   getValue(): number {
@@ -356,7 +354,7 @@ const result = Funcio._Object.chainify(new ExampleClass(5))
 
 #### `_Object.setByPath(keysToFollow, value, obj)`
 
-The `_Object.setByPath(keysToFollow, value, obj)` method allows you to set a value at a specific path within an object. It takes an array keysToFollow representing the path to the desired value and the object obj where the value will be set. For example:
+Returns a new object with the value set at the given path. The original object is unchanged.
 
 ```typescript
 import Funcio from 'funcio';
@@ -372,16 +370,15 @@ const person = {
   },
 }
 
-const streetValue = Funcio._Object.setByPath(['address', 'street'], '124 Main St', person);
+const updated = Funcio._Object.setByPath(['address', 'street'], '124 Main St', person);
 
-// Result: "124 Main St" for streetValue
+updated.address.street; // "124 Main St"
+person.address.street; // "123 Main St"
 ```
 
 #### `_Object.getPathValue(keysToFollow, obj)`
 
-The `_Object.getPathValue(keysToFollow, obj)` function retrieves the value
-
- at the specified path within an object. It takes an array of keys (`keysToFollow`) representing the path to follow and the target object (`obj`). The function returns the value found at the specified path or `undefined` if the path is not valid.
+Returns a copy of the value at the given path, or `undefined` if the path does not exist.
 
 ```typescript
 import Funcio from 'funcio';
@@ -406,17 +403,15 @@ const nonExistingValue = Funcio._Object.getPathValue(['address', 'null'], person
 
 ### `_Maybe`
 
-`_Maybe` is a module in the Funcio library that empowers you to handle optional values with finesse, in line with functional programming principles. The concept of "Maybe" is your guardian angel for situations where a value may or may not be present, safeguarding against null reference errors and enabling the creation of safer code.
+`_Maybe.of(value)` returns `Nothing` for `null` or `undefined`, and `Just` otherwise. Transformations skip `Nothing`.
 
 #### `_Maybe.get()`
 
-The `_Maybe.get()` method is a foundational function bequeathed by the `_Maybe` module within the Funcio library. It allows you to securely fetch the value ensconced within a `Maybe` object.
-
-When you invoke `_Maybe.get()` on a `Maybe` instance, it will yield the value if it's present, or it will raise an error or yield a default value if the `Maybe` is empty.
+`Just.get()` returns its value. `Nothing.get()` returns an `ExtractValueError` object; it does not throw. Use `getOrElse` to supply a fallback.
 
 #### `_Maybe.getOrElse(defaultValue)`
 
-The `_Maybe.getOrElse(defaultValue)` method is another invaluable tool within the `_Maybe` module in Funcio. It permits you to procure the value from a `Maybe` object while specifying a default value to deploy in case the `Maybe` is empty.
+Returns the value for `Just`, or the supplied fallback for `Nothing`.
 
 ```typescript
 import Funcio from 'funcio';
@@ -433,27 +428,21 @@ const defaultValue = maybeEmpty.getOrElse(0); // Retrieve a default value if the
 
 #### `_Maybe.map(function)`
 
-The `_Maybe.map(function)` method is a potent tool presented by the `_Maybe` module within the Funcio library. It allows you to apply a function to the value contained within a Maybe object, but only if the Maybe isn't empty. This method is your trusty companion for transforming the value within a Maybe while preserving safety and gracefully handling optional values.
+Transforms a `Just` and skips `Nothing`. If the callback returns `null` or `undefined`, the result becomes `Nothing`.
 
 ```typescript
 import Funcio from 'funcio';
 
-// Create a Maybe with a value
 const maybeValue = Funcio._Maybe.of(5);
 
-// Define a function to double the value
-const doubleValue = (x) => x * 2;
+const doubleValue = (x: number) => x * 2;
 
-// Utilize map to wield the function on the Maybe's value
 const doubledMaybe = maybeValue.map(doubleValue);
 
-// Create a Maybe with no value (empty)
 const maybeEmpty = Funcio._Maybe.of(null);
 
-// Endeavor to employ the same function on the empty Maybe
-const doubledEmptyMaybe = maybeEmpty.map(doubleValue);
+const doubledEmptyMaybe = maybeEmpty.map(() => 10); // Callback is skipped.
 
-// Retrieve the outcomes
 const result1 = doubledMaybe.getOrElse("Value is empty");
 const result2 = doubledEmptyMaybe.getOrElse("Value is empty");
 
@@ -497,7 +486,7 @@ const result = Funcio._Maybe.of(3)
 
 ### `_Maybe.unwrap()`
 
-The _Maybe.unwrap() method, when called on a Maybe instance, retrieves the encapsulated value if it exists. If the Maybe is empty, an error or a default value can be specified to handle this scenario, ensuring robust error handling and smooth execution flow.
+Recursively unwraps nested `Just` and `Nothing` values. For `_Maybe.of(null)` it returns `null`; for `_Maybe.of(undefined)` it returns `undefined`. It does not accept a fallback; use `getOrElse` for that.
 
 ```typescript
  import Funcio from 'funcio';
@@ -511,6 +500,10 @@ const unwrappedValue = maybeValue.unwrap();
 #### `_Maybe.when(predicate).then(fn).else(fn)`
 
 The `_Maybe.when()` method provides a fluent conditional API for executing different transformations based on a predicate. It supports both boolean values and predicate functions.
+
+The builder is not a Promise. Finish the chain with `unwrap()`, `getOrElse()` or
+`toMaybe()` before using its result with `await` or `Promise.resolve()`. Passing
+the builder itself can leave the Promise pending because of its `then` method.
 
 ```typescript
 import Funcio from 'funcio';
@@ -587,9 +580,26 @@ Funcio._Maybe.of(10).filter((v) => v > 5).isJust(); // true
 Funcio._Maybe.of(null).orElse(Funcio._Maybe.of(9)).getOrElse(0); // 9
 ```
 
+#### Maybe / Either conversions and traversal
+
+```typescript
+import { _Maybe, _Either } from 'funcio';
+
+_Maybe.of(42).toEither('missing').getOrThrow(); // 42
+_Maybe.of(null).toEither('missing').value; // 'missing'
+_Either.toMaybe(_Either.right(42)).getOrElse(0); // 42
+_Either.toMaybe(_Either.left('error')).isNothing(); // true
+_Maybe.sequence([_Maybe.just(1), _Maybe.just(2)]).getOrElse([]); // [1, 2]
+_Maybe.traverse([1, 2], (x) => _Maybe.just(x * 2)).getOrElse([]); // [2, 4]
+```
+
+`sequence` and `traverse` stop on the first `Nothing`; empty inputs produce `Just([])`.
+`_Either.toMaybe` preserves explicit `Right` values, even `null`. The historical
+`_Maybe.fromNullable` boolean predicate is unchanged.
+
 ### `_pipe`
 
-The `_pipe` function in the Funcio library is a formidable utility for composing multiple functions into a single, higher-order function. It empowers you to craft a pipeline of functions where the output of one function becomes the input for the next.
+Passes the input through each function from left to right. The synchronous variant does not await promises.
 
 ```typescript
 import Funcio from 'funcio';
@@ -624,7 +634,7 @@ Funcio._compose((x: number) => x + 1, (x: number) => x * 2)(5); // 11
 
 #### `_pipe.async`
 
-The `_pipe.async` helper composes synchronous and asynchronous functions in order. Each function receives the resolved value from the previous step.
+The `_pipe.async` helper composes synchronous and asynchronous functions in order. Each function receives the resolved value from the previous step. TypeScript infers the resolved result and rejects incompatible steps. Promise inputs are also awaited.
 
 ```typescript
 import Funcio from 'funcio';
@@ -654,6 +664,43 @@ const grouped = Funcio._Array.groupBy((x: number) => (x % 2 === 0 ? "even" : "od
 // doubled: [2, 4, 6]
 // evens: [2, 4]
 ```
+
+#### Bounded concurrency and cancellation
+
+`mapAsync` and `filterAsync` accept an optional third argument:
+
+```typescript
+const controller = new AbortController();
+const names = await Funcio._Array.mapAsync(
+  [1, 2, 3],
+  async (id, index, array, signal) => {
+    const response = await fetch(`/api/users/${id}`, { signal });
+    return response.json();
+  },
+  { concurrency: 2, signal: controller.signal }
+);
+```
+
+The default remains unlimited concurrency. Results preserve input order.
+Concurrency must be a positive integer or `Infinity`. Cancellation rejects with
+`AbortError`, even if a callback ignores the signal; pass it to `fetch` to cancel
+the underlying request too. Failure or cancellation stops queued work, but
+already-running callbacks may continue. Callback errors are not wrapped.
+
+#### Lazy iterables
+
+```typescript
+const total = Funcio._Array.lazy([1, 2, 3, 4])
+  .filter((x) => x % 2 === 0)
+  .map((x) => x * 10)
+  .take(1)
+  .reduce((sum, x) => sum + x, 0); // 20
+```
+
+`lazy(iterable)` supports `map`, `filter`, `flatMap`, `take`, `drop`, `reduce`,
+`toArray` and `for...of`. It performs no work until consumed, and `take` does not
+read an extra element. Arrays can be consumed repeatedly; generator instances
+remain single-use. `take` and `drop` require non-negative integer counts.
 
 #### `_Object.pick / omit / mergeDeep / evolve / hasPath / dissocPath`
 
@@ -689,6 +736,32 @@ const result = await Funcio._Task
 result.getOrElse(0); // 10
 ```
 
+Tasks are lazy: each `run()` executes the operation again. Execution controls compose with existing methods:
+
+```typescript
+const controller = new AbortController();
+const request = Funcio._Task.fromPromise(async (signal) => {
+  const response = await fetch('/api/users', { signal });
+  if (!response.ok) throw new Error(`HTTP ${response.status}`);
+  return response.json();
+});
+
+const result = await request
+  .timeout(2000) // Timeout for each attempt
+  .retry(2, 100) // Up to 2 additional attempts, 100ms apart
+  .run(controller.signal);
+
+// To cancel an in-progress run: controller.abort();
+const users = await Funcio._Task.parallel([request, request, request], 2).run();
+```
+
+- `retry(retries, delayMs = 0)` retries failures; `retry(0)` runs once.
+- `timeout(ms)` returns a `Left` with an error named `TimeoutError` and aborts its operation's signal. Put it after `retry` to limit the entire retry sequence instead.
+- `run(signal?)` and `match(handlers, signal?)` accept cancellation. Cancellation returns a `Left` with an error named `AbortError`, skips queued work and stops retries.
+- Cancellation is cooperative: pass the supplied signal to APIs such as `fetch`. An operation that ignores it may continue in the background, even after the task returns.
+- `parallel(tasks, concurrency = Infinity)` preserves input order, limits active tasks and stops scheduling queued tasks after a failure. Already-running tasks are allowed to finish.
+- Invalid retry counts, delays, timeouts or concurrency limits throw `RangeError` when configured.
+
 ### `_Validation`
 
 ```typescript
@@ -703,6 +776,75 @@ schema.safeParse({ name: "Ana", age: 30 }).isRight(); // true
 schema.safeParse({ name: "x", age: -1 }).isLeft(); // true (2 issues accumulated)
 ```
 
+Additional schemas and composable modifiers:
+
+```typescript
+import { _Validation as v, type Infer } from 'funcio';
+
+const userSchema = v.object({
+  name: v.string().min(2),
+  nickname: v.string().optional(),
+  email: v.string().email().nullable(),
+  active: v.boolean().default(true),
+  role: v.enum(['admin', 'user']),
+  id: v.union([v.string(), v.number().int()]),
+  age: v.number().refine((age) => age >= 18, 'Must be an adult'),
+});
+
+type User = Infer<typeof userSchema>; // nickname is an optional property
+const result = userSchema.safeParse({
+  name: 'Ana', email: null, role: 'user', id: 1, age: 30,
+}); // Right: active defaults to true
+```
+
+- `optional()` accepts `undefined`; `nullable()` accepts `null`. Combine them to accept both.
+- `default(value)` replaces only `undefined`, validates the default and removes `undefined` from the inferred output type.
+- `enum(values)` accepts a non-empty tuple of string literals.
+- `union(schemas)` returns the first successful alternative, or accumulates all alternative issues if none match.
+- `refine(predicate, message?)` checks a successfully parsed value, including entire objects and arrays. Predicates should return a boolean; exceptions thrown by user predicates propagate.
+- `safeParse` returns `Either<ValidationIssue[], T>` with nested error paths; `parse` throws on invalid input. Apply type-specific checks such as `.min()` before generic modifiers such as `.optional()`.
+
+#### Transformations, extra schemas and asynchronous validation
+
+```typescript
+import { _Validation as v } from 'funcio';
+
+const length = v.string().min(2).transform((text) => text.length);
+length.parse('hello'); // 5, inferred as number
+
+v.coerce.number().parse('42'); // 42
+v.literal('ok').parse('ok'); // 'ok'
+v.tuple([v.literal('ok'), v.number()]).parse(['ok', 42]);
+v.record(v.number()).parse({ score: 42 });
+v.date().parse(new Date()); // a copy of a valid Date
+
+const user = v.object({ name: v.string() });
+user.parse({ name: 'Ana', extra: 1 }); // { name: 'Ana' } (unchanged default)
+user.strict().safeParse({ name: 'Ana', extra: 1 }).isLeft(); // true
+user.passthrough().parse({ name: 'Ana', extra: 1 }); // keeps extra
+user.strict().strip(); // explicitly restore the default
+
+const availableName = v.string()
+  .refineAsync(async (name) => name !== 'taken', 'Name unavailable')
+  .transformAsync(async (name) => name.toUpperCase());
+
+await v.object({ name: availableName }).parseAsync({ name: 'ana' });
+// { name: 'ANA' }
+```
+
+- `transform` and `transformAsync` run only after successful validation and infer
+  the transformed output type. Thrown transformation errors become issues.
+- `refineAsync` supports asynchronous predicates; failures and thrown errors
+  become validation issues.
+- Use `parseAsync` / `safeParseAsync` for async schemas, including nested objects,
+  arrays, unions, tuples, records and generic modifiers. Synchronous parsing of
+  an async schema throws an explanatory error instead of silently skipping checks.
+- Coercion is **opt-in** and uses JavaScript's `String`, `Number`, `Boolean` and
+  `Date` conversions, followed by validation. In particular, `Boolean('false')`
+  is `true`. Normal validators do not coerce.
+- Object policies return new schemas and do not change the original schema.
+  Tuples require an exact length; records validate all enumerable own string keys.
+
 ### `_tap / _once / _memoize / _flip`
 
 ```typescript
@@ -716,9 +858,23 @@ const flipped = Funcio._flip((a: number, b: number) => a - b); // (b, a) => a - 
 
 ### `_curry`
 
-The `_Curry` function in the Funcio library is a powerful tool for enabling currying, a fundamental concept in functional programming. Currying allows you to transform a function that takes multiple arguments into a series of functions, each accepting a single argument. This technique enhances code readability, reusability, and composability.
+`_curry(fn)` collects arguments across calls and invokes `fn` once its required arguments are supplied.
 
-The `_curry(fn)` method transforms a regular function into a curried function. Once curried, you can partially apply arguments one at a time, creating new functions along the way.
+Grouped arguments and placeholders are also supported without changing unary application:
+
+```typescript
+import { _curry, _placeholder } from 'funcio';
+
+const sum = _curry((a: number, b: number, c: number) => a + b + c);
+sum(1)(2)(3); // 6
+sum(1, 2)(3); // 6
+sum(1, _placeholder, 3)(2); // 6
+// _curry.placeholder is the same placeholder.
+```
+
+Partial applications are reusable. Arity is still determined by `fn.length`,
+so parameters after the first default parameter and rest parameters are not
+counted toward the required arguments.
 
 ```typescript
 import Funcio from 'funcio';
@@ -739,7 +895,7 @@ const result = addTen(7); // Result: 22
 
 ### `_match`
 
-The `_match` function in the Funcio library is a powerful pattern-matching tool for executing different code blocks based on the matched values. It allows you to define patterns and corresponding actions, providing a concise and expressive way to handle multiple cases.
+Runs the first handler whose pattern matches the value. Use `._(fn)` to supply a fallback.
 
 ```typescript
 import Funcio from 'funcio';
@@ -750,17 +906,75 @@ const response = Funcio._match<number, number>(2)
   ._(() => -1)
   .exec();
 
-result // 4
+response // 4
 ```
 
-## Contributions 🤝
+Use `.exhaustive()` to require complete coverage of literal/discriminated unions
+or an explicit fallback:
 
-We extend a warm welcome to contributions from the open-source community. If you have ideas or a desire to contribute to Funcio, please explore our [GitHub repository](https://github.com/levi5/funcio.git) and submit a pull request.
+```typescript
+import { _match } from 'funcio';
 
-## License 📜
+type State = { kind: 'ok', value: number } | { kind: 'error', message: string };
+const render = (state: State): string => _match<State, string>(state)
+  .with({ kind: 'ok' }, (value) => String(value.value))
+  .with({ kind: 'error' }, (value) => value.message)
+  .exhaustive();
+```
+
+Removing either branch makes `.exhaustive()` a TypeScript error. Predicates,
+arrays and widened or union-typed pattern values do not prove coverage; use
+`._(() => fallback)` for those cases.
+Constructor patterns (`String`, `Number`, `Boolean`, `Symbol`) check primitive
+types. `.exec()` returns `null` when there is no match or fallback; its type
+includes `null` until coverage or a fallback is provided. `.exhaustive()` has a checked result type
+and throws when no branch matches at runtime. For example, the `Number`
+constructor pattern excludes `NaN`, even though TypeScript types it as `number`.
+
+## Contributions
+
+Bug reports and pull requests are welcome. Include a reproduction for bugs and tests for behavior changes.
+
+### Development and verification
+
+Use Node.js 24 (`nvm use`) for development. The CI also checks the library on
+Node.js 22 and 26. Both lockfiles are committed; use `npm ci` for reproducible
+installs.
+
+```sh
+npm ci
+npm run lint
+npm run typecheck
+npm test -- --run
+npm run coverage
+npm run test:package
+npm --prefix web ci
+npm --prefix web run build
+```
+
+`lint` is read-only; `lint:fix` applies supported fixes. `build` generates
+CommonJS, native ESM and declarations. Internal imports use `@funcio/*`;
+`tsc-alias` rewrites these to relative paths in **both JavaScript and declarations**,
+so package consumers do not need aliases or extra runtime dependencies.
+
+The `noThenProperty` lint exception applies only to `WhenBuilder`, whose `then`
+method is part of the existing conditional API.
+
+The [documentation site](web/README.md) uses `@/*` for site imports and bundles
+the library from this checkout, including playground workers. Its header, hero,
+structured data and HTML version metadata all read the root `package.json`
+version. No generated version file, hardcoded CDN version or npm lookup is
+required; changing the library version automatically updates the next site build.
+
+GitHub Actions checks lint, types, tests, coverage, package entry points, runnable
+documentation examples and the production site. Pages deployment runs the
+library tests, types, lint and site build before uploading. npm publishing remains tag-driven. Dependabot
+checks library tooling, website dependencies and Actions weekly.
+
+Tooling uses TypeScript 6, Vitest 5 with V8 coverage, and Biome 2 for linting
+the library and website. The website uses React 19 and Vite 8. The library
+still has no runtime dependencies.
+
+## License
 
 Funcio is released under the [MIT License](LICENSE.txt).
-
----
-
-Embark on a thrilling journey into the realm of functional programming with Funcio! 🌟
