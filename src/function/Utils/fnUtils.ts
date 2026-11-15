@@ -12,7 +12,7 @@ export const _tap = <T>(fn: (value: T) => void): ((value: T) => T) => {
 /**
  * Ensure fn runs at most once; later calls return the first result.
  */
-export const _once = <P extends any[], R>(fn: (...args: P) => R): ((...args: P) => R) => {
+export const _once = <P extends unknown[], R>(fn: (...args: P) => R): ((...args: P) => R) => {
   let called = false
   let result: R
   return (...args: P): R => {
@@ -27,7 +27,7 @@ export const _once = <P extends any[], R>(fn: (...args: P) => R): ((...args: P) 
 /**
  * Memoize a pure function with an optional key resolver.
  */
-export const _memoize = <P extends any[], R>(
+export const _memoize = <P extends unknown[], R>(
   fn: (...args: P) => R,
   resolver?: (...args: P) => string
 ): ((...args: P) => R) => {

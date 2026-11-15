@@ -1,7 +1,7 @@
 import type { Pipeline } from '@funcio/@Types/Pipe/index.js'
 import type { FN } from '@funcio/@Types/common.js'
 
-type AsyncFN = (value: any) => any | Promise<any>
+type AsyncFN = (value: never) => unknown
 
 type AsyncSteps<T, F extends AsyncFN[]> = F extends [infer H extends AsyncFN, ...infer Rest extends AsyncFN[]]
   ? [(value: Awaited<T>) => ReturnType<H>, ...AsyncSteps<ReturnType<H>, Rest>]
@@ -21,7 +21,7 @@ export function asyncPipe<T, A, B, C, D, E> (input: T, a: (value: Awaited<T>) =>
 export function asyncPipe<T, F extends AsyncFN[]> (input: T, ...fns: F & AsyncSteps<T, F>): Promise<AsyncOutput<T, F>>
 export async function asyncPipe (input: unknown, ...fns: AsyncFN[]): Promise<unknown> {
   return await fns.reduce(
-    async (previousValue, fn) => fn(await previousValue),
+    async (previousValue, fn) => Reflect.apply(fn, undefined, [await previousValue]) as unknown,
     Promise.resolve(input)
   )
 }
@@ -33,7 +33,7 @@ function pipe<T, FNS extends FN[]> (
 
 function pipe (input: unknown, ...fns: FN[]): unknown {
   return fns.reduce((previousValue, fn) =>
-    fn.call(fn, previousValue), input)
+    Reflect.apply(fn, fn, [previousValue]) as unknown, input)
 }
 
 export const _pipe = pipe as typeof pipe & {

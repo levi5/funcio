@@ -7,7 +7,7 @@ const fakeData = () => ({
 })
 
 const makeSut = () => {
-  const sut = (condition: boolean, value: any): IEither.Either<null, object> => {
+  const sut = (condition: boolean, value: object): IEither.Either<null, object> => {
     if (condition) return right(value)
     return left(null)
   }

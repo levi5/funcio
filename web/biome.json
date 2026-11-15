@@ -27,20 +27,7 @@
   "linter": {
     "enabled": true,
     "rules": {
-      "preset": "recommended",
-      "style": {
-        "noNonNullAssertion": "off",
-        "useNamingConvention": "off"
-      },
-      "complexity": {
-        "noImportantStyles": "off"
-      },
-      "security": {
-        "noDangerouslySetInnerHtml": "off"
-      },
-      "suspicious": {
-        "noArrayIndexKey": "off"
-      }
+      "preset": "recommended"
     }
   },
   "assist": {

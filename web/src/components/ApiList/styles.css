@@ -23,9 +23,17 @@
   list-style: none;
 }
 
+.item {
+  min-width: 0;
+}
+
 .item + .item {
   padding-top: 0;
   border-top: none;
+}
+
+.item:has(details[open]) {
+  grid-column: 1 / -1;
 }
 
 .name {

@@ -59,7 +59,10 @@ export const filterAsync = async <T>(
   return array.filter((_, index) => Boolean(keep[index]))
 }
 
-export const forEachAsync = async <T>(array: T[], fn: (x: T) => any): Promise<any> => await array.reduce(
-  async (promise: Promise<void>, value: T) => await promise.then(() => fn(value)),
-  Promise.resolve()
+export const forEachAsync = async <T, R>(array: T[], fn: (x: T) => R): Promise<Awaited<R> | undefined> => await array.reduce<Promise<Awaited<R> | undefined>>(
+  async (promise, value): Promise<Awaited<R> | undefined> => {
+    await promise
+    return await fn(value)
+  },
+  Promise.resolve(undefined)
 )

@@ -10,7 +10,9 @@ export const pick = <O extends OBJ, K extends keyof O>(keys: K[], obj: O): Pick<
 
 export const omit = <O extends OBJ, K extends keyof O>(keys: K[], obj: O): Omit<O, K> => {
   const out = { ...obj }
-  keys.forEach((k) => Reflect.deleteProperty(out, k))
+  keys.forEach((k) => {
+    Reflect.deleteProperty(out, k)
+  })
   return out as Omit<O, K>
 }
 

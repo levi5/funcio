@@ -1,3 +1,4 @@
+import { mapAsyncImplementation } from '@/content/implementations'
 import type { ModuleDoc } from '@/content/types'
 
 export const array: ModuleDoc = {
@@ -7,6 +8,7 @@ export const array: ModuleDoc = {
   api: [
     {
       name: '_Array.mapAsync',
+      implementation: mapAsyncImplementation,
       signature:
         'mapAsync<T, R>(array: T[], fn: (value, index, array, signal?) => R | Promise<R>, options?: AsyncArrayOptions): Promise<R[]>',
       description:
@@ -20,7 +22,7 @@ export const array: ModuleDoc = {
     },
     {
       name: '_Array.forEachAsync',
-      signature: 'forEachAsync<T>(array: T[], fn: (x: T) => any): Promise<any>',
+      signature: 'forEachAsync<T, R>(array: T[], fn: (x: T) => R): Promise<Awaited<R> | undefined>',
       description: 'Runs the callback over each element strictly in sequence, awaiting each one before the next.'
     },
     {

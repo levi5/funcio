@@ -37,9 +37,9 @@
   font-family: var(--font-mono);
   font-size: 13px;
   transition:
-    color 0.15s ease,
-    border-color 0.15s ease,
-    background 0.15s ease;
+    color var(--motion-duration, 0.15s) ease,
+    border-color var(--motion-duration, 0.15s) ease,
+    background var(--motion-duration, 0.15s) ease;
 }
 
 .link:hover {

@@ -9,7 +9,7 @@ const makeSut = () => {
   }
 }
 
-const modifyObject = (immutableObject: any) => {
+const modifyObject = (immutableObject: { age: number; address: { city: string } }) => {
   try {
     if (!immutableObject) return;
     immutableObject.age = 40

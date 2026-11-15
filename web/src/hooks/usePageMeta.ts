@@ -2,7 +2,7 @@ export const MODULE_META: Record<string, { title: string; description: string }>
   pipe: {
     title: 'Funcio - Compose functions left-to-right, sync or async',
     description:
-      'Compose functions left-to-right, sync or async. Fully typed pipeline operator for TypeScript with end-to-end type inference.'
+      'Compose functions left-to-right, sync or async. Async pipelines await each step and infer the resolved output.'
   },
   curry: {
     title: 'Funcio - Automatic currying for TypeScript functions',
@@ -30,8 +30,7 @@ export const MODULE_META: Record<string, { title: string; description: string }>
   },
   array: {
     title: 'Funcio - Functional array methods',
-    description:
-      'Lazy iterables and ordered async array helpers with bounded concurrency, cancellation and full type inference.'
+    description: 'Lazy iterables and ordered async array helpers with bounded concurrency and cancellation.'
   },
   primitives: {
     title: 'Funcio - String and number utilities',

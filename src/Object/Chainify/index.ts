@@ -8,30 +8,15 @@ import type { Chainify } from '@funcio/@Types/Object/index.js'
  * @typeParam T - The type of the object.
  * @public
  */
-export const _chainify = <T extends Record<string, any>>(object: T): Chainify<T> => new Proxy(object, {
-  /**
-   * Gets a property from the target object.
-   *
-   * @param target - The target object.
-   * @param property - The property to get.
-   * @param receiver - The receiver object.
-   * @returns The value of the property or a chainable function if the property is a function.
-   * @public
-   */
+export const _chainify = <T extends object>(object: T): Chainify<T> => new Proxy(object, {
   get (target, property, receiver) {
     if (typeof property !== 'string') return Reflect.get(target, property, receiver)
-    if (typeof target[property] !== 'function') return target[property]
+    const method: unknown = Reflect.get(target, property, receiver)
+    if (typeof method !== 'function') return method
 
-    /**
-     * Invokes the method on the target object with the given arguments.
-     *
-     * @param args - The arguments to pass to the method.
-     * @returns The result of the method or the receiver object.
-     * @public
-     */
-    return (...args: any[]) => {
-      const result = target[property](...args)
+    return (...args: unknown[]) => {
+      const result: unknown = Reflect.apply(method, target, args)
       return result === undefined ? receiver : result
     }
   }
-})
+}) as Chainify<T>

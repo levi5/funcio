@@ -18,18 +18,19 @@
   "linter": {
     "enabled": true,
     "rules": {
-      "preset": "recommended",
-      "suspicious": {
-        "noExplicitAny": "off",
-        "noThenProperty": "off",
-        "useIterableCallbackReturn": "off"
-      },
-      "style": {
-        "noNamespace": "off"
-      },
-      "correctness": {
-        "noUnusedFunctionParameters": "off"
+      "preset": "recommended"
+    }
+  },
+  "overrides": [
+    {
+      "includes": ["src/Monads/Maybe/whenBuilder.ts"],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            "noThenProperty": "off"
+          }
+        }
       }
     }
-  }
+  ]
 }

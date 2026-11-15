@@ -3,7 +3,7 @@ import { WhenBuilder } from './whenBuilder.js'
 import { left, right } from '@funcio/Monads/Either/index.js'
 import type { IEither } from '@funcio/@Types/index.js'
 
-export class _Maybe<T = any> {
+export class _Maybe<T = unknown> {
   public isJust () {
     return false
   }
@@ -55,7 +55,7 @@ export class _Maybe<T = any> {
     return Just.of(values)
   }
 
-  when<U>(predicate: boolean | ((value: any) => boolean)): WhenBuilder<T, U> {
+  when<U>(predicate: boolean | ((value: T) => boolean)): WhenBuilder<T, U> {
     return new WhenBuilder(this, predicate)
   }
 

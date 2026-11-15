@@ -1,6 +1,8 @@
 import { writeFileSync } from 'node:fs'
 import { resolve } from 'node:path'
-import { modules } from '@/content'
+import { loadContent } from './load-content'
+
+const { modules } = await loadContent()
 
 const BASE_URL = 'https://levi5.github.io/funcio/'
 

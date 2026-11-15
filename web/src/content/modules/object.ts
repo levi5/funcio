@@ -8,7 +8,8 @@ export const object: ModuleDoc = {
     {
       name: '_Object.makeImmutable',
       signature: 'makeImmutable<T extends object>(object: T): T',
-      description: 'Deep copies an object and freezes it, recursively. Any later assignment throws a `TypeError`.'
+      description:
+        'Copies and freezes enumerable string-keyed properties recursively. Assignments to frozen properties throw in strict mode. Map, Set and Date methods can still mutate their contents; cyclic objects are not supported.'
     },
     {
       name: '_Object.getPathValue',

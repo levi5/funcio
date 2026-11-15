@@ -126,6 +126,7 @@ export function formatError(error: unknown): string {
 export type LogLevel = 'log' | 'info' | 'warn' | 'error' | 'debug'
 
 export interface LogEntry {
+  id: number
   level: LogLevel
   text: string
 }

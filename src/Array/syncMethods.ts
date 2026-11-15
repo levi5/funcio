@@ -29,7 +29,10 @@ export const groupBy = <T>(fn: (value: T) => string | number, array: T[]): Recor
 export const partition = <T>(predicate: (value: T) => boolean, array: T[]): [T[], T[]] => {
   const pass: T[] = []
   const fail: T[] = []
-  array.forEach((item) => (predicate(item) ? pass.push(item) : fail.push(item)))
+  array.forEach((item) => {
+    if (predicate(item)) pass.push(item)
+    else fail.push(item)
+  })
   return [pass, fail]
 }
 

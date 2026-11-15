@@ -1,3 +1,4 @@
+import { curryImplementation } from '@/content/implementations'
 import type { ModuleDoc } from '@/content/types'
 
 export const curry: ModuleDoc = {
@@ -7,6 +8,7 @@ export const curry: ModuleDoc = {
   api: [
     {
       name: '_curry',
+      implementation: curryImplementation,
       signature: '_curry<P extends any[], R>(fn: (...args: P) => R): Curry.TResponse<P, R>',
       description:
         'Apply arguments one at a time, in groups or all at once. Each partial application is reusable. Required arity follows fn.length; default and rest parameters are not counted after the first default.'

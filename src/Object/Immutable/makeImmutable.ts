@@ -11,7 +11,9 @@ import { $isObject } from '@funcio/Object/common.js'
 export const deepFreeze = <T extends object, K extends keyof T>(object: T): T => {
   if ($isObject(object) && !Object.isFrozen(object)) {
     const keys: K[] = Object.keys(object) as K[]
-    keys.forEach((key: K) => deepFreeze(object[key] as T))
+    keys.forEach((key: K) => {
+      deepFreeze(object[key] as T)
+    })
     Object.freeze(object)
   }
   return object

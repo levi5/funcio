@@ -17,7 +17,7 @@ describe("Match function", () => {
     const parameter: IEither.Either<null, number> = left(null)
     const response: string = _match<IEither.Either<null, number>, string>(parameter)
       .with(left(null), (result) => `value is ${result.value}`)
-      .with(right(2), (v) => 'value is 2')
+      .with(right(2), () => 'value is 2')
       ._(():string => 'not value')
       .exec()
     expect(response).toBe('value is null');

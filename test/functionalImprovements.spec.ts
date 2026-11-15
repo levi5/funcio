@@ -57,6 +57,17 @@ describe('exhaustive matching', () => {
     expect(builder.exec()).toBeNull()
     expect(() => (builder as unknown as { exhaustive: () => string }).exhaustive()).toThrow('Non-exhaustive match')
   })
+
+  it('uses a fallback with dynamic patterns and values excluded by constructors', () => {
+    const render = (pattern: string, value: string): string => _match<string, string>(value)
+      .with(pattern, () => 'matched')
+      ._(() => 'other')
+      .exhaustive()
+    expect(render('a', 'a')).toBe('matched')
+    expect(render('a', 'b')).toBe('other')
+    expect(_match<number, string>(NaN).with(Number, () => 'number')._(() => 'not a number').exhaustive()).toBe('not a number')
+    expect(_match<{ value: number }, string>({ value: 2 }).with({ value: Number }, (item) => String(item.value)).exhaustive()).toBe('2')
+  })
 })
 
 describe('Maybe / Either interoperability', () => {
@@ -167,7 +178,7 @@ describe('flexible currying', () => {
     expect(partial('a', true)).toBe('a:2:true')
     expect(partial('b')(false)).toBe('b:2:false')
     expect(join('c', _placeholder) (3, true)).toBe('c:3:true')
-    const untyped = _curry((a: any, b: number) => `${a}:${b}`)
+    const untyped = _curry((a: unknown, b: number) => `${a}:${b}`)
     expect(untyped(_placeholder)('a')(2)).toBe('a:2')
   })
 })
@@ -300,6 +311,22 @@ function typeChecks (): void {
   const predicate = _match<number, number>(1).with((x) => x > 0, () => 1)
   // @ts-expect-error a predicate alone does not prove coverage
   predicate.exhaustive()
+  const broadPattern: string = String('a')
+  // @ts-expect-error a string variable matches one value, not every string
+  _match<string, number>('b').with(broadPattern, () => 1).exhaustive()
+  const unionPattern = Math.random() < 0.5 ? 'a' : 'b'
+  // @ts-expect-error a union-typed pattern is still one runtime value
+  _match<'a' | 'b', number>('a').with(unionPattern, () => 1).exhaustive()
+  const arrayPattern: number[] = [1]
+  // @ts-expect-error one array pattern cannot cover every array
+  _match<number[], number>([1, 2]).with(arrayPattern, () => 1).exhaustive()
+  const objectPattern: { kind: 'a' | 'b' } = { kind: 'a' }
+  // @ts-expect-error the discriminant pattern contains only one of its possible values
+  _match<{ kind: 'a' } | { kind: 'b' }, number>({ kind: 'b' }).with(objectPattern, () => 1).exhaustive()
+  // @ts-expect-error a widened object property is not an exhaustive discriminator
+  _match<{ kind: string }, number>({ kind: 'b' }).with({ kind: broadPattern }, () => 1).exhaustive()
+  // @ts-expect-error Number matches numeric values, not the constructor itself
+  _match<{ value: NumberConstructor }, number>({ value: Number }).with({ value: Number }, () => 1).exhaustive()
   const sum = _curry((a: number, b: string) => `${a}${b}`)
   // @ts-expect-error incorrect first argument
   sum('bad')
@@ -309,7 +336,7 @@ function typeChecks (): void {
   expectTypeOf(sum(_placeholder, 'ok')(1)).toEqualTypeOf<string>()
   const boolean = _match<boolean, string>(true).with(Boolean, (x) => String(x)).exhaustive()
   expectTypeOf(boolean).toEqualTypeOf<string>()
-  const untyped = _curry((a: any, b: number) => `${a}:${b}`)
+  const untyped = _curry((a: unknown, b: number) => `${a}:${b}`)
   expectTypeOf(untyped(_placeholder)('a')(2)).toEqualTypeOf<string>()
 }
 void typeChecks

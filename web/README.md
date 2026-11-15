@@ -43,13 +43,10 @@ sitemap and verifies the generated version metadata and worker bundles.
 
 ## Dynamic version and deployment
 
-The **root `package.json` is the only source of the displayed library version**.
-`src/version.ts` reads that JSON directly for the header, hero and structured
-data. Vite also inserts it into the HTML `funcio-version` metadata.
-
-Do not hardcode a library version or add an npm/CDN lookup. Every dev run or new
-build reads the current root version, and the playground always uses the matching
-checkout. Publishing to npm and deploying documentation remain independent.
+The displayed version comes from the root `package.json`. `src/version.ts`
+provides it to the header, hero and structured data; Vite inserts it into the
+HTML metadata. There is no npm/CDN lookup. The playground uses the same checkout
+as the documentation, independently of npm publication.
 
 GitHub Actions builds and validates the site on pull requests. The Pages workflow
 deploys verified `web/dist` output on pushes to `main`. Set `BASE_PATH` to override

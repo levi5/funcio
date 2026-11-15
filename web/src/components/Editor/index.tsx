@@ -15,7 +15,7 @@ export const Editor = ({ code, onChange, onRun, readOnly = false }: Props) => {
   const highlightRef = useRef<HTMLPreElement>(null)
 
   const tokens = useMemo(() => tokenize(code), [code])
-  const lineNumbers = useMemo(() => code.split('\n').length, [code])
+  const lineNumbers = useMemo(() => code.split('\n').map((_, index) => index + 1), [code])
 
   const syncScroll = useCallback(() => {
     const input = inputRef.current
@@ -48,16 +48,16 @@ export const Editor = ({ code, onChange, onRun, readOnly = false }: Props) => {
   return (
     <div className={styles.editor}>
       <div className={styles.gutter} aria-hidden="true">
-        {Array.from({ length: lineNumbers }, (_, index) => (
-          <span key={index}>{index + 1}</span>
+        {lineNumbers.map((line) => (
+          <span key={line}>{line}</span>
         ))}
       </div>
 
       <div className={styles.surface}>
         <pre className={styles.highlight} ref={highlightRef} aria-hidden="true">
           <code>
-            {tokens.map((token, index) => (
-              <span key={index} className={styles[token.type]}>
+            {tokens.map((token) => (
+              <span key={token.start} className={styles[token.type]}>
                 {token.value}
               </span>
             ))}

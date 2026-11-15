@@ -9,13 +9,13 @@ export const match: ModuleDoc = {
       name: '_match',
       signature: '_match<T, R>(value: T): MatchBuilder<T, R>',
       description:
-        'Registers literal, constructor, predicate, array or partial-object patterns with `.with(pattern, handler)`. First match wins. `.exec()` preserves historical permissive typing and returns null if no pattern or fallback matches.'
+        'Registers literal, constructor, predicate, array or partial-object patterns with `.with(pattern, handler)`. First match wins. `.exec()` returns null when nothing matches; its type includes null until coverage or a fallback is provided.'
     },
     {
       name: '.exhaustive()',
       signature: 'exhaustive(): R',
       description:
-        'Available only after every literal/discriminated-union case is covered, or after an explicit fallback. Predicates alone do not prove coverage. Unsafe calls that bypass TypeScript throw when no branch matches.'
+        'Requires fixed literal or constructor patterns covering the input type, or a fallback. Predicates, arrays and widened or union-typed patterns require a fallback. Throws if nothing matches at runtime; Number excludes NaN.'
     }
   ],
   examples: [

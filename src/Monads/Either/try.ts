@@ -7,7 +7,7 @@ import type { IEither } from '@funcio/@Types/index.js'
  * @param {() => Promise<T>} fn - The asynchronous operation to be wrapped.
  * @returns {Promise<IEither.Either<Error, T>>} Either monad representing success or failure.
  */
-export const asyncTry = async <T = any>(fn: () => Promise<T>): Promise<IEither.Either<Error, T>> => {
+export const asyncTry = async <T = unknown>(fn: () => Promise<T>): Promise<IEither.Either<Error, T>> => {
   try {
     const result: T = await fn()
     return right<Error, T>(result)

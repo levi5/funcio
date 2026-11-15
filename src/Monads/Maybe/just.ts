@@ -43,7 +43,7 @@ export class Just<T> extends _Maybe<T> {
     return true
   }
 
-  public when<U>(predicate: boolean | ((value: any) => boolean)): WhenBuilder<T, U> {
+  public when<U>(predicate: boolean | ((value: T) => boolean)): WhenBuilder<T, U> {
     return new WhenBuilder(this, predicate)
   }
 

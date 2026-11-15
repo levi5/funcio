@@ -20,9 +20,8 @@ export const Hero = () => (
     </h1>
 
     <p className={styles.lead}>
-      Maybe, Either, <code>pipe</code>, <code>curry</code> and pattern matching for TypeScript. Zero dependencies, no
-      platform assumptions — the same code on your server and in the browser. Every example below is a real editor wired
-      to the real library, so you can edit one and press Run.
+      Maybe, Either, <code>pipe</code>, <code>curry</code>, tasks and validation for TypeScript and JavaScript, with no
+      runtime dependencies. Edit the examples below and press Run to try them.
     </p>
 
     <Install />

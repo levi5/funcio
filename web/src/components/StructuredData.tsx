@@ -46,14 +46,7 @@ const softwareApplication = {
     'Cancellable asynchronous tasks',
     'Synchronous and asynchronous schema validation'
   ],
-  keywords: 'functional programming, TypeScript, JavaScript, Maybe, Either, pipe, curry, pattern matching, immutable',
-  aggregateRating: {
-    '@type': 'AggregateRating',
-    ratingValue: '5',
-    reviewCount: '1',
-    bestRating: '5',
-    worstRating: '1'
-  }
+  keywords: 'functional programming, TypeScript, JavaScript, Maybe, Either, pipe, curry, pattern matching, immutable'
 }
 
 const faqPage = {
@@ -65,7 +58,7 @@ const faqPage = {
       name: 'Is Funcio zero-dependency?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Yes, Funcio has zero runtime dependencies. It is a lightweight functional programming toolkit (~1.5KB gzipped).'
+        text: 'Funcio has no runtime dependencies. The documentation site has its own development and UI dependencies.'
       }
     },
     {
@@ -73,7 +66,7 @@ const faqPage = {
       name: 'Does Funcio work in both Node.js and the browser?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Yes, the same code runs in Node.js and browsers without platform-specific assumptions or polyfills.'
+        text: 'The package provides CommonJS and ESM builds. Async cancellation requires AbortController and AbortSignal in the runtime.'
       }
     },
     {
@@ -81,7 +74,7 @@ const faqPage = {
       name: 'Is Funcio written in TypeScript?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Yes, Funcio is written in TypeScript and provides full type inference for all utilities including pipe, curry, match, Maybe, and Either.'
+        text: 'Funcio is written in TypeScript and ships declarations. Type inference varies by helper; some APIs still use any.'
       }
     },
     {
@@ -148,5 +141,5 @@ export const StructuredData = ({ modules, activeModule }: { modules: ModuleDoc[]
     ...modules.flatMap((m) => codeSnippets(m))
   ]
 
-  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(allSchemas) }} />
+  return <script type="application/ld+json">{JSON.stringify(allSchemas).replace(/</g, '\\u003c')}</script>
 }

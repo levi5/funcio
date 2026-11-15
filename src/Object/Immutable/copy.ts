@@ -5,12 +5,16 @@ export const $copy = <T>(object: T): T => {
   if (object instanceof RegExp) return new RegExp(object.source, object.flags) as unknown as T
   if (object instanceof Map) {
     const out = new Map()
-    object.forEach((v, k) => out.set(k, $copy(v as unknown as object)))
+    object.forEach((v, k) => {
+      out.set(k, $copy(v as unknown as object))
+    })
     return out as unknown as T
   }
   if (object instanceof Set) {
     const out = new Set()
-    object.forEach((v) => out.add($copy(v as unknown as object)))
+    object.forEach((v) => {
+      out.add($copy(v as unknown as object))
+    })
     return out as unknown as T
   }
   if ((!$isObject(object as unknown as object))) return object

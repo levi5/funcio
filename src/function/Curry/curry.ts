@@ -3,26 +3,12 @@ import type { Curry } from '@funcio/@Types/Curry/index.js'
 /** Leave an argument open when partially applying a curried function. */
 export const _placeholder: unique symbol = Symbol('funcio.placeholder')
 
-/**
- * Curry a function, allowing partial application of its arguments.
- *
- * @param {(...args: P) => R} fn - The function to curry.
- * @returns {Curry.TResponse<P, R>} The curried function.
- */
-
-// overloaded function
-function curry<P extends any[], R> (
+function curry<P extends unknown[], R> (
   fn: (...args: P) => R
 ): Curry.TResponse<P, R>
 
-/**
- * Curry a function, allowing partial application of its arguments.
- *
- * @param {(...args: any) => any} fn - The function to curry.
- * @returns {Curry.TResponse<any[], any>} The curried function.
- */
-function curry (fn: (...args: any) => any) {
-  const collect = (previous: any[]): any => (...incoming: any[]) => {
+function curry (fn: (...args: never[]) => unknown) {
+  const collect = (previous: unknown[]) => (...incoming: unknown[]): unknown => {
     const args = previous.slice()
     let next = 0
     // Only fill holes from earlier calls; holes from this call remain open.
@@ -37,8 +23,5 @@ function curry (fn: (...args: any) => any) {
   return fn.length === 0 ? fn() : collect([])
 }
 
-/**
- * Export the curried function.
- */
 const placeholder: { placeholder: typeof _placeholder } = { placeholder: _placeholder }
 export const _curry = Object.assign(curry, placeholder)

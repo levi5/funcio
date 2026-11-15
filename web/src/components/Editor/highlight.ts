@@ -11,6 +11,7 @@ export type TokenType =
   | 'plain'
 
 export type Token = {
+  start: number
   type: TokenType
   value: string
 }
@@ -87,7 +88,7 @@ export const tokenize = (code: string): Token[] => {
   for (const match of code.matchAll(PATTERN)) {
     const index = match.index ?? 0
 
-    if (index > cursor) tokens.push({ type: 'plain', value: code.slice(cursor, index) })
+    if (index > cursor) tokens.push({ start: cursor, type: 'plain', value: code.slice(cursor, index) })
 
     const groups = match.groups ?? {}
 
@@ -99,11 +100,11 @@ export const tokenize = (code: string): Token[] => {
       (groups.punctuation !== undefined && 'punctuation') ||
       (typeof groups.word === 'string' ? classify(groups.word, code.slice(cursor, index)) : 'plain')
 
-    tokens.push({ type, value: match[0] })
+    tokens.push({ start: index, type, value: match[0] })
     cursor = index + match[0].length
   }
 
-  if (cursor < code.length) tokens.push({ type: 'plain', value: code.slice(cursor) })
+  if (cursor < code.length) tokens.push({ start: cursor, type: 'plain', value: code.slice(cursor) })
 
   return tokens
 }

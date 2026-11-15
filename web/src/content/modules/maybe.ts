@@ -38,7 +38,7 @@ export const maybe: ModuleDoc = {
       name: '.when(predicate)',
       signature: 'when<U>(predicate: boolean | ((value: T) => boolean)): WhenBuilder<T, U>',
       description:
-        'A fluent conditional. Chain `.then(fn)` and `.else(fn)`, then finish with `unwrap()`, `getOrElse()`, `toMaybe()`, `map()` and friends.'
+        'A fluent conditional. Chain `.then(fn)` and `.else(fn)`, then extract the result with unwrap, getOrElse or toMaybe. Do not await the builder itself: its then method registers a branch, not a Promise continuation.'
     },
     {
       name: '.fold(onNothing, onJust) / .filter(pred) / .orElse(other) / .tap(fn)',

@@ -1,20 +1,28 @@
-import { _Maybe } from '@funcio/main.js'
 import type { PatternMatching } from '@funcio/@Types/Match/index.js'
 import { $isObject } from '@funcio/Object/common.js'
 
-/**
- * Function for pattern matching.
- *
- * @param value - The value to match against.
- * @returns An object with methods for defining patterns and executing the matching.
- */
-type Covered<T, P> = P extends (...args: any[]) => any
+type IsUnion<T, Whole = T> = T extends Whole ? [Whole] extends [T] ? false : true : never
+
+// A widened or union-typed pattern denotes one runtime value, not the whole type.
+type IsFixedPattern<P> = 0 extends (1 & P) ? false
+  : true extends IsUnion<P> ? false
+    : P extends StringConstructor | NumberConstructor | BooleanConstructor | SymbolConstructor ? true
+      : P extends (...args: never[]) => unknown ? false
+        : P extends readonly unknown[] ? false
+          : P extends object ? false extends { [K in keyof P]-?: IsFixedPattern<P[K]> }[keyof P] ? false : true
+            : P extends string ? string extends P ? false : true
+              : P extends number ? number extends P ? false : true
+                : P extends boolean ? boolean extends P ? false : true
+                  : P extends symbol ? symbol extends P ? false : true
+                    : P extends null | undefined ? true : false
+
+type Covered<T, P> = IsFixedPattern<P> extends true
   ? P extends StringConstructor ? Extract<T, string>
     : P extends NumberConstructor ? Extract<T, number>
       : P extends BooleanConstructor ? Extract<T, boolean>
         : P extends SymbolConstructor ? Extract<T, symbol>
-          : never
-  : T extends P ? T : never
+          : T extends PatternMatching.InvertedPattern<P> ? T : never
+  : never
 
 export interface MatchBuilder<T, R, Remaining = T> {
   with: {
@@ -23,32 +31,25 @@ export interface MatchBuilder<T, R, Remaining = T> {
     <const P extends PatternMatching.Pattern<T>>(pattern: P, expression: (value: PatternMatching.CustomExtract<T, PatternMatching.InvertedPattern<P>>) => R): MatchBuilder<T, R, Exclude<Remaining, Covered<Remaining, P>>>
   }
   _: (fallback: () => R) => MatchBuilder<T, R, never>
-  /** Legacy permissive return type; prefer exhaustive() for checked matches. */
-  exec: () => R & any
+  exec: () => [Remaining] extends [never] ? R : R | null
   exhaustive: [Remaining] extends [never] ? () => R : never
 }
 
+/** Match in declaration order; use a fallback or cover every case before exhaustive(). */
 export const _match = <T, R>(value: T): MatchBuilder<T, R> => patternBuilder<T, R>(value)(undefined, []) as MatchBuilder<T, R>
 
-/**
- * Internal function for matching a value against a pattern.
- *
- * @param value - The value to match against.
- * @param pattern - The pattern to match.
- * @returns `true` if the value matches the pattern, otherwise `false`.
- */
 const matchPattern = <T>(value: T, pattern: PatternMatching.Pattern<T>): boolean => {
   if (pattern === String) return typeof value === 'string'
   if (pattern === Number) return typeof value === 'number' && !Number.isNaN(value)
   if (pattern === Boolean) return typeof value === 'boolean'
   if (pattern === Symbol) return typeof value === 'symbol'
   const isFunction = typeof pattern === 'function' && typeof value === 'function'
-  const isString = (pattern === String || typeof pattern === 'string') && _Maybe.of(typeof value === 'string').getOrElse(false)
-  const isBoolean = (pattern === Boolean || typeof pattern === 'boolean') && _Maybe.of(typeof value === 'boolean').getOrElse(false)
-  const isNumber = (pattern === Number || typeof pattern === 'number') && _Maybe.of(typeof value === 'number' && !Number.isNaN(value)).getOrElse(false)
-  const isSymbol = typeof pattern === 'symbol' && _Maybe.of(typeof value === 'symbol' && value.description === pattern.description).getOrElse(false)
+  const isString = typeof pattern === 'string' && typeof value === 'string'
+  const isBoolean = typeof pattern === 'boolean' && typeof value === 'boolean'
+  const isNumber = typeof pattern === 'number' && typeof value === 'number' && !Number.isNaN(value)
+  const isSymbol = typeof pattern === 'symbol' && typeof value === 'symbol' && value.description === pattern.description
   const isPrimitive = isString || isBoolean || isNumber || isSymbol
-  const isNull = _Maybe.of(value).isNothing() && _Maybe.of(pattern).isNothing()
+  const isNull = (value === null || value === undefined) && (pattern === null || pattern === undefined)
   if (isFunction) return true
   if (isPrimitive || isNull) {
     return (value === pattern) ||
@@ -62,7 +63,7 @@ const matchPattern = <T>(value: T, pattern: PatternMatching.Pattern<T>): boolean
       matchPattern<unknown>((value as unknown[])[index], patternItem as PatternMatching.Pattern<unknown>))
   }
 
-  if (typeof pattern === 'function' && (pattern as unknown) !== (String as unknown) && (pattern as unknown) !== (Number as unknown) && (pattern as unknown) !== (Boolean as unknown)) {
+  if (typeof pattern === 'function') {
     try {
       return (pattern as (v: T) => unknown)(value) === true
     } catch {
@@ -77,46 +78,20 @@ const matchPattern = <T>(value: T, pattern: PatternMatching.Pattern<T>): boolean
   })
 }
 
-/**
- * Internal function for building the pattern matching expression.
- *
- * @param value - The value to match against.
- * @param _ - The wildcard argument function.
- * @param patterns - The array of patterns.
- * @returns An object with methods for defining patterns and executing the matching.
- */
 const unmatched = (): never => null as never
 
 const patternBuilder =
   <T, R>(value: T) => (
     _: PatternMatching.WildcardArgs<R> = unmatched,
-    patterns: Array<{ value: PatternMatching.Pattern<T>, expression: (v: any) => R }> = []
+    patterns: Array<{ value: PatternMatching.Pattern<T>, expression: (v: never) => R }> = []
   ) => ({
-    /**
-     * Adds a pattern and its corresponding expression to the pattern matching.
-     *
-     * @param pattern - The pattern to match.
-     * @param expression - The expression to execute if the pattern matches.
-     * @returns An object with methods for defining patterns and executing the matching.
-     */
     with: <S extends PatternMatching.Pattern<T>>(
       pattern: S,
       expression: PatternMatching.MatchingFunction<PatternMatching.CustomExtract<T, PatternMatching.InvertedPattern<typeof pattern>>, R>
     ) => patternBuilder(value)(_, [...patterns, { value: pattern, expression }]),
 
-    /**
-     * Sets a default expression for the pattern matching.
-     *
-     * @param _ - The default expression.
-     * @returns An object with methods for defining patterns and executing the matching.
-     */
     _: (__: () => R) => patternBuilder(value)(__, patterns),
 
-    /**
-     * Executes the pattern matching and returns the result.
-     *
-     * @returns The result of the pattern matching.
-     */
     exec: (): R => {
       const matchedPattern = patterns.find((option) => {
         const { value: currentPattern } = option
@@ -127,11 +102,11 @@ const patternBuilder =
         return _()
       }
       const { expression } = matchedPattern
-      return expression(value)
+      return Reflect.apply(expression, undefined, [value]) as R
     },
     exhaustive: (): R => {
       const matchedPattern = patterns.find((option) => matchPattern(value, option.value))
-      if (matchedPattern) return matchedPattern.expression(value)
+      if (matchedPattern) return Reflect.apply(matchedPattern.expression, undefined, [value]) as R
       if (_ === unmatched) throw new Error('Non-exhaustive match')
       return _()
     }
