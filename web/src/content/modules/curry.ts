@@ -1,18 +1,34 @@
-import type { ModuleDoc } from '../types'
+import type { ModuleDoc } from '@/content/types'
 
 export const curry: ModuleDoc = {
   id: 'curry',
   title: '_curry',
-  tagline: 'Turn any function into a chain of single-argument steps.',
+  tagline: 'Partial application with grouped arguments and placeholders.',
   api: [
     {
       name: '_curry',
       signature: '_curry<P extends any[], R>(fn: (...args: P) => R): Curry.TResponse<P, R>',
       description:
-        'Wraps a function so arguments can be applied one at a time. Each partial application returns another curried function.'
+        'Apply arguments one at a time, in groups or all at once. Each partial application is reusable. Required arity follows fn.length; default and rest parameters are not counted after the first default.'
+    },
+    {
+      name: '_placeholder / _curry.placeholder',
+      description: 'The same unique symbol leaves an argument open. Later calls fill earlier holes from left to right.'
     }
   ],
   examples: [
+    {
+      id: 'curry-placeholders',
+      title: 'Grouped arguments and placeholders',
+      description: 'Keep unary application or leave a hole wherever an argument should be supplied later.',
+      expected: '[6, 6, 6, 9]',
+      code: `import { _curry, _placeholder } from 'funcio'
+
+const sum = _curry((a, b, c) => a + b + c)
+const partial = sum(1, _placeholder, 3)
+
+[sum(1)(2)(3), sum(1, 2)(3), partial(2), partial(5)]`
+    },
     {
       id: 'curry-basics',
       title: 'Partial application',

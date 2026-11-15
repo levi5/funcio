@@ -1,4 +1,4 @@
-import type { ModuleDoc } from '../types'
+import type { ModuleDoc } from '@/content/types'
 
 export const match: ModuleDoc = {
   id: 'match',
@@ -7,12 +7,33 @@ export const match: ModuleDoc = {
   api: [
     {
       name: '_match',
-      signature: '_match<T, R>(value: T): { with(pattern, fn): ...; _(default): ...; exec(): R }',
+      signature: '_match<T, R>(value: T): MatchBuilder<T, R>',
       description:
-        'Registers patterns with `.with(pattern, handler)` and a fallback with `._(fn)`. `.exec()` returns the first handler whose pattern matches. A pattern is a literal (string, number, boolean, symbol, null) or an object shape compared key by key, recursively.'
+        'Registers literal, constructor, predicate, array or partial-object patterns with `.with(pattern, handler)`. First match wins. `.exec()` preserves historical permissive typing and returns null if no pattern or fallback matches.'
+    },
+    {
+      name: '.exhaustive()',
+      signature: 'exhaustive(): R',
+      description:
+        'Available only after every literal/discriminated-union case is covered, or after an explicit fallback. Predicates alone do not prove coverage. Unsafe calls that bypass TypeScript throw when no branch matches.'
     }
   ],
   examples: [
+    {
+      id: 'match-exhaustive',
+      title: 'Exhaustive constructor patterns',
+      description:
+        'In TypeScript, use _match<string | number, string>(value). Both primitive cases must be covered before exhaustive is callable.',
+      expected: '["text: hello", "number: 42"]',
+      code: `import { _match } from 'funcio'
+
+const describe = (value) => _match(value)
+  .with(String, (text) => \`text: \${text}\`)
+  .with(Number, (number) => \`number: \${number}\`)
+  .exhaustive()
+
+[describe('hello'), describe(42)]`
+    },
     {
       id: 'match-values',
       title: 'Matching literals',

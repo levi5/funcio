@@ -1,5 +1,5 @@
 import { $copy } from './copy.js'
-import { $isObject } from '../common.js'
+import { $isObject } from '@funcio/Object/common.js'
 
 /**
  * Deep freezes an object, making it immutable by recursively freezing all its properties.

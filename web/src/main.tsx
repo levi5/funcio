@@ -1,10 +1,10 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 
-import { App } from './App'
+import { App } from '@/App'
 
-import './global/global.css'
-import './global/rest.css'
+import '@/global/global.css'
+import '@/global/rest.css'
 
 const container = document.getElementById('root')
 

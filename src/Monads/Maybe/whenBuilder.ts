@@ -1,6 +1,6 @@
 import { _Maybe } from './maybe.js'
-import { type Just } from './just.js'
-import { type Nothing } from './nothing.js'
+import type { Just } from './just.js'
+import type { Nothing } from './nothing.js'
 
 export class WhenBuilder<T, U> {
   private readonly predicate: boolean | ((value: any) => boolean)
@@ -31,9 +31,9 @@ export class WhenBuilder<T, U> {
 
   private exec (): U {
     const isJust = this.source.isJust()
-    const value = isJust ? (this.source as any).get() : undefined
+    const value = isJust ? (this.source as Just<T>).get() : undefined
 
-    const predicateResult = isJust ? this.evaluatePredicate(value) : false
+    const predicateResult = isJust ? this.evaluatePredicate(value as T) : false
 
     if (predicateResult && this.onTrueFn) {
       return this.onTrueFn(value)

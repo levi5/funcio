@@ -1,4 +1,4 @@
-import type { ApiEntry } from '../../content'
+import type { ApiEntry } from '@/content'
 import styles from './styles.css'
 
 export const ApiList = ({ entries }: { entries: ApiEntry[] }) => (

@@ -1,4 +1,4 @@
-import { type Chainify } from '../../@Types/Object/index.js'
+import type { Chainify } from '@funcio/@Types/Object/index.js'
 
 /**
  * Creates a chainable proxy for the given object.

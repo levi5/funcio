@@ -1,9 +1,8 @@
-import { heroExample } from '../../content'
+import { Button } from '@/components/Button'
+import { Install } from '@/components/Install'
+import { Playground } from '@/components/Playground'
+import { heroExample } from '@/content'
 import { VERSION } from '@/version'
-
-import { Button } from '../Button'
-import { Install } from '../Install'
-import { Playground } from '../Playground'
 import styles from './styles.css'
 
 export const Hero = () => (
@@ -11,8 +10,7 @@ export const Hero = () => (
     <div className={styles.glow} aria-hidden="true" />
 
     <p className={styles.eyebrow}>
-      <span className={styles.dot} aria-hidden="true" />
-      v{VERSION} · MIT · 0 dependencies
+      <span className={styles.dot} aria-hidden="true" />v{VERSION} · MIT · 0 dependencies
     </p>
 
     <h1 className={styles.title}>

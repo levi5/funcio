@@ -1,5 +1,5 @@
 import { expect, describe, it } from "vitest"
-import { _Maybe } from "../src/Monads/Maybe/index.js"
+import { _Maybe } from "@funcio/Monads/Maybe/index.js"
 
 
 describe("Maybe Monad", () => {

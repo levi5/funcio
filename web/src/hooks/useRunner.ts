@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 
-import { ReplayRunner, type RunOutcome } from '../playground/runner'
+import { ReplayRunner, type RunOutcome } from '@/playground/runner'
 
 const TIMEOUT_MS = 5000
 

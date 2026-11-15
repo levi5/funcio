@@ -1,4 +1,4 @@
-import type { RunOutcome } from '../../playground/runner'
+import type { RunOutcome } from '@/playground/runner'
 import styles from './styles.css'
 
 type Props = {

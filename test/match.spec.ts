@@ -1,6 +1,6 @@
-import { _match } from '../src/function/Match/match.js'
-import { left, right } from "../src/Monads/Either/index.js"
-import { IEither } from "../src/@Types/index.js"
+import { _match } from '@funcio/function/Match/match.js'
+import { left, right } from "@funcio/Monads/Either/index.js"
+import type { IEither } from "@funcio/@Types/index.js"
 import { expect, describe, it } from "vitest"
 
 describe("Match function", () => {

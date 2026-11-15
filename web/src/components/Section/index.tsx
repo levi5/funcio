@@ -1,7 +1,6 @@
-import type { ModuleDoc } from '../../content'
-
-import { ApiList } from '../ApiList'
-import { Example } from '../Example'
+import { ApiList } from '@/components/ApiList'
+import { Example } from '@/components/Example'
+import type { ModuleDoc } from '@/content'
 import styles from './styles.css'
 
 type Props = {

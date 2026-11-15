@@ -1,4 +1,5 @@
-import type { ModuleDoc } from '../content'
+import type { ModuleDoc } from '@/content'
+import { VERSION } from '@/version'
 
 const BASE_URL = 'https://levi5.github.io/funcio/'
 const REPO_URL = 'https://github.com/levi5/funcio'
@@ -8,6 +9,7 @@ const softwareApplication = {
   '@context': 'https://schema.org',
   '@type': 'SoftwareApplication',
   name: 'Funcio',
+  softwareVersion: VERSION,
   description:
     'Functional programming toolkit for TypeScript: Maybe, Either, pipe, curry, pattern matching and immutable object helpers. Zero dependencies, runs in Node and browser.',
   url: BASE_URL,
@@ -40,7 +42,9 @@ const softwareApplication = {
     'curry (automatic currying)',
     'match (pattern matching)',
     'Immutable object helpers',
-    'Functional array methods'
+    'Lazy iterables and bounded asynchronous arrays',
+    'Cancellable asynchronous tasks',
+    'Synchronous and asynchronous schema validation'
   ],
   keywords: 'functional programming, TypeScript, JavaScript, Maybe, Either, pipe, curry, pattern matching, immutable',
   aggregateRating: {

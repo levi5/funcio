@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { _Task } from '../src/main.js'
+import { _Task } from '@funcio/main.js'
 
 afterEach(() => { vi.useRealTimers() })
 

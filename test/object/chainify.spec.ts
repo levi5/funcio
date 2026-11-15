@@ -1,5 +1,5 @@
 import { expect, describe, it } from "vitest"
-import { _chainify } from '../../src/Object/Chainify/index.js'
+import { _chainify } from '@funcio/Object/Chainify/index.js'
 
 
 const makeSut = (name: string, age: number) => {

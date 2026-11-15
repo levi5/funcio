@@ -1,6 +1,6 @@
-import { _Maybe } from '../../main.js'
-import { type PatternMatching } from '../../@Types/Match/index.js'
-import { $isObject } from '../../Object/common.js'
+import { _Maybe } from '@funcio/main.js'
+import type { PatternMatching } from '@funcio/@Types/Match/index.js'
+import { $isObject } from '@funcio/Object/common.js'
 
 /**
  * Function for pattern matching.
@@ -8,7 +8,27 @@ import { $isObject } from '../../Object/common.js'
  * @param value - The value to match against.
  * @returns An object with methods for defining patterns and executing the matching.
  */
-export const _match = <T, R>(value: T) => patternBuilder<T, R>(value)(undefined, [])
+type Covered<T, P> = P extends (...args: any[]) => any
+  ? P extends StringConstructor ? Extract<T, string>
+    : P extends NumberConstructor ? Extract<T, number>
+      : P extends BooleanConstructor ? Extract<T, boolean>
+        : P extends SymbolConstructor ? Extract<T, symbol>
+          : never
+  : T extends P ? T : never
+
+export interface MatchBuilder<T, R, Remaining = T> {
+  with: {
+    (pattern: BooleanConstructor, expression: (value: Extract<T, boolean>) => R): MatchBuilder<T, R, Exclude<Remaining, boolean>>
+    (pattern: (value: T) => boolean, expression: (value: T) => R): MatchBuilder<T, R, Remaining>
+    <const P extends PatternMatching.Pattern<T>>(pattern: P, expression: (value: PatternMatching.CustomExtract<T, PatternMatching.InvertedPattern<P>>) => R): MatchBuilder<T, R, Exclude<Remaining, Covered<Remaining, P>>>
+  }
+  _: (fallback: () => R) => MatchBuilder<T, R, never>
+  /** Legacy permissive return type; prefer exhaustive() for checked matches. */
+  exec: () => R & any
+  exhaustive: [Remaining] extends [never] ? () => R : never
+}
+
+export const _match = <T, R>(value: T): MatchBuilder<T, R> => patternBuilder<T, R>(value)(undefined, []) as MatchBuilder<T, R>
 
 /**
  * Internal function for matching a value against a pattern.
@@ -18,6 +38,10 @@ export const _match = <T, R>(value: T) => patternBuilder<T, R>(value)(undefined,
  * @returns `true` if the value matches the pattern, otherwise `false`.
  */
 const matchPattern = <T>(value: T, pattern: PatternMatching.Pattern<T>): boolean => {
+  if (pattern === String) return typeof value === 'string'
+  if (pattern === Number) return typeof value === 'number' && !Number.isNaN(value)
+  if (pattern === Boolean) return typeof value === 'boolean'
+  if (pattern === Symbol) return typeof value === 'symbol'
   const isFunction = typeof pattern === 'function' && typeof value === 'function'
   const isString = (pattern === String || typeof pattern === 'string') && _Maybe.of(typeof value === 'string').getOrElse(false)
   const isBoolean = (pattern === Boolean || typeof pattern === 'boolean') && _Maybe.of(typeof value === 'boolean').getOrElse(false)
@@ -40,16 +64,16 @@ const matchPattern = <T>(value: T, pattern: PatternMatching.Pattern<T>): boolean
 
   if (typeof pattern === 'function' && (pattern as unknown) !== (String as unknown) && (pattern as unknown) !== (Number as unknown) && (pattern as unknown) !== (Boolean as unknown)) {
     try {
-      return (pattern as (v: T) => boolean)(value) === true
+      return (pattern as (v: T) => unknown)(value) === true
     } catch {
       return false
     }
   }
 
-  return $isObject(pattern) && Object.keys(pattern).every((key) => {
-    const subValue = (value as unknown as Record<string, unknown>)[key]
+  return $isObject(pattern) && value !== null && value !== undefined && Object.keys(pattern).every((key) => {
+    const subValue = (value as Record<string, unknown>)[key]
     const subPattern = (pattern as unknown as Record<string, unknown>)[key]
-    return matchPattern(subValue, subPattern as unknown as PatternMatching.Pattern<unknown>)
+    return matchPattern(subValue, subPattern as PatternMatching.Pattern<unknown>)
   })
 }
 
@@ -61,9 +85,11 @@ const matchPattern = <T>(value: T, pattern: PatternMatching.Pattern<T>): boolean
  * @param patterns - The array of patterns.
  * @returns An object with methods for defining patterns and executing the matching.
  */
+const unmatched = (): never => null as never
+
 const patternBuilder =
   <T, R>(value: T) => (
-    _: PatternMatching.WildcardArgs<R> = (() => null) as unknown as PatternMatching.WildcardArgs<R>,
+    _: PatternMatching.WildcardArgs<R> = unmatched,
     patterns: Array<{ value: PatternMatching.Pattern<T>, expression: (v: any) => R }> = []
   ) => ({
     /**
@@ -91,7 +117,7 @@ const patternBuilder =
      *
      * @returns The result of the pattern matching.
      */
-    exec: (): R & any => {
+    exec: (): R => {
       const matchedPattern = patterns.find((option) => {
         const { value: currentPattern } = option
         return matchPattern(value, currentPattern)
@@ -102,5 +128,11 @@ const patternBuilder =
       }
       const { expression } = matchedPattern
       return expression(value)
+    },
+    exhaustive: (): R => {
+      const matchedPattern = patterns.find((option) => matchPattern(value, option.value))
+      if (matchedPattern) return matchedPattern.expression(value)
+      if (_ === unmatched) throw new Error('Non-exhaustive match')
+      return _()
     }
   })

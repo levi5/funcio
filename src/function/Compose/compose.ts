@@ -1,4 +1,4 @@
-import { type FN } from '../../@Types/common.js'
+import type { FN } from '@funcio/@Types/common.js'
 
 /**
  * Compose functions right-to-left: compose(f, g, h)(x) === f(g(h(x))).

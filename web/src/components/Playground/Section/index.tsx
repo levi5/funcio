@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import type { ModuleDoc } from '../../../content'
-import { Section } from '../../Section'
-import { Playground } from '../index'
+import { Playground } from '@/components/Playground'
+import { Section } from '@/components/Section'
+import type { ModuleDoc } from '@/content'
 import styles from './styles.css'
 
 const SNIPPETS = [

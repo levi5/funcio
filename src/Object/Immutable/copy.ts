@@ -1,4 +1,4 @@
-import { $isObject } from '../common.js'
+import { $isObject } from '@funcio/Object/common.js'
 
 export const $copy = <T>(object: T): T => {
   if (object instanceof Date) return new Date(object.getTime()) as unknown as T
@@ -18,7 +18,7 @@ export const $copy = <T>(object: T): T => {
   const copy = (Array.isArray(object) ? [] : {}) as Record<string | symbol, unknown>
   const keys = [...Object.keys(object as object), ...Object.getOwnPropertySymbols(object as object)]
   keys.forEach((key) => {
-    if (Object.prototype.hasOwnProperty.call(object, key) || typeof key === 'symbol') {
+    if (Object.getOwnPropertyDescriptor(object, key) !== undefined || typeof key === 'symbol') {
       copy[key as string] = $copy((object as Record<string | symbol, unknown>)[key as string])
     }
   })

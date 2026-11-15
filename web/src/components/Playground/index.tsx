@@ -1,9 +1,9 @@
 import { useRef, useState } from 'react'
-import { useClipboard } from '../../hooks/useClipboard'
-import { useRunner } from '../../hooks/useRunner'
-import { Editor } from '../Editor'
-import { Output } from '../Output'
-import { Toolbar } from '../Toolbar'
+import { Editor } from '@/components/Editor'
+import { Output } from '@/components/Output'
+import { Toolbar } from '@/components/Toolbar'
+import { useClipboard } from '@/hooks/useClipboard'
+import { useRunner } from '@/hooks/useRunner'
 import styles from './styles.css'
 
 type Props = {

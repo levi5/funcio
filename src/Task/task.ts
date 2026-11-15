@@ -1,5 +1,5 @@
-import { left, right } from '../Monads/Either/index.js'
-import { type IEither } from '../@Types/index.js'
+import { left, right } from '@funcio/Monads/Either/index.js'
+import type { IEither } from '@funcio/@Types/index.js'
 
 export type TaskResult<T> = IEither.Either<Error, T>
 

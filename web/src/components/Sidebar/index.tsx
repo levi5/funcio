@@ -1,4 +1,4 @@
-import type { ModuleDoc } from '../../content'
+import type { ModuleDoc } from '@/content'
 import styles from './styles.css'
 
 type Props = {

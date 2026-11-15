@@ -1,5 +1,5 @@
 import { describe, expect, expectTypeOf, it } from 'vitest'
-import { _Validation as v, type Infer } from '../src/main.js'
+import { _Validation as v, type Infer } from '@funcio/main.js'
 
 describe('_Validation extensions', () => {
   it('validates booleans without coercion', () => {

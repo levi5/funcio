@@ -1,4 +1,4 @@
-import type { ModuleDoc } from '../types'
+import type { ModuleDoc } from '@/content/types'
 
 export const object: ModuleDoc = {
   id: 'object',

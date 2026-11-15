@@ -587,6 +587,23 @@ Funcio._Maybe.of(10).filter((v) => v > 5).isJust(); // true
 Funcio._Maybe.of(null).orElse(Funcio._Maybe.of(9)).getOrElse(0); // 9
 ```
 
+#### Maybe / Either conversions and traversal
+
+```typescript
+import { _Maybe, _Either } from 'funcio';
+
+_Maybe.of(42).toEither('missing').getOrThrow(); // 42
+_Maybe.of(null).toEither('missing').value; // 'missing'
+_Either.toMaybe(_Either.right(42)).getOrElse(0); // 42
+_Either.toMaybe(_Either.left('error')).isNothing(); // true
+_Maybe.sequence([_Maybe.just(1), _Maybe.just(2)]).getOrElse([]); // [1, 2]
+_Maybe.traverse([1, 2], (x) => _Maybe.just(x * 2)).getOrElse([]); // [2, 4]
+```
+
+`sequence` and `traverse` stop on the first `Nothing`; empty inputs produce `Just([])`.
+`_Either.toMaybe` preserves explicit `Right` values, even `null`. The historical
+`_Maybe.fromNullable` boolean predicate is unchanged.
+
 ### `_pipe`
 
 The `_pipe` function in the Funcio library is a formidable utility for composing multiple functions into a single, higher-order function. It empowers you to craft a pipeline of functions where the output of one function becomes the input for the next.
@@ -624,7 +641,7 @@ Funcio._compose((x: number) => x + 1, (x: number) => x * 2)(5); // 11
 
 #### `_pipe.async`
 
-The `_pipe.async` helper composes synchronous and asynchronous functions in order. Each function receives the resolved value from the previous step.
+The `_pipe.async` helper composes synchronous and asynchronous functions in order. Each function receives the resolved value from the previous step. TypeScript infers the resolved result and rejects incompatible steps. Promise inputs are also awaited.
 
 ```typescript
 import Funcio from 'funcio';
@@ -654,6 +671,43 @@ const grouped = Funcio._Array.groupBy((x: number) => (x % 2 === 0 ? "even" : "od
 // doubled: [2, 4, 6]
 // evens: [2, 4]
 ```
+
+#### Bounded concurrency and cancellation
+
+`mapAsync` and `filterAsync` accept an optional third argument:
+
+```typescript
+const controller = new AbortController();
+const names = await Funcio._Array.mapAsync(
+  [1, 2, 3],
+  async (id, index, array, signal) => {
+    const response = await fetch(`/api/users/${id}`, { signal });
+    return response.json();
+  },
+  { concurrency: 2, signal: controller.signal }
+);
+```
+
+The default remains unlimited concurrency. Results preserve input order.
+Concurrency must be a positive integer or `Infinity`. Cancellation rejects with
+`AbortError`, even if a callback ignores the signal; pass it to `fetch` to cancel
+the underlying request too. Failure or cancellation stops queued work, but
+already-running callbacks may continue. Callback errors are not wrapped.
+
+#### Lazy iterables
+
+```typescript
+const total = Funcio._Array.lazy([1, 2, 3, 4])
+  .filter((x) => x % 2 === 0)
+  .map((x) => x * 10)
+  .take(1)
+  .reduce((sum, x) => sum + x, 0); // 20
+```
+
+`lazy(iterable)` supports `map`, `filter`, `flatMap`, `take`, `drop`, `reduce`,
+`toArray` and `for...of`. It performs no work until consumed, and `take` does not
+read an extra element. Arrays can be consumed repeatedly; generator instances
+remain single-use. `take` and `drop` require non-negative integer counts.
 
 #### `_Object.pick / omit / mergeDeep / evolve / hasPath / dissocPath`
 
@@ -757,6 +811,47 @@ const result = userSchema.safeParse({
 - `refine(predicate, message?)` checks a successfully parsed value, including entire objects and arrays. Predicates should return a boolean; exceptions thrown by user predicates propagate.
 - `safeParse` returns `Either<ValidationIssue[], T>` with nested error paths; `parse` throws on invalid input. Apply type-specific checks such as `.min()` before generic modifiers such as `.optional()`.
 
+#### Transformations, extra schemas and asynchronous validation
+
+```typescript
+import { _Validation as v } from 'funcio';
+
+const length = v.string().min(2).transform((text) => text.length);
+length.parse('hello'); // 5, inferred as number
+
+v.coerce.number().parse('42'); // 42
+v.literal('ok').parse('ok'); // 'ok'
+v.tuple([v.literal('ok'), v.number()]).parse(['ok', 42]);
+v.record(v.number()).parse({ score: 42 });
+v.date().parse(new Date()); // a copy of a valid Date
+
+const user = v.object({ name: v.string() });
+user.parse({ name: 'Ana', extra: 1 }); // { name: 'Ana' } (unchanged default)
+user.strict().safeParse({ name: 'Ana', extra: 1 }).isLeft(); // true
+user.passthrough().parse({ name: 'Ana', extra: 1 }); // keeps extra
+user.strict().strip(); // explicitly restore the default
+
+const availableName = v.string()
+  .refineAsync(async (name) => name !== 'taken', 'Name unavailable')
+  .transformAsync(async (name) => name.toUpperCase());
+
+await v.object({ name: availableName }).parseAsync({ name: 'ana' });
+// { name: 'ANA' }
+```
+
+- `transform` and `transformAsync` run only after successful validation and infer
+  the transformed output type. Thrown transformation errors become issues.
+- `refineAsync` supports asynchronous predicates; failures and thrown errors
+  become validation issues.
+- Use `parseAsync` / `safeParseAsync` for async schemas, including nested objects,
+  arrays, unions, tuples, records and generic modifiers. Synchronous parsing of
+  an async schema throws an explanatory error instead of silently skipping checks.
+- Coercion is **opt-in** and uses JavaScript's `String`, `Number`, `Boolean` and
+  `Date` conversions, followed by validation. In particular, `Boolean('false')`
+  is `true`. Normal validators do not coerce.
+- Object policies return new schemas and do not change the original schema.
+  Tuples require an exact length; records validate all enumerable own string keys.
+
 ### `_tap / _once / _memoize / _flip`
 
 ```typescript
@@ -773,6 +868,22 @@ const flipped = Funcio._flip((a: number, b: number) => a - b); // (b, a) => a - 
 The `_Curry` function in the Funcio library is a powerful tool for enabling currying, a fundamental concept in functional programming. Currying allows you to transform a function that takes multiple arguments into a series of functions, each accepting a single argument. This technique enhances code readability, reusability, and composability.
 
 The `_curry(fn)` method transforms a regular function into a curried function. Once curried, you can partially apply arguments one at a time, creating new functions along the way.
+
+Grouped arguments and placeholders are also supported without changing unary application:
+
+```typescript
+import { _curry, _placeholder } from 'funcio';
+
+const sum = _curry((a: number, b: number, c: number) => a + b + c);
+sum(1)(2)(3); // 6
+sum(1, 2)(3); // 6
+sum(1, _placeholder, 3)(2); // 6
+// _curry.placeholder is the same placeholder.
+```
+
+Partial applications are reusable. Arity is still determined by `fn.length`,
+so parameters after the first default parameter and rest parameters are not
+counted toward the required arguments.
 
 ```typescript
 import Funcio from 'funcio';
@@ -804,12 +915,69 @@ const response = Funcio._match<number, number>(2)
   ._(() => -1)
   .exec();
 
-result // 4
+response // 4
 ```
+
+Use `.exhaustive()` to require complete coverage of literal/discriminated unions
+or an explicit fallback:
+
+```typescript
+import { _match } from 'funcio';
+
+type State = { kind: 'ok', value: number } | { kind: 'error', message: string };
+const render = (state: State): string => _match<State, string>(state)
+  .with({ kind: 'ok' }, (value) => String(value.value))
+  .with({ kind: 'error' }, (value) => value.message)
+  .exhaustive();
+```
+
+Removing either branch makes `.exhaustive()` a TypeScript error. Arbitrary
+predicates do not prove coverage; use `._(() => fallback)` for those cases.
+Constructor patterns (`String`, `Number`, `Boolean`, `Symbol`) check primitive
+types. `.exec()` retains its historical permissive typing and returns `null`
+when there is no match or fallback. `.exhaustive()` has a checked result type
+and throws if an unsafe cast bypasses coverage.
 
 ## Contributions 🤝
 
 We extend a warm welcome to contributions from the open-source community. If you have ideas or a desire to contribute to Funcio, please explore our [GitHub repository](https://github.com/levi5/funcio.git) and submit a pull request.
+
+### Development and verification
+
+Use Node.js 24 (`nvm use`) for development. The CI also checks the library on
+Node.js 22 and 26. Both lockfiles are committed; use `npm ci` for reproducible
+installs.
+
+```sh
+npm ci
+npm run lint
+npm run typecheck
+npm test -- --run
+npm run coverage
+npm run test:package
+npm --prefix web ci
+npm --prefix web run build
+```
+
+`lint` is read-only; `lint:fix` applies supported fixes. `build` generates
+CommonJS, native ESM and declarations. Internal imports use `@funcio/*`;
+`tsc-alias` rewrites these to relative paths in **both JavaScript and declarations**,
+so package consumers do not need aliases or extra runtime dependencies.
+
+The [documentation site](web/README.md) uses `@/*` for site imports and bundles
+the library from this checkout, including playground workers. Its header, hero,
+structured data and HTML version metadata all read the root `package.json`
+version. No generated version file, hardcoded CDN version or npm lookup is
+required; changing the library version automatically updates the next site build.
+
+GitHub Actions checks lint, types, tests, coverage, package entry points, runnable
+documentation examples and the production site. Pages deployment runs these
+checks before uploading, while npm publishing remains tag-driven. Dependabot
+checks library tooling, website dependencies and Actions weekly.
+
+Tooling uses TypeScript 6, Vitest 5 with V8 coverage, and Biome 2 for linting
+the library and website. The website uses React 19 and Vite 8. The library
+still has no runtime dependencies.
 
 ## License 📜
 

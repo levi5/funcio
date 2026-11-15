@@ -1,4 +1,4 @@
-import type { ModuleDoc } from '../types'
+import type { ModuleDoc } from '@/content/types'
 
 export const either: ModuleDoc = {
   id: 'either',
@@ -51,9 +51,28 @@ export const either: ModuleDoc = {
     {
       name: '_Either.unwrap(either)',
       description: 'Returns the wrapped value, following nested `Either` values.'
+    },
+    {
+      name: '_Either.toMaybe(either)',
+      signature: 'toMaybe<L, R>(either: Either<L, R>): Just<R> | Nothing<R>',
+      description:
+        'Right becomes Just; Left becomes Nothing. An explicit Right(null) remains Just(null), unlike _Maybe.of(null).'
     }
   ],
   examples: [
+    {
+      id: 'either-to-maybe',
+      title: 'From success/failure to presence/absence',
+      description: 'Discard the Left error only when an optional result is what you need.',
+      expected: '[42, "absent", true]',
+      code: `import { _Either } from 'funcio'
+
+const success = _Either.toMaybe(_Either.right(42))
+const failure = _Either.toMaybe(_Either.left('network error'))
+const explicitNull = _Either.toMaybe(_Either.right(null))
+
+[success.getOrElse(0), failure.getOrElse('absent'), explicitNull.isJust()]`
+    },
     {
       id: 'either-sides',
       title: 'Both sides',

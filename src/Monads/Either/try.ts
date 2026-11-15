@@ -1,5 +1,5 @@
 import { left, right } from './index.js'
-import { type IEither } from '../../@Types/index.js'
+import type { IEither } from '@funcio/@Types/index.js'
 
 /**
  * Wraps an asynchronous operation in a try-catch block, returning an Either monad.

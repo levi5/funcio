@@ -1,7 +1,7 @@
-import { _curry } from '../../function/Curry/curry.js'
-import { _match } from '../../function/Match/match.js'
+import { _curry } from '@funcio/function/Curry/curry.js'
+import { _match } from '@funcio/function/Match/match.js'
 import { $copy } from './copy.js'
-import { type OBJ } from '../common.js'
+import type { OBJ } from '@funcio/Object/common.js'
 
 /**
  * Processes a key in an object by following a path of keys.

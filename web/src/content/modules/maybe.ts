@@ -1,4 +1,4 @@
-import type { ModuleDoc } from '../types'
+import type { ModuleDoc } from '@/content/types'
 
 export const maybe: ModuleDoc = {
   id: 'maybe',
@@ -44,9 +44,32 @@ export const maybe: ModuleDoc = {
       name: '.fold(onNothing, onJust) / .filter(pred) / .orElse(other) / .tap(fn)',
       description:
         'Collapse both cases, keep the value only when a predicate holds, fall back, or observe without unwrapping.'
+    },
+    {
+      name: '.toEither(fallback)',
+      signature: 'toEither<L>(fallback: L): Either<L, T>',
+      description:
+        'Turns Just into Right and Nothing into Left(fallback). The existing fromNullable boolean predicate is unchanged.'
+    },
+    {
+      name: '_Maybe.sequence(list) / traverse(list, fn)',
+      description:
+        'Collect optional results into Just(array), stopping at the first Nothing. Empty input produces Just([]); traverse skips callbacks after the first absent result.'
     }
   ],
   examples: [
+    {
+      id: 'maybe-traverse',
+      title: 'Traverse and convert to Either',
+      description: 'Validate a collection of optional values, then choose the error used for an absent result.',
+      expected: '[[2, 4, 6], "missing"]',
+      code: `import { _Maybe } from 'funcio'
+
+const doubled = _Maybe.traverse([1, 2, 3], (n) => _Maybe.just(n * 2))
+const missing = _Maybe.sequence([_Maybe.of(1), _Maybe.of(null)])
+
+[doubled.getOrElse([]), missing.toEither('missing').value]`
+    },
     {
       id: 'maybe-basics',
       title: 'of and getOrElse',

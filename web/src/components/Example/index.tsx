@@ -1,6 +1,5 @@
-import type { Example as ExampleDoc } from '../../content'
-
-import { Playground } from '../Playground'
+import { Playground } from '@/components/Playground'
+import type { Example as ExampleDoc } from '@/content'
 import styles from './styles.css'
 
 export const Example = ({ example }: { example: ExampleDoc }) => (

@@ -6,8 +6,7 @@ export const MODULE_META: Record<string, { title: string; description: string }>
   },
   curry: {
     title: 'Funcio - Automatic currying for TypeScript functions',
-    description:
-      'Automatic currying for TypeScript functions. Transform any function into a curried version with partial application support.'
+    description: 'Typed partial application with grouped arguments, reusable curried functions and placeholders.'
   },
   match: {
     title: 'Funcio - Pattern matching for TypeScript',
@@ -32,7 +31,16 @@ export const MODULE_META: Record<string, { title: string; description: string }>
   array: {
     title: 'Funcio - Functional array methods',
     description:
-      'Functional array methods: map, filter, reduce, flatMap, groupBy, unique, and more with full type inference.'
+      'Lazy iterables and ordered async array helpers with bounded concurrency, cancellation and full type inference.'
+  },
+  primitives: {
+    title: 'Funcio - String and number utilities',
+    description: 'Functional string and number helpers: capitalize, slugify, clamp, sum, average and rounding.'
+  },
+  'async-validation': {
+    title: 'Funcio - Tasks and asynchronous schema validation',
+    description:
+      'Cancellable tasks with retries, timeouts and bounded concurrency. Typed schemas with coercion, transforms and nested asynchronous validation.'
   },
   playground: {
     title: 'Funcio - Try Funcio in your browser',

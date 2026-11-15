@@ -1,4 +1,4 @@
-import type { ModuleDoc } from '../types'
+import type { ModuleDoc } from '@/content/types'
 
 export const pipe: ModuleDoc = {
   id: 'pipe',
@@ -13,9 +13,10 @@ export const pipe: ModuleDoc = {
     },
     {
       name: '_pipe.async',
-      signature: '_pipe.async<T>(input: T, ...fns: AsyncFN[]): Promise<any>',
+      signature:
+        '_pipe.async<T, A, B>(input: T, a: (value: Awaited<T>) => A, b: (value: Awaited<A>) => B): Promise<Awaited<B>>',
       description:
-        'The same idea for pipelines that mix sync and async steps. Each step receives the resolved value from the previous one.'
+        'Mix sync and async steps with inferred resolved output types. Promise inputs are awaited too. TypeScript rejects incompatible steps; annotate steps in longer variadic pipelines when needed.'
     },
     {
       name: '_compose(...fns)',
