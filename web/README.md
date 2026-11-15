@@ -49,5 +49,5 @@ HTML metadata. There is no npm/CDN lookup. The playground uses the same checkout
 as the documentation, independently of npm publication.
 
 GitHub Actions builds and validates the site on pull requests. The Pages workflow
-deploys verified `web/dist` output on pushes to `main`. Set `BASE_PATH` to override
+deploys verified `web/dist` output on pushes to `master` (the default branch) or `main`. Set `BASE_PATH` to override
 the default `/funcio/` deployment path.
