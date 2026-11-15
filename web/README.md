@@ -38,6 +38,10 @@ sitemap and verifies the generated version metadata and worker bundles.
   the API entries rather than placing type annotations in runnable snippets.
 - Register new modules in `src/content/index.ts` and page metadata in
   `src/hooks/usePageMeta.ts`. Sitemap sections come from the module list.
+- To add a **View implementation** walkthrough, import the source with `?raw` in
+  `src/content/implementations.ts` and slice it with `cut(file, source, start, end)`.
+  Each step records the file and starting/ending line automatically, so the site can
+  link to GitHub. `npm run verify` fails if a marker no longer exists.
 - Use `@/*` for site imports, `@funcio/*` for library source imports and `funcio`
   inside examples. Co-located imports can remain relative.
 

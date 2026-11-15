@@ -106,7 +106,7 @@ export const PlaygroundSection = () => {
         ))}
       </div>
 
-      <Playground code={code} onChange={setCode} />
+      <Playground code={code} onChange={setCode} label="Playground editor" />
     </Section>
   )
 }

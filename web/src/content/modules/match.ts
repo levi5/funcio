@@ -1,3 +1,4 @@
+import { matchImplementation } from '@/content/implementations'
 import type { ModuleDoc } from '@/content/types'
 
 export const match: ModuleDoc = {
@@ -7,6 +8,7 @@ export const match: ModuleDoc = {
   api: [
     {
       name: '_match',
+      implementation: matchImplementation,
       signature: '_match<T, R>(value: T): MatchBuilder<T, R>',
       description:
         'Registers literal, constructor, predicate, array or partial-object patterns with `.with(pattern, handler)`. First match wins. `.exec()` returns null when nothing matches; its type includes null until coverage or a fallback is provided.'

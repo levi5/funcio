@@ -18,7 +18,7 @@ export const Output = ({ outcome, expected, running }: Props) => {
 }
 
 const Running = () => (
-  <div className={`${styles.output} ${styles.pending}`} data-state="pending">
+  <div className={`${styles.output} ${styles.pending}`} data-state="pending" role="status">
     <span className={styles.spinner} aria-hidden="true" />
     running…
   </div>
@@ -72,7 +72,7 @@ const Success = ({ outcome }: { outcome: RunOutcome }) => {
   }
 
   return (
-    <div className={`${styles.output} ${styles.succeeded}`} data-state="ok">
+    <div className={`${styles.output} ${styles.succeeded}`} data-state="ok" role="status">
       {outcome.logs.map((log) => (
         <div key={log.id} className={log.level === 'log' ? styles.line : `${styles.line} ${styles[log.level]}`}>
           {log.level !== 'log' && <span className={`${styles.badge} ${styles.muted}`}>{log.level}</span>}

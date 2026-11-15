@@ -1,3 +1,4 @@
+import { eitherImplementation } from '@/content/implementations'
 import type { ModuleDoc } from '@/content/types'
 
 export const either: ModuleDoc = {
@@ -19,6 +20,7 @@ export const either: ModuleDoc = {
     },
     {
       name: '_Either.try.sync(fn)',
+      implementation: eitherImplementation,
       signature: '_try.sync<T>(fn: () => T): Either<Error, T>',
       description:
         'Runs `fn` and wraps the outcome: `Right` with the result, or `Left` with the thrown error. Rejects a function that returns a `Promise`.'

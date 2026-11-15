@@ -1,3 +1,4 @@
+import { chainifyImplementation, makeImmutableImplementation, objectImplementation } from '@/content/implementations'
 import type { ModuleDoc } from '@/content/types'
 
 export const object: ModuleDoc = {
@@ -7,6 +8,7 @@ export const object: ModuleDoc = {
   api: [
     {
       name: '_Object.makeImmutable',
+      implementation: makeImmutableImplementation,
       signature: 'makeImmutable<T extends object>(object: T): T',
       description:
         'Copies and freezes enumerable string-keyed properties recursively. Assignments to frozen properties throw in strict mode. Map, Set and Date methods can still mutate their contents; cyclic objects are not supported.'
@@ -18,12 +20,14 @@ export const object: ModuleDoc = {
     },
     {
       name: '_Object.setByPath',
+      implementation: objectImplementation,
       signature: 'setByPath(path: Array<string | number>, value: unknown, obj: O): O',
       description:
         'Writes a nested value by path and returns a new object, creating intermediate objects or arrays as needed. The original is left untouched.'
     },
     {
       name: '_Object.chainify',
+      implementation: chainifyImplementation,
       signature: 'chainify<T extends Record<string, any>>(object: T): Chainify<T>',
       description:
         'Wraps an object in a `Proxy` so any method returning `undefined` returns the proxy instead, letting calls chain.'

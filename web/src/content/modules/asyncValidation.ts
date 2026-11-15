@@ -1,3 +1,4 @@
+import { taskImplementation, validationImplementation } from '@/content/implementations'
 import type { ModuleDoc } from '@/content/types'
 
 export const asyncValidation: ModuleDoc = {
@@ -18,6 +19,7 @@ export const asyncValidation: ModuleDoc = {
     },
     {
       name: '.retry(retries, delayMs?) / .timeout(ms)',
+      implementation: taskImplementation,
       description:
         'Retry failed operations with an optional delay. timeout returns Left(TimeoutError). Put timeout before retry for a per-attempt limit, or after it for a total limit. Invalid counts and delays throw RangeError.'
     },
@@ -28,6 +30,7 @@ export const asyncValidation: ModuleDoc = {
     },
     {
       name: '_Validation.string() / number() / object() / array()',
+      implementation: validationImplementation,
       description:
         'Composable schemas: safeParse returns Either<ValidationIssue[], T>, accumulating nested paths. parse throws on invalid input. Normal validators never coerce.'
     },

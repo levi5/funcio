@@ -12,9 +12,10 @@ type Props = {
   readOnly?: boolean
   onChange?: (code: string) => void
   compact?: boolean
+  label?: string
 }
 
-export const Playground = ({ code: source, expected, readOnly = false, onChange, compact = false }: Props) => {
+export const Playground = ({ code: source, expected, readOnly = false, onChange, compact = false, label }: Props) => {
   const baseline = useRef(source).current
   const [own, setOwn] = useState(baseline)
   const { outcome, running, isStale, run } = useRunner()
@@ -47,7 +48,7 @@ export const Playground = ({ code: source, expected, readOnly = false, onChange,
         }
       />
 
-      <Editor code={code} onChange={update} onRun={() => void run(code)} readOnly={readOnly} />
+      <Editor code={code} onChange={update} onRun={() => void run(code)} readOnly={readOnly} label={label} />
 
       <Output outcome={outcome} expected={expected} running={running} />
     </div>

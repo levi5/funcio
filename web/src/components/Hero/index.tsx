@@ -27,7 +27,7 @@ export const Hero = () => (
     <Install />
 
     <div className={styles.demo} data-hero-demo="">
-      <Playground code={heroExample} expected="no email" compact />
+      <Playground code={heroExample} expected="no email" compact label="Hero example" />
     </div>
 
     <div className={styles.links}>

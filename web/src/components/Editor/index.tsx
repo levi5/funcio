@@ -8,9 +8,10 @@ type Props = {
   onChange: (code: string) => void
   onRun: () => void
   readOnly?: boolean
+  label?: string
 }
 
-export const Editor = ({ code, onChange, onRun, readOnly = false }: Props) => {
+export const Editor = ({ code, onChange, onRun, readOnly = false, label }: Props) => {
   const inputRef = useRef<HTMLTextAreaElement>(null)
   const highlightRef = useRef<HTMLPreElement>(null)
 
@@ -78,7 +79,7 @@ export const Editor = ({ code, onChange, onRun, readOnly = false }: Props) => {
           autoCapitalize="off"
           autoCorrect="off"
           readOnly={readOnly}
-          aria-label="Runnable example"
+          aria-label={label ?? 'Runnable example'}
           data-editor=""
         />
       </div>

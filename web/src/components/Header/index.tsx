@@ -1,11 +1,17 @@
 import { useEffect, useState } from 'react'
 import { Button } from '@/components/Button'
 import { Logo } from '@/components/Logo'
+import { modules } from '@/content'
 import { useTheme } from '@/hooks/useTheme'
 import { VERSION } from '@/version'
 import styles from './styles.css'
 
-const LINKS = ['pipe', 'curry', 'match', 'maybe', 'either', 'object', 'array', 'async-validation', 'playground']
+const LABELS: Record<string, string> = { 'async-validation': 'validation' }
+
+const LINKS = [
+  ...modules.map((module) => ({ id: module.id, label: LABELS[module.id] ?? module.id })),
+  { id: 'playground', label: 'playground' }
+]
 
 export const Header = () => {
   const { theme, toggle } = useTheme()
@@ -23,6 +29,19 @@ export const Header = () => {
     }
   }, [])
 
+  useEffect(() => {
+    if (!open) return
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setOpen(false)
+    }
+
+    window.addEventListener('keydown', onKeyDown)
+    return () => {
+      window.removeEventListener('keydown', onKeyDown)
+    }
+  }, [open])
+
   return (
     <header className={`${styles.header} ${scrolled ? styles.scrolled : ''}`}>
       <div className={styles.inner}>
@@ -32,22 +51,27 @@ export const Header = () => {
           <span className={styles.version}>{VERSION}</span>
         </a>
 
-        <nav className={`${styles.nav} ${open ? styles.open : ''}`} aria-label="Sections">
-          {LINKS.map((id) => (
+        <nav id="site-nav" className={`${styles.nav} ${open ? styles.open : ''}`} aria-label="Sections">
+          {LINKS.map((link) => (
             <a
-              key={id}
-              href={`#${id}`}
+              key={link.id}
+              href={`#${link.id}`}
               onClick={() => {
                 setOpen(false)
               }}
             >
-              {id === 'async-validation' ? 'validation' : id}
+              {link.label}
             </a>
           ))}
         </nav>
 
         <div className={styles.tools}>
-          <Button variant="icon" onClick={toggle} title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}>
+          <Button
+            variant="icon"
+            onClick={toggle}
+            title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}
+            ariaLabel={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}
+          >
             {theme === 'dark' ? '☀' : '☾'}
           </Button>
           <Button variant="ghost" href="https://www.npmjs.com/package/funcio" target="_blank">
@@ -63,6 +87,9 @@ export const Header = () => {
               setOpen(!open)
             }}
             title="Toggle navigation"
+            ariaLabel="Toggle navigation"
+            ariaExpanded={open}
+            ariaControls="site-nav"
           >
             {open ? '✕' : '☰'}
           </Button>
